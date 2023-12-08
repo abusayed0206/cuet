@@ -13,7 +13,6 @@ import {
   Card,
 } from "@/components/ui/card";
 import Link from "next/link";
-import Image from "next/image";
 
 export default function Component() {
   return (
@@ -34,7 +33,9 @@ export default function Component() {
           </CardDescription>
         </CardHeader>
         <CardContent className="p-4 border-t border-b ">
-          <p className="text-sm text-center">Negative by Blood🩸 Just a Normie🙂</p>
+          <p className="text-sm text-center">
+            Negative by Blood🩸 Just a Normie🙂
+          </p>
         </CardContent>
         <CardFooter className="flex justify-around py-4">
           <Link
@@ -80,12 +81,11 @@ export default function Component() {
         </CardFooter>
 
         <div style={{ borderRadius: "10px", overflow: "hidden" }}>
-          <Image
+          <img
             src="https://discord.c99.nl/widget/theme-5/852836480262209557.png"
             alt="Sayed"
-            width={1200}
-            height={600}
-            layout="responsive"
+            width="auto"
+            height="auto"
           />
         </div>
       </Card>
