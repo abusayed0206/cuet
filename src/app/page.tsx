@@ -4,7 +4,7 @@ import { BsTwitterX } from "react-icons/bs";
 import { VscGithubInverted } from "react-icons/vsc";
 import { TfiEmail } from "react-icons/tfi";
 import { FaHashnode } from "react-icons/fa6";
-import Image from "next/image";
+import { BiKey } from "react-icons/bi";
 import {
   CardTitle,
   CardDescription,
@@ -53,12 +53,7 @@ export default function Component() {
             href="Abu Sayed_0x081A22B2_public.asc"
             target="_blank"
           >
-            <Image
-              src="https://raw.githubusercontent.com/ModernPGP/icons/master/keys/icon-key.svg"
-              height={20}
-              width={20}
-              alt="PGP Key"
-            />
+            <BiKey />
           </Link>
           <Link
             aria-label="Twitter"
@@ -97,7 +92,7 @@ export default function Component() {
         <div style={{ borderRadius: "15px", overflow: "hidden" }}>
           <img
             src="https://discord.c99.nl/widget/theme-5/852836480262209557.png"
-            alt="আমার জন্য ডিসকর্ড উইজেট"
+            alt="Discord Widget"
             width="395"
             height="80"
           />
