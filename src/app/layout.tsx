@@ -11,6 +11,7 @@ const inter = Nova_Square({
 export const metadata: Metadata = {
   title: "Sayed",
   description: "Negative by Blood💖⭐, Just a Normie🙂.",
+  metadataBase: new URL("https://sayed.page/"),
   icons: [
     {
       rel: "icon",
