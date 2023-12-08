@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     },
   ],
   openGraph: {
-    images: '/opengraph-image.png',
+    images: '/OG_Image.png',
   },
 };
 
