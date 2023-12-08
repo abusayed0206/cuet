@@ -10,7 +10,7 @@ const inter = Nova_Square({
 
 export const metadata: Metadata = {
   title: "Sayed",
-  description: "Negative by Blood💖⭐",
+  description: "Negative by Blood💖⭐, Just a Normie🙂.",
   icons: [
     {
       rel: "icon",
@@ -41,6 +41,9 @@ export const metadata: Metadata = {
       url: "/safari-pinned-tab.svg",
     },
   ],
+  openGraph: {
+    images: '/opengraph-image.png',
+  },
 };
 
 export default function RootLayout({

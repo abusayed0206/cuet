@@ -4,6 +4,7 @@ import { BsTwitterX } from "react-icons/bs";
 import { VscGithubInverted } from "react-icons/vsc";
 import { TfiEmail } from "react-icons/tfi";
 import { FaHashnode } from "react-icons/fa6";
+import Image from "next/image";
 import {
   CardTitle,
   CardDescription,
@@ -47,6 +48,19 @@ export default function Component() {
             <TfiEmail />
           </Link>
           <Link
+            aria-label="PGP Key"
+            className="text-blue-700 hover:text-blue-800"
+            href="Abu Sayed_0x081A22B2_public.asc"
+            target="_blank"
+          >
+            <Image
+              src="https://raw.githubusercontent.com/ModernPGP/icons/master/keys/icon-key.svg"
+              height={20}
+              width={20}
+              alt="PGP Key"
+            />
+          </Link>
+          <Link
             aria-label="Twitter"
             className="text-blue-500 hover:text-blue-600"
             href="https://twitter.com/abusayed0206"
@@ -80,12 +94,12 @@ export default function Component() {
           </Link>
         </CardFooter>
 
-        <div style={{ borderRadius: "10px", overflow: "hidden" }}>
+        <div style={{ borderRadius: "15px", overflow: "hidden" }}>
           <img
             src="https://discord.c99.nl/widget/theme-5/852836480262209557.png"
-            alt="Sayed"
-            width="auto"
-            height="auto"
+            alt="আমার জন্য ডিসকর্ড উইজেট"
+            width="395"
+            height="80"
           />
         </div>
       </Card>
