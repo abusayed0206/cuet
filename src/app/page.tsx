@@ -91,7 +91,7 @@ export default function Component() {
 
         <div style={{ borderRadius: "15px", overflow: "hidden" }}>
           <img
-            src="https://discord.c99.nl/widget/theme-5/852836480262209557.png"
+            src="https://discord.c99.nl/widget/theme-3/852836480262209557.png"
             alt="Discord Widget"
             width="395"
             height="80"
