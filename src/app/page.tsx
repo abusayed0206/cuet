@@ -89,7 +89,7 @@ export default function Component() {
           </Link>
         </CardFooter>
 
-        <div style={{ borderRadius: "15px", overflow: "hidden" }}>
+        <div style={{ borderRadius: "16px", overflow: "hidden" }}>
           <img
             src="https://discord.c99.nl/widget/theme-3/852836480262209557.png"
             alt="Discord Widget"
