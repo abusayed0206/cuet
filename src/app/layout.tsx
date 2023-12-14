@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { Nova_Square } from "next/font/google";
+import { Hind_Siliguri } from "next/font/google";
 import "./globals.css";
 
-const inter = Nova_Square({
+const inter = Hind_Siliguri({
   weight: "400",
   subsets: ["latin"],
   display: "swap",
