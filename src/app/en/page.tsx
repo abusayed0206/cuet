@@ -45,9 +45,9 @@ export default function Component() {
                 className="rounded-full"
                 src="https://cdn.hashnode.com/res/hashnode/image/upload/v1699648553222/cHpLJnlzJ.jpg?w=500&h=500&fit=crop&crop=faces&auto=compress,format&format=webp"
               />
-              <AvatarFallback className="rounded-full">Sayed</AvatarFallback>
+              <AvatarFallback className="rounded-full">Lutfor Rashid Sayed</AvatarFallback>
             </Avatar>
-            <CardTitle className="text-2xl font-bold">Sayed</CardTitle>
+            <CardTitle className="text-2xl font-bold">Lutfor Rashid Sayed</CardTitle>
             <CardDescription className="text-center text-gray-500">
               Civil Engineering Student | CUET
             </CardDescription>

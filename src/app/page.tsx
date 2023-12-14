@@ -47,14 +47,14 @@ export default function Component() {
               />
               <AvatarFallback className="rounded-full">সাঈদ</AvatarFallback>
             </Avatar>
-            <CardTitle className="text-2xl font-bold">সাঈদ</CardTitle>
+            <CardTitle className="text-2xl font-bold">লূৎফুর রশীদ সাঈদ</CardTitle>
             <CardDescription className="text-center text-gray-500">
               পুরকৌশল শিক্ষার্থী | চুয়েট
             </CardDescription>
           </CardHeader>
           <CardContent className="p-4 border-t border-b ">
             <p className="text-sm text-center">
-              রক্তে রক্তে নেগেটিভিটি🩸🙂
+              রক্তে রক্তে নেগেটিভিটি🩸নর্মি একটা🙂
             </p>
           </CardContent>
           <CardFooter className="flex justify-around py-4">
