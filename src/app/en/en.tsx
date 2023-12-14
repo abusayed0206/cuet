@@ -24,7 +24,7 @@ export default function Component() {
           <Button className="absolute top-0 right-0 mt-4 mr-4 text-white hover:text-red-800 ">
             <Link
               aria-label="বাংলা"
-              className="text-white hover:text-red-800 "
+              className="text-black hover:text-blue-800 underline"
               href="/"
             >
               বাংলা
@@ -32,7 +32,7 @@ export default function Component() {
             |
             <Link
               aria-label="English"
-              className="text-black hover:text-blue-800 underline"
+              className="text-white hover:text-red-800 "
               href="/en"
             >
               English
@@ -45,16 +45,16 @@ export default function Component() {
                 className="rounded-full"
                 src="https://cdn.hashnode.com/res/hashnode/image/upload/v1699648553222/cHpLJnlzJ.jpg?w=500&h=500&fit=crop&crop=faces&auto=compress,format&format=webp"
               />
-              <AvatarFallback className="rounded-full">সাঈদ</AvatarFallback>
+              <AvatarFallback className="rounded-full">Sayed</AvatarFallback>
             </Avatar>
-            <CardTitle className="text-2xl font-bold">সাঈদ</CardTitle>
+            <CardTitle className="text-2xl font-bold">Sayed</CardTitle>
             <CardDescription className="text-center text-gray-500">
-              পুরকৌশল শিক্ষার্থী | চুয়েট
+              Civil Engineering Student | CUET
             </CardDescription>
           </CardHeader>
           <CardContent className="p-4 border-t border-b ">
             <p className="text-sm text-center">
-              রক্তে রক্তে নেগেটিভিটি🩸🙂
+              Negative by Blood🩸 Just a Normie🙂
             </p>
           </CardContent>
           <CardFooter className="flex justify-around py-4">
