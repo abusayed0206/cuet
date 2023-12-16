@@ -43,7 +43,7 @@ export default function Component() {
               <AvatarImage
                 alt="A smily face of Sayed"
                 className="rounded-full"
-                src="https://cdn.hashnode.com/res/hashnode/image/upload/v1699648553222/cHpLJnlzJ.jpg?w=500&h=500&fit=crop&crop=faces&auto=compress,format&format=webp"
+                src="https://abusayed.vercel.app/static/media/sayed.5022f8e22eb97adb250a.jpg"
               />
               <AvatarFallback className="rounded-full">Lutfor Rashid Sayed</AvatarFallback>
             </Avatar>
