@@ -118,9 +118,9 @@ export default function Component() {
               <SiTrakt />
             </Link>
           </CardFooter>
-          <div style={{ borderRadius: "8px", overflow: "hidden" }}>
+          <div style={{ borderRadius: "16px", overflow: "hidden" }}>
             <img
-              src="https://trakt-sayed.vercel.app/lrs/watched/banner"
+              src="https://trakt-widgets.vercel.app/lrs/watched/banner"
               alt="Trakt.tv banner"
               width="395"
             />
