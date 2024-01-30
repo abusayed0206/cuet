@@ -5,6 +5,7 @@ import { VscGithubInverted } from "react-icons/vsc";
 import { TfiEmail } from "react-icons/tfi";
 import { FaHashnode } from "react-icons/fa6";
 import { BiKey } from "react-icons/bi";
+import { FaDiscord } from "react-icons/fa6";
 import {
   CardTitle,
   CardDescription,
@@ -45,9 +46,13 @@ export default function Component() {
                 className="rounded-full"
                 src="https://abusayed.vercel.app/static/media/sayed.5022f8e22eb97adb250a.jpg"
               />
-              <AvatarFallback className="rounded-full">Lutfor Rashid Sayed</AvatarFallback>
+              <AvatarFallback className="rounded-full">
+                Lutfor Rashid Sayed
+              </AvatarFallback>
             </Avatar>
-            <CardTitle className="text-2xl font-bold">Lutfor Rashid Sayed</CardTitle>
+            <CardTitle className="text-2xl font-bold">
+              Lutfor Rashid Sayed
+            </CardTitle>
             <CardDescription className="text-center text-gray-500">
               Civil Engineering Student | CUET
             </CardDescription>
@@ -60,7 +65,7 @@ export default function Component() {
           <CardFooter className="flex justify-around py-4">
             <Link
               aria-label="Email"
-              className="text-gray-500 hover:text-gray-600"
+              className="text-blue-700 hover:text-gray-600"
               href="mailto:hello@sayed.page"
               target="_blank"
             >
@@ -84,7 +89,7 @@ export default function Component() {
             </Link>
             <Link
               aria-label="GitHub"
-              className="text-gray-900 hover:text-gray-800"
+              className="text-blue-700 hover:text-gray-800"
               href="https://github.com/abusayed0206"
               target="_blank"
             >
@@ -105,6 +110,14 @@ export default function Component() {
               target="_blank"
             >
               <FaHashnode />
+            </Link>
+            <Link
+              aria-label="Discord"
+              className="text-blue-700 hover:text-blue-800"
+              href="https://discordapp.com/users/852836480262209557"
+              target="_blank"
+            >
+              <FaDiscord />
             </Link>
           </CardFooter>
 

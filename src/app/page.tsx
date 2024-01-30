@@ -5,6 +5,7 @@ import { VscGithubInverted } from "react-icons/vsc";
 import { TfiEmail } from "react-icons/tfi";
 import { FaHashnode } from "react-icons/fa6";
 import { BiKey } from "react-icons/bi";
+import { SiTrakt } from "react-icons/si";
 import {
   CardTitle,
   CardDescription,
@@ -47,7 +48,9 @@ export default function Component() {
               />
               <AvatarFallback className="rounded-full">সাঈদ</AvatarFallback>
             </Avatar>
-            <CardTitle className="text-2xl font-bold">লূৎফুর রশীদ সাঈদ</CardTitle>
+            <CardTitle className="text-2xl font-bold">
+              লূৎফুর রশীদ সাঈদ
+            </CardTitle>
             <CardDescription className="text-center text-gray-500">
               পুরকৌশল শিক্ষার্থী | চুয়েট
             </CardDescription>
@@ -60,7 +63,7 @@ export default function Component() {
           <CardFooter className="flex justify-around py-4">
             <Link
               aria-label="Email"
-              className="text-gray-500 hover:text-gray-600"
+              className="text-blue-800 hover:text-gray-600"
               href="mailto:hello@sayed.page"
               target="_blank"
             >
@@ -84,7 +87,7 @@ export default function Component() {
             </Link>
             <Link
               aria-label="GitHub"
-              className="text-gray-900 hover:text-gray-800"
+              className="text-blue-900 hover:text-gray-800"
               href="https://github.com/abusayed0206"
               target="_blank"
             >
@@ -106,14 +109,20 @@ export default function Component() {
             >
               <FaHashnode />
             </Link>
+            <Link
+              aria-label="Trakt.tv"
+              className="text-red-900 hover:text-gray-800"
+              href="https://trakt.tv/users/lrs"
+              target="_blank"
+            >
+              <SiTrakt />
+            </Link>
           </CardFooter>
-
-          <div style={{ borderRadius: "16px", overflow: "hidden" }}>
+          <div style={{ borderRadius: "8px", overflow: "hidden" }}>
             <img
-              src="https://discord.c99.nl/widget/theme-3/852836480262209557.png"
-              alt="Discord Widget"
+              src="https://trakt-sayed.vercel.app/lrs/watched/banner"
+              alt="Trakt.tv banner"
               width="395"
-              height="80"
             />
           </div>
         </Card>
