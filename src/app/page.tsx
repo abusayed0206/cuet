@@ -112,8 +112,7 @@ export default function Component() {
             <Link
               aria-label="Trakt.tv"
               className="text-red-900 hover:text-gray-800"
-              href="https://trakt.tv/users/lrs"
-              target="_blank"
+              href="/tv"
             >
               <SiTrakt />
             </Link>
