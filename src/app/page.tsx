@@ -6,6 +6,7 @@ import { TfiEmail } from "react-icons/tfi";
 import { FaHashnode } from "react-icons/fa6";
 import { BiKey } from "react-icons/bi";
 import { SiTrakt } from "react-icons/si";
+import { FaMastodon } from "react-icons/fa6";
 import {
   CardTitle,
   CardDescription,
@@ -108,6 +109,14 @@ export default function Component() {
               target="_blank"
             >
               <FaHashnode />
+            </Link>
+            <Link
+              aria-label="Mastodon"
+              className="text-blue-700 hover:text-blue-800"
+              rel="me" href="https://mastodon.social/@abusayed"
+              target="_blank"
+            >
+              <FaMastodon />
             </Link>
             <Link
               aria-label="Trakt.tv"
