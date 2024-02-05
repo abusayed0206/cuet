@@ -2,11 +2,13 @@ import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
 import { GrLinkedin } from "react-icons/gr";
 import { BsTwitterX } from "react-icons/bs";
 import { VscGithubInverted } from "react-icons/vsc";
-import { TfiEmail } from "react-icons/tfi";
 import { FaHashnode } from "react-icons/fa6";
 import { BiKey } from "react-icons/bi";
 import { SiTrakt } from "react-icons/si";
 import { FaMastodon } from "react-icons/fa6";
+import { MdMarkEmailUnread } from "react-icons/md";
+import { SiLichess } from "react-icons/si";
+import { FaDiscord } from "react-icons/fa6";
 import {
   CardTitle,
   CardDescription,
@@ -68,7 +70,7 @@ export default function Component() {
               href="mailto:hello@sayed.page"
               target="_blank"
             >
-              <TfiEmail />
+              <MdMarkEmailUnread />
             </Link>
             <Link
               aria-label="PGP Key"
@@ -95,6 +97,23 @@ export default function Component() {
               <VscGithubInverted />
             </Link>
             <Link
+              aria-label="Discord"
+              className="text-blue-700 hover:text-blue-800"
+              href="https://discordapp.com/users/852836480262209557"
+              target="_blank"
+            >
+              <FaDiscord />
+            </Link>
+          </CardFooter>
+          <CardFooter className="flex justify-around py-4">
+            <Link
+              aria-label="Lichess"
+              className="text-blue-700 hover:text-blue-800"
+              href="/lichess"
+            >
+              <SiLichess />
+            </Link>
+            <Link
               aria-label="LinkedIn"
               className="text-blue-700 hover:text-blue-800"
               href="https://linkedin.com/in/abusayed0206"
@@ -113,7 +132,8 @@ export default function Component() {
             <Link
               aria-label="Mastodon"
               className="text-blue-700 hover:text-blue-800"
-              rel="me" href="https://mastodon.social/@abusayed"
+              rel="me"
+              href="https://mastodon.social/@abusayed"
               target="_blank"
             >
               <FaMastodon />
