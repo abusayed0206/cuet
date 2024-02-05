@@ -109,7 +109,8 @@ export default function Component() {
             <Link
               aria-label="Lichess"
               className="text-blue-700 hover:text-blue-800"
-              href="/lichess"
+              href="https://lichess.org/@/abusayed0206"
+              target="_blank"
             >
               <SiLichess />
             </Link>
