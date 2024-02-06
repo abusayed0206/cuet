@@ -1,10 +1,7 @@
-// Code: Lichess page
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { SiLichess } from "react-icons/si";
 import { Card } from "@/components/ui/card";
-import Head from "next/head";
-import LichessProfile from "@/components/ui/LichessWidget";
 
 export default function Component() {
   return (
@@ -33,11 +30,28 @@ export default function Component() {
                 Home|বাড়ি
               </Link>
             </Button>
-            <div>
-              <h1 className="fles items-center content-center">
-                Lichess Profile
-              </h1>
-              <LichessProfile />
+            <div
+              style={{
+                position: "relative",
+                overflow: "hidden",
+                width: "370px",
+                height: "175px",
+                borderRadius: "5%",
+              }}
+            >
+              <iframe
+                src="/lichess.html"
+                width="400px"
+                height="200px"
+                style={{
+                  position: "absolute",
+                  top: "-4px",
+                  left: "-10px",
+                  bottom: 0,
+                  right: 0,
+                  border: "none",
+                }}
+              ></iframe>
             </div>
           </Card>
         </div>
