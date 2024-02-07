@@ -9,7 +9,6 @@ import { FaMastodon } from "react-icons/fa6";
 import { MdMarkEmailUnread } from "react-icons/md";
 import { SiLichess } from "react-icons/si";
 import { FaDiscord } from "react-icons/fa6";
-import LastFMPlaylist from "lastfm_playlist";
 import {
   CardTitle,
   CardDescription,
@@ -153,9 +152,6 @@ export default function Component() {
               alt="Trakt.tv banner"
               width="395"
             />
-          </div>
-          <div style={{ borderRadius: "16px", overflow: "hidden" }}>
-            <LastFMPlaylist user={"username"} refresh={30} limit={5} />
           </div>
         </Card>
       </div>
