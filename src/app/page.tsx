@@ -153,6 +153,10 @@ export default function Component() {
               width="395"
             />
           </div>
+
+          <a href="https://sayed.page/now-playing">
+    <img src="https://sayed.page/now-playing" width="256" height="64" alt="Now Playing"/>`
+</a>
         </Card>
       </div>
     </>
