@@ -9,7 +9,6 @@ import { FaMastodon } from "react-icons/fa6";
 import { MdMarkEmailUnread } from "react-icons/md";
 import { SiLichess } from "react-icons/si";
 import { FaDiscord } from "react-icons/fa6";
-import Image from "next/image";
 import {
   CardTitle,
   CardDescription,
@@ -20,18 +19,10 @@ import {
 } from "@/components/ui/card";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import Head from "next/head";
 
 export default function Component() {
   return (
     <>
-      <Head>
-        <link
-          rel="preload"
-          href="https://bing.biturl.top/?resolution=1920&format=image&index=0&mkt=en-US"
-          as="image"
-        />
-      </Head>
       <div className="bg-[url('https://bing.biturl.top/?resolution=1920&format=image&index=0&mkt=en-US')] min-h-screen flex items-center justify-center">
         <Card className="max-w-auto mx-4 bg-[rgb(255,255,255)] text-[#000000]">
           <Button className="absolute top-0 right-0 mt-4 mr-4 text-white hover:text-red-800 ">
@@ -159,12 +150,11 @@ export default function Component() {
           </CardFooter>
 
           <div style={{ borderRadius: "16px", overflow: "hidden" }}>
-            <Image
+            <img
               src="https://discord.c99.nl/widget/theme-3/852836480262209557.png"
-              width={395}
-              height={80}
-              alt="My Discord Status"
-              priority={true}
+              alt="Discord Widget"
+              width="395"
+              height="80"
             />
           </div>
         </Card>
