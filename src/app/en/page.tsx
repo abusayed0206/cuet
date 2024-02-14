@@ -149,14 +149,21 @@ export default function Component() {
             </Link>
           </CardFooter>
 
-          <div style={{ borderRadius: "16px", overflow: "hidden" }}>
-            <img
-              src="https://discord.c99.nl/widget/theme-3/852836480262209557.png"
-              alt="Discord Widget"
-              width="395"
-              height="80"
-            />
-          </div>
+          <Link
+            aria-label="Discord"
+            className="text-blue-700 hover:text-blue-800"
+            href="https://discordapp.com/users/852836480262209557"
+            target="_blank"
+          >
+            <div style={{ borderRadius: "16px", overflow: "hidden" }}>
+              <img
+                src="https://discord.c99.nl/widget/theme-3/852836480262209557.png"
+                alt="Discord Widget"
+                width="395"
+                height="80"
+              />
+            </div>
+          </Link>
         </Card>
       </div>
     </>
