@@ -107,13 +107,6 @@ export default function Component() {
           </CardFooter>
           <CardFooter className="flex justify-around py-4">
             <Link
-              aria-label="Lichess"
-              className="text-blue-700 hover:text-blue-800"
-              href="/lichess"
-            >
-              <SiLichess />
-            </Link>
-            <Link
               aria-label="LinkedIn"
               className="text-blue-700 hover:text-blue-800"
               href="https://linkedin.com/in/abusayed0206"
