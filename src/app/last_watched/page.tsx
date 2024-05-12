@@ -32,7 +32,7 @@ export default function Component() {
           <Link
             aria-label="Trakt.tv"
             className="text-blue-700 hover:text-blue-800"
-            href="https://trakt-widgets.vercel.app/pizidavi/watched/card"
+            href="https://trakt-widgets.vercel.app/lrs/watched/card"
             target="_blank"
           >
             <div style={{ borderRadius: "16px", overflow: "hidden" }}>
