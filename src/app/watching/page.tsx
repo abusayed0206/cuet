@@ -30,9 +30,9 @@ export default function Component() {
           </Button>
 
           <Link
-            aria-label="Lichess"
+            aria-label="Trakt.tv"
             className="text-blue-700 hover:text-blue-800"
-            href="https://trakt.tv/users/lrs"
+            href="https://trakt-widgets.vercel.app/pizidavi/watching/card"
             target="_blank"
           >
             <div style={{ borderRadius: "16px", overflow: "hidden" }}>

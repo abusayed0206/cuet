@@ -29,10 +29,10 @@ export default function Component() {
             </Link>
           </Button>
 
-          <LinkLink
-            aria-label="Lichess"
+          <Link
+            aria-label="Trakt.tv"
             className="text-blue-700 hover:text-blue-800"
-            href="https://trakt.tv/userLinLins"
+            href="https://trakt-widgets.vercel.app/pizidavi/watched/card"
             target="_blank"
           >
             <div style={{ borderRadius: "16px", overflow: "hidden" }}>

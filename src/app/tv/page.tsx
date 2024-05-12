@@ -30,7 +30,7 @@ export default function Component() {
           </Button>
 
           <Link
-            aria-label="Lichess"
+            aria-label="Trakt.tv"
             className="text-blue-700 hover:text-blue-800"
             href="https://trakt.tv/users/lrs"
             target="_blank"
