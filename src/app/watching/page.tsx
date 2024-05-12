@@ -32,12 +32,12 @@ export default function Component() {
           <Link
             aria-label="Trakt.tv"
             className="text-blue-700 hover:text-blue-800"
-            href="https://trakt-widgets.vercel.app/lrs/watching/card"
+            href="https://trakt.tv/users/lrs"
             target="_blank"
           >
             <div style={{ borderRadius: "16px", overflow: "hidden" }}>
               <img
-                src="https://trakt-widgets.vercel.app/lrs/profile/poster"
+                src="https://trakt-widgets.vercel.app/lrs/watching/card"
                 alt="Trakt.tv banner"
               />
             </div>
