@@ -2,13 +2,10 @@ import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
 import { GrLinkedin } from "react-icons/gr";
 import { BsTwitterX } from "react-icons/bs";
 import { VscGithubInverted } from "react-icons/vsc";
-import { FaHashnode } from "react-icons/fa6";
 import { BiKey } from "react-icons/bi";
 import { SiTrakt } from "react-icons/si";
-import { FaMastodon } from "react-icons/fa6";
+import { FaMastodon, FaOrcid, FaHashnode, FaDiscord } from "react-icons/fa6";
 import { MdMarkEmailUnread } from "react-icons/md";
-import { SiLichess } from "react-icons/si";
-import { FaDiscord } from "react-icons/fa6";
 import {
   CardTitle,
   CardDescription,
@@ -25,10 +22,10 @@ export default function Component() {
     <>
       <div className="bg-[url('https://bing.biturl.top/?resolution=1920&format=image&index=0&mkt=en-US')] min-h-screen flex items-center justify-center">
         <Card className="max-w-auto mx-4 bg-[rgb(255,255,255)] text-[#000000]">
-          <Button className="absolute top-0 right-0 mt-4 mr-4 text-white hover:text-red-800 ">
+          <Button className="absolute top-0 right-0 mt-4 mr-4 p-2 bg-black text-white hover:text-red-800 border border-white">
             <Link
               aria-label="বাংলা"
-              className="text-black hover:text-blue-800 underline"
+              className="text-white hover:text-blue-800  mr-2"
               href="/"
             >
               বাংলা
@@ -36,12 +33,13 @@ export default function Component() {
             |
             <Link
               aria-label="English"
-              className="text-white hover:text-red-800 "
+              className="text-white hover:text-red-800 ml-2 underline"
               href="/en"
             >
               English
             </Link>
           </Button>
+
           <CardHeader className="flex flex-col items-center pt-6">
             <Avatar className="w-28 h-28 mb-4">
               <AvatarImage
@@ -74,14 +72,7 @@ export default function Component() {
             >
               <MdMarkEmailUnread />
             </Link>
-            <Link
-              aria-label="PGP Key"
-              className="text-blue-700 hover:text-blue-800"
-              href="Abu Sayed_0x081A22B2_public.asc"
-              target="_blank"
-            >
-              <BiKey />
-            </Link>
+
             <Link
               aria-label="Twitter"
               className="text-blue-500 hover:text-blue-600"
@@ -99,16 +90,6 @@ export default function Component() {
               <VscGithubInverted />
             </Link>
             <Link
-              aria-label="Discord"
-              className="text-blue-700 hover:text-blue-800"
-              href="https://discordapp.com/users/852836480262209557"
-              target="_blank"
-            >
-              <FaDiscord />
-            </Link>
-          </CardFooter>
-          <CardFooter className="flex justify-around py-4">
-            <Link
               aria-label="LinkedIn"
               className="text-blue-700 hover:text-blue-800"
               href="https://linkedin.com/in/abusayed0206"
@@ -116,6 +97,25 @@ export default function Component() {
             >
               <GrLinkedin />
             </Link>
+            <Link
+              aria-label="ORCID"
+              className="text-blue-700 hover:text-blue-800"
+              href="https://orcid.org/0009-0007-8994-5252"
+              target="_blank"
+            >
+              <FaOrcid />
+            </Link>
+          </CardFooter>
+          <CardFooter className="flex justify-around py-4">
+            <Link
+              aria-label="Discord"
+              className="text-blue-700 hover:text-blue-800"
+              href="https://discordapp.com/users/852836480262209557"
+              target="_blank"
+            >
+              <FaDiscord />
+            </Link>
+
             <Link
               aria-label="Blog"
               className="text-blue-700 hover:text-blue-800"
@@ -128,10 +128,18 @@ export default function Component() {
               aria-label="Mastodon"
               className="text-blue-700 hover:text-blue-800"
               rel="me"
-              href="https://linux.social/@lrs"
+              href="https://mastodon.social/@abusayed"
               target="_blank"
             >
               <FaMastodon />
+            </Link>
+            <Link
+              aria-label="PGP Key"
+              className="text-blue-700 hover:text-blue-800"
+              href="Abu Sayed_0x081A22B2_public.asc"
+              target="_blank"
+            >
+              <BiKey />
             </Link>
             <Link
               aria-label="Trakt.tv"
