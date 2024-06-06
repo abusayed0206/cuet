@@ -4,6 +4,7 @@ import { BsTwitterX } from "react-icons/bs";
 import { VscGithubInverted } from "react-icons/vsc";
 import { BiKey } from "react-icons/bi";
 import { SiTrakt } from "react-icons/si";
+import Image from "next/image";
 import { FaMastodon, FaOrcid, FaHashnode, FaDiscord } from "react-icons/fa6";
 import { MdMarkEmailUnread } from "react-icons/md";
 import {
@@ -146,12 +147,18 @@ export default function Component() {
               <SiTrakt />
             </Link>
           </CardFooter>
-          <Link aria-label="সর্বশেষ দেখা মুভি/টিভি সিরিজ রিভিউ" href="https://recap.sayed.page/" target="_blank">
+          <Link
+            aria-label="সর্বশেষ দেখা মুভি/টিভি সিরিজ রিভিউ"
+            href="https://recap.sayed.page/"
+            target="_blank"
+          >
             <div style={{ borderRadius: "16px", overflow: "hidden" }}>
-              <img
+              <Image
                 src="/recap.png"
                 alt="সর্বশেষ দেখা মুভি/টিভি সিরিজ"
-                width="395"
+                width={395}
+                height={50}
+                priority={true}
               />
             </div>
           </Link>
