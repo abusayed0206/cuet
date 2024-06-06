@@ -133,7 +133,7 @@ export default function Component() {
             <Link
               aria-label="PGP Key"
               className="text-blue-700 hover:text-blue-800"
-              href="Abu Sayed_0x081A22B2_public.asc"
+              href="gpg-public-key.asc"
               target="_blank"
             >
               <BiKey />
@@ -146,10 +146,10 @@ export default function Component() {
               <SiTrakt />
             </Link>
           </CardFooter>
-          <Link aria-label="সর্বশেষ দেখা মুভি/টিভি সিরিজ" href="/tv">
+          <Link aria-label="সর্বশেষ দেখা মুভি/টিভি সিরিজ রিভিউ" href="https://recap.sayed.page/" target="_blank">
             <div style={{ borderRadius: "16px", overflow: "hidden" }}>
               <img
-                src="https://trakt-widgets.vercel.app/lrs/watched/banner"
+                src="/recap.png"
                 alt="সর্বশেষ দেখা মুভি/টিভি সিরিজ"
                 width="395"
               />

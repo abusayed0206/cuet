@@ -136,7 +136,7 @@ export default function Component() {
             <Link
               aria-label="PGP Key"
               className="text-blue-700 hover:text-blue-800"
-              href="Abu Sayed_0x081A22B2_public.asc"
+              href="gpg-public-key.asc"
               target="_blank"
             >
               <BiKey />
@@ -151,14 +151,14 @@ export default function Component() {
           </CardFooter>
 
           <Link
-            aria-label="Discord"
+            aria-label="Last Watched movie/episode"
             className="text-blue-700 hover:text-blue-800"
-            href="https://discordapp.com/users/852836480262209557"
+            href="https://trakt.tv/users/lrs"
             target="_blank"
           >
             <div style={{ borderRadius: "16px", overflow: "hidden" }}>
               <img
-                src="https://discord.c99.nl/widget/theme-3/852836480262209557.png"
+                src="https://trakt-widgets.vercel.app/lrs/watched/banner"
                 alt="Discord Widget"
                 width="395"
                 height="80"
