@@ -26,7 +26,7 @@ export default function Component() {
             <Link
               aria-label="Index"
               className="text-white hover:text-blue-800 mr-2"
-              href="https://index.sayed.page/"
+              href="https://index.sayed.page/en"
               target="_blank"
             >
               Index
