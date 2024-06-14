@@ -40,11 +40,12 @@ export default function Component() {
               English
             </Link>
           </Button>
-          <Button className="absolute top-0 left-0 mt-4 mr-4 p-2 bg-black text-white hover:text-red-800 border border-white">
+          <Button className="absolute top-0 left-0 mt-4 ml-4 p-2 bg-black text-white hover:text-red-800 border border-white">
             <Link
               aria-label="সূচিপত্র"
               className="text-white hover:text-blue-800 mr-2"
               href="https://index.sayed.page/"
+              target="_blank"
             >
               সূচিপত্র
             </Link>
