@@ -22,6 +22,15 @@ export default function Component() {
     <>
       <div className="bg-[url('https://bing.biturl.top/?resolution=1920&format=image&index=0&mkt=en-US')] min-h-screen flex items-center justify-center">
         <Card className="max-w-auto mx-4 bg-[rgb(255,255,255)] text-[#000000]">
+          <Button className="absolute top-0 left-0 mt-4 mr-4 p-2 bg-black text-white hover:text-red-800 border border-white">
+            <Link
+              aria-label="Index"
+              className="text-white hover:text-blue-800 mr-2"
+              href="https://index.sayed.page/"
+            >
+              Index
+            </Link>
+          </Button>
           <Button className="absolute top-0 right-0 mt-4 mr-4 p-2 bg-black text-white hover:text-red-800 border border-white">
             <Link
               aria-label="বাংলা"
