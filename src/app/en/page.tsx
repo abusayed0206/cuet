@@ -4,8 +4,11 @@ import { BsTwitterX } from "react-icons/bs";
 import { VscGithubInverted } from "react-icons/vsc";
 import { BiKey } from "react-icons/bi";
 import { SiTrakt } from "react-icons/si";
-import { FaMastodon, FaOrcid, FaHashnode, FaDiscord } from "react-icons/fa6";
-import { MdMarkEmailUnread } from "react-icons/md";
+import Image from "next/image";
+import { ImProfile } from "react-icons/im";
+import { LiaOrcid } from "react-icons/lia";
+import { FaMastodon, FaHashnode, FaDiscord } from "react-icons/fa6";
+import { MdOutlineMarkEmailUnread } from "react-icons/md";
 import {
   CardTitle,
   CardDescription,
@@ -61,11 +64,13 @@ export default function Component() {
                 Lutfor Rashid Sayed
               </AvatarFallback>
             </Avatar>
-            <CardTitle className="text-2xl font-bold">
+            <CardTitle className="text-3xl font-bold">
               Lutfor Rashid Sayed
             </CardTitle>
             <CardDescription className="text-center text-gray-500">
-              Civil Engineering Student | CUET
+              <Link href="https://cv.sayed.page/" target="_blank">
+                Civil Engineering Student | CUET
+              </Link>
             </CardDescription>
           </CardHeader>
           <CardContent className="p-4 border-t border-b ">
@@ -74,107 +79,176 @@ export default function Component() {
             </p>
           </CardContent>
           <CardFooter className="flex justify-around py-4">
-            <Link
-              aria-label="Email"
-              className="text-blue-800 hover:text-gray-600"
-              href="mailto:hello@sayed.page"
-              target="_blank"
-            >
-              <MdMarkEmailUnread />
-            </Link>
-
-            <Link
-              aria-label="Twitter"
-              className="text-blue-500 hover:text-blue-600"
-              href="https://twitter.com/abusayed0206"
-              target="_blank"
-            >
-              <BsTwitterX />
-            </Link>
-            <Link
-              aria-label="GitHub"
-              className="text-blue-900 hover:text-gray-800"
-              href="https://github.com/abusayed0206"
-              target="_blank"
-            >
-              <VscGithubInverted />
-            </Link>
-            <Link
-              aria-label="LinkedIn"
-              className="text-blue-700 hover:text-blue-800"
-              href="https://linkedin.com/in/abusayed0206"
-              target="_blank"
-            >
-              <GrLinkedin />
-            </Link>
-            <Link
-              aria-label="ORCID"
-              className="text-blue-700 hover:text-blue-800"
-              href="https://orcid.org/0009-0007-8994-5252"
-              target="_blank"
-            >
-              <FaOrcid />
-            </Link>
-          </CardFooter>
-          <CardFooter className="flex justify-around py-4">
-            <Link
-              aria-label="Discord"
-              className="text-blue-700 hover:text-blue-800"
-              href="https://discordapp.com/users/852836480262209557"
-              target="_blank"
-            >
-              <FaDiscord />
-            </Link>
-
-            <Link
-              aria-label="Blog"
-              className="text-blue-700 hover:text-blue-800"
-              href="https://abusayed.dev"
-              target="_blank"
-            >
-              <FaHashnode />
-            </Link>
-            <Link
-              aria-label="Mastodon"
-              className="text-blue-700 hover:text-blue-800"
-              rel="me"
-              href="https://mastodon.social/@abusayed"
-              target="_blank"
-            >
-              <FaMastodon />
-            </Link>
-            <Link
-              aria-label="PGP Key"
-              className="text-blue-700 hover:text-blue-800"
-              href="gpg-public-key.asc"
-              target="_blank"
-            >
-              <BiKey />
-            </Link>
-            <Link
-              aria-label="Trakt.tv"
-              className="text-red-900 hover:text-gray-800"
-              href="/tv"
-            >
-              <SiTrakt />
-            </Link>
-          </CardFooter>
-
-          <Link
-            aria-label="Last Watched movie/episode"
-            className="text-blue-700 hover:text-blue-800"
-            href="https://trakt.tv/users/lrs"
-            target="_blank"
-          >
-            <div style={{ borderRadius: "16px", overflow: "hidden" }}>
-              <img
-                src="https://trakt-widgets.vercel.app/lrs/watched/banner"
-                alt="Discord Widget"
-                width="395"
-                height="80"
-              />
+            <div className="flex flex-col items-center text-center">
+              <Link
+                aria-label="CV"
+                className="text-blue-800 hover:text-gray-600 flex flex-col items-center"
+                href="https://cv.sayed.page/"
+                target="_blank"
+              >
+                <ImProfile className="text-2xl mb-1" />
+                <span>CV</span>
+              </Link>
             </div>
-          </Link>
+            <div className="flex flex-col items-center text-center">
+              <Link
+                aria-label="Email"
+                className="text-blue-800 hover:text-gray-600 flex flex-col items-center"
+                href="mailto:hello@sayed.page"
+                target="_blank"
+              >
+                <MdOutlineMarkEmailUnread className="text-2xl mb-1" />
+                <span>Email</span>
+              </Link>
+            </div>
+
+            <div className="flex flex-col items-center text-center">
+              <Link
+                aria-label="GitHub"
+                className="text-blue-900 hover:text-gray-800 flex flex-col items-center"
+                href="https://github.com/abusayed0206"
+                target="_blank"
+              >
+                <VscGithubInverted className="text-2xl mb-1" />
+                <span>GitHub</span>
+              </Link>
+            </div>
+
+            <div className="flex flex-col items-center text-center">
+              <Link
+                aria-label="LinkedIn"
+                className="text-blue-700 hover:text-blue-800 flex flex-col items-center"
+                href="https://linkedin.com/in/abusayed0206"
+                target="_blank"
+              >
+                <GrLinkedin className="text-2xl mb-1" />
+                <span>LinkedIn</span>
+              </Link>
+            </div>
+          </CardFooter>
+
+          <CardFooter className="flex justify-around py-4">
+            <div className="flex flex-col items-center text-center">
+              <Link
+                aria-label="PGP Key"
+                className="text-blue-700 hover:text-blue-800 flex flex-col items-center"
+                href="gpg-public-key.asc"
+                target="_blank"
+              >
+                <BiKey className="text-2xl mb-1" />
+                <span>PGP Key</span>
+              </Link>
+            </div>
+
+            <div className="flex flex-col items-center text-center">
+              <Link
+                aria-label="ORCID"
+                className="text-blue-700 hover:text-blue-800 flex flex-col items-center"
+                href="https://orcid.org/0009-0007-8994-5252"
+                target="_blank"
+              >
+                <LiaOrcid className="text-2xl mb-1" />
+                <span>ORCID</span>
+              </Link>
+            </div>
+
+            <div className="flex flex-col items-center text-center">
+              <Link
+                aria-label="Twitter"
+                className="text-blue-500 hover:text-blue-600 flex flex-col items-center"
+                href="https://twitter.com/abusayed0206"
+                target="_blank"
+              >
+                <BsTwitterX className="text-2xl mb-1" />
+                <span>Twitter</span>
+              </Link>
+            </div>
+          </CardFooter>
+
+          <CardFooter className="flex justify-around py-4">
+            <div className="flex flex-col items-center text-center">
+              <Link
+                aria-label="Discord"
+                className="text-blue-700 hover:text-blue-800 flex flex-col items-center"
+                href="https://discordapp.com/users/852836480262209557"
+                target="_blank"
+              >
+                <FaDiscord className="text-2xl mb-1" />
+                <span>Discord</span>
+              </Link>
+            </div>
+
+            <div className="flex flex-col items-center text-center">
+              <Link
+                aria-label="Blog"
+                className="text-blue-700 hover:text-blue-800 flex flex-col items-center"
+                href="https://abusayed.dev"
+                target="_blank"
+              >
+                <FaHashnode className="text-2xl mb-1" />
+                <span>Blog</span>
+              </Link>
+            </div>
+
+            <div className="flex flex-col items-center text-center">
+              <Link
+                aria-label="Mastodon"
+                className="text-blue-700 hover:text-blue-800 flex flex-col items-center"
+                rel="me"
+                href="https://mastodon.social/@abusayed"
+                target="_blank"
+              >
+                <FaMastodon className="text-2xl mb-1" />
+                <span>Mastodon</span>
+              </Link>
+            </div>
+
+            <div className="flex flex-col items-center text-center">
+              <Link
+                aria-label="Trakt.tv"
+                className="text-blue-700 hover:text-blue-800 flex flex-col items-center"
+                href="/tv"
+              >
+                <SiTrakt className="text-2xl mb-1" />
+                <span>Trakt.tv</span>
+              </Link>
+            </div>
+          </CardFooter>
+          <CardFooter className="flex flex-wrap justify-around py-4">
+            <div className="w-full sm:w-1/2 p-2">
+              <Link
+                aria-label="সর্বশেষ দেখা মুভি/টিভি সিরিজ রিভিউ"
+                href="https://recap.sayed.page/"
+                target="_blank"
+              >
+                <div className="rounded-lg overflow-hidden">
+                  <Image
+                    src="/recap_en.png"
+                    alt="Movie/TV Series Recap"
+                    width={395}
+                    height={50}
+                    priority={true}
+                  />
+                </div>
+              </Link>
+            </div>
+            <div className="w-full sm:w-1/2 p-2">
+              <Link
+                aria-label="Trakt Watched Banner"
+                href="https://trakt.tv/users/lrs"
+                target="_blank"
+              >
+                <div className="rounded-lg overflow-hidden">
+                  <img
+                    src="https://trakt-widgets.vercel.app/lrs/watched/banner"
+                    alt="Trakt Watched Banner"
+                    width={395}
+                    height={50}
+                  />
+                </div>
+              </Link>
+            </div>
+          </CardFooter>
         </Card>
       </div>
     </>
