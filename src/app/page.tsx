@@ -24,34 +24,38 @@ export default function Component() {
   return (
     <>
       <div className="bg-[url('https://bing.biturl.top/?resolution=1920&format=image&index=0&mkt=en-US')] min-h-screen flex items-center justify-center">
-        <Card className="max-w-auto mx-4 bg-[rgb(255,255,255)] text-[#000000]">
-          <Button className="absolute top-0 right-0 mt-4 mr-4 p-2 bg-black text-white hover:text-red-800 border border-white">
-            <Link
-              aria-label="বাংলা"
-              className="text-white hover:text-blue-800 underline mr-2"
-              href="/"
-            >
-              বাংলা
-            </Link>
-            |
-            <Link
-              aria-label="English"
-              className="text-white hover:text-red-800 ml-2"
-              href="/en"
-            >
-              English
-            </Link>
-          </Button>
-          <Button className="absolute top-0 left-0 mt-4 ml-4 p-2 bg-black text-white hover:text-red-800 border border-white">
-            <Link
-              aria-label="সূচিপত্র"
-              className="text-white hover:text-blue-800 mr-2"
-              href="https://index.sayed.page/"
-              target="_blank"
-            >
-              সূচিপত্র
-            </Link>
-          </Button>
+        <Card className="max-w-auto mx-4 bg-[rgb(255,255,255)] text-[#000000] relative">
+          <div className="absolute top-0 right-0 mt-4 mr-4">
+            <Button className="p-2 bg-black text-white hover:text-red-800 border border-white">
+              <Link
+                aria-label="বাংলা"
+                className="text-white hover:text-blue-800 underline mr-2"
+                href="/"
+              >
+                বাংলা
+              </Link>
+              |
+              <Link
+                aria-label="English"
+                className="text-white hover:text-red-800 ml-2"
+                href="/en"
+              >
+                English
+              </Link>
+            </Button>
+          </div>
+          <div className="absolute top-0 left-0 mt-4 ml-4">
+            <Button className="p-2 bg-black text-white hover:text-red-800 border border-white">
+              <Link
+                aria-label="সূচিপত্র"
+                className="text-white hover:text-blue-800 mr-2"
+                href="https://index.sayed.page/"
+                target="_blank"
+              >
+                সূচিপত্র
+              </Link>
+            </Button>
+          </div>
           <CardHeader className="flex flex-col items-center pt-6">
             <Avatar className="w-28 h-28 mb-4">
               <AvatarImage
@@ -73,7 +77,7 @@ export default function Component() {
               রক্তে রক্তে নেগেটিভিটি🩸নর্মি একটা🙂
             </p>
           </CardContent>
-          <CardFooter className="flex justify-around py-4">
+          <CardFooter className="flex justify-around py-2">
             <div className="flex flex-col items-center text-center">
               <Link
                 aria-label="CV"
@@ -81,8 +85,8 @@ export default function Component() {
                 href="https://cv.sayed.page/"
                 target="_blank"
               >
-                <ImProfile className="text-2xl mb-1" />
-                <span>সিভি</span>
+                <ImProfile className="text-base mb-1"  />
+                <span className="text-sm italic">সিভি</span>
               </Link>
             </div>
             <div className="flex flex-col items-center text-center">
@@ -92,8 +96,8 @@ export default function Component() {
                 href="mailto:hello@sayed.page"
                 target="_blank"
               >
-                <MdOutlineMarkEmailUnread className="text-2xl mb-1" />
-                <span>ইমেইল</span>
+                <MdOutlineMarkEmailUnread className="text-base mb-1"  />
+                <span className="text-sm italic">ইমেইল</span>
               </Link>
             </div>
 
@@ -104,8 +108,8 @@ export default function Component() {
                 href="https://github.com/abusayed0206"
                 target="_blank"
               >
-                <VscGithubInverted className="text-2xl mb-1" />
-                <span>গিটহাব</span>
+                <VscGithubInverted className="text-base mb-1"  />
+                <span className="text-sm italic">গিটহাব</span>
               </Link>
             </div>
 
@@ -116,13 +120,24 @@ export default function Component() {
                 href="https://linkedin.com/in/abusayed0206"
                 target="_blank"
               >
-                <GrLinkedin className="text-2xl mb-1" />
-                <span>লিংকডইন</span>
+                <GrLinkedin className="text-base mb-1"  />
+                <span className="text-sm italic">লিংকডইন</span>
               </Link>
             </div>
           </CardFooter>
 
-          <CardFooter className="flex justify-around py-4">
+          <CardFooter className="flex justify-around py-2">
+            <div className="flex flex-col items-center text-center">
+              <Link
+                aria-label="Blog"
+                className="text-blue-700 hover:text-blue-800 flex flex-col items-center"
+                href="https://abusayed.dev"
+                target="_blank"
+              >
+                <FaHashnode className="text-base mb-1"  />
+                <span className="text-sm italic">ব্লগ</span>
+              </Link>
+            </div>
             <div className="flex flex-col items-center text-center">
               <Link
                 aria-label="PGP Key"
@@ -130,8 +145,8 @@ export default function Component() {
                 href="gpg-public-key.asc"
                 target="_blank"
               >
-                <BiKey className="text-2xl mb-1" />
-                <span>পিজিপি কী</span>
+                <BiKey className="text-base mb-1"  />
+                <span className="text-sm italic">পিজিপি কী</span>
               </Link>
             </div>
 
@@ -142,8 +157,8 @@ export default function Component() {
                 href="https://orcid.org/0009-0007-8994-5252"
                 target="_blank"
               >
-                <LiaOrcid className="text-2xl mb-1" />
-                <span>অর্কিড</span>
+                <LiaOrcid className="text-base mb-1"  />
+                <span className="text-sm italic">অর্কিড</span>
               </Link>
             </div>
 
@@ -154,37 +169,12 @@ export default function Component() {
                 href="https://twitter.com/abusayed0206"
                 target="_blank"
               >
-                <BsTwitterX className="text-2xl mb-1" />
-                <span>এক্স</span>
+                <BsTwitterX className="text-base mb-1"  />
+                <span className="text-sm italic">এক্স</span>
               </Link>
             </div>
           </CardFooter>
-
-          <CardFooter className="flex justify-around py-4">
-            <div className="flex flex-col items-center text-center">
-              <Link
-                aria-label="Discord"
-                className="text-blue-700 hover:text-blue-800 flex flex-col items-center"
-                href="https://discordapp.com/users/852836480262209557"
-                target="_blank"
-              >
-                <FaDiscord className="text-2xl mb-1" />
-                <span>ডিসকর্ড</span>
-              </Link>
-            </div>
-
-            <div className="flex flex-col items-center text-center">
-              <Link
-                aria-label="Blog"
-                className="text-blue-700 hover:text-blue-800 flex flex-col items-center"
-                href="https://abusayed.dev"
-                target="_blank"
-              >
-                <FaHashnode className="text-2xl mb-1" />
-                <span>ব্লগ</span>
-              </Link>
-            </div>
-
+          <CardFooter className="flex justify-around py-2">
             <div className="flex flex-col items-center text-center">
               <Link
                 aria-label="Mastodon"
@@ -193,8 +183,20 @@ export default function Component() {
                 href="https://mastodon.social/@abusayed"
                 target="_blank"
               >
-                <FaMastodon className="text-2xl mb-1" />
-                <span>মাস্টোডন</span>
+                <FaMastodon className="text-base mb-1"  />
+                <span className="text-sm italic">মাস্টোডন</span>
+              </Link>
+            </div>
+            <div className="flex flex-col items-center text-center">
+              <Link
+                aria-label="Discord"
+                className="text-blue-700 hover:text-blue-800 flex flex-col items-center"
+                href="https://discordapp.com/users/852836480262209557"
+                target="_blank"
+              >
+                <FaDiscord className="text-base mb-1" />
+                <span className="text-sm italic">ডিসকর্ড</span>{" "}
+
               </Link>
             </div>
 
@@ -204,12 +206,13 @@ export default function Component() {
                 className="text-blue-700 hover:text-blue-800 flex flex-col items-center"
                 href="/tv"
               >
-                <SiTrakt className="text-2xl mb-1" />
-                <span>টিভি</span>
+                <SiTrakt className="text-base mb-1"  />
+                <span className="text-sm italic">টিভি</span>
               </Link>
             </div>
           </CardFooter>
-          <CardFooter className="flex flex-wrap justify-around py-4">
+
+          <CardFooter className="flex flex-wrap justify-around py-1">
             <div className="w-full sm:w-1/2 p-2">
               <Link
                 aria-label="সর্বশেষ দেখা মুভি/টিভি সিরিজ রিভিউ"
