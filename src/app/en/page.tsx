@@ -34,14 +34,6 @@ export default function Component() {
               >
                 বাংলা
               </Link>
-              |
-              <Link
-                aria-label="English"
-                className="text-white hover:text-red-800 ml-2 underline"
-                href="/en"
-              >
-                English
-              </Link>
             </Button>
           </div>
           <div className="absolute top-0 left-0 mt-4 ml-4">

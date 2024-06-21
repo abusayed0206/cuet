@@ -28,14 +28,6 @@ export default function Component() {
           <div className="absolute top-0 right-0 mt-4 mr-4">
             <Button className="p-2 bg-black text-white hover:text-red-800 border border-white">
               <Link
-                aria-label="বাংলা"
-                className="text-white hover:text-blue-800 underline mr-2"
-                href="/"
-              >
-                বাংলা
-              </Link>
-              |
-              <Link
                 aria-label="English"
                 className="text-white hover:text-red-800 ml-2"
                 href="/en"
@@ -85,7 +77,7 @@ export default function Component() {
                 href="https://cv.sayed.page/"
                 target="_blank"
               >
-                <ImProfile className="text-base mb-1"  />
+                <ImProfile className="text-base mb-1" />
                 <span className="text-sm italic">সিভি</span>
               </Link>
             </div>
@@ -96,7 +88,7 @@ export default function Component() {
                 href="mailto:hello@sayed.page"
                 target="_blank"
               >
-                <MdOutlineMarkEmailUnread className="text-base mb-1"  />
+                <MdOutlineMarkEmailUnread className="text-base mb-1" />
                 <span className="text-sm italic">ইমেইল</span>
               </Link>
             </div>
@@ -108,7 +100,7 @@ export default function Component() {
                 href="https://github.com/abusayed0206"
                 target="_blank"
               >
-                <VscGithubInverted className="text-base mb-1"  />
+                <VscGithubInverted className="text-base mb-1" />
                 <span className="text-sm italic">গিটহাব</span>
               </Link>
             </div>
@@ -120,7 +112,7 @@ export default function Component() {
                 href="https://linkedin.com/in/abusayed0206"
                 target="_blank"
               >
-                <GrLinkedin className="text-base mb-1"  />
+                <GrLinkedin className="text-base mb-1" />
                 <span className="text-sm italic">লিংকডইন</span>
               </Link>
             </div>
@@ -134,7 +126,7 @@ export default function Component() {
                 href="https://abusayed.dev"
                 target="_blank"
               >
-                <FaHashnode className="text-base mb-1"  />
+                <FaHashnode className="text-base mb-1" />
                 <span className="text-sm italic">ব্লগ</span>
               </Link>
             </div>
@@ -145,7 +137,7 @@ export default function Component() {
                 href="gpg-public-key.asc"
                 target="_blank"
               >
-                <BiKey className="text-base mb-1"  />
+                <BiKey className="text-base mb-1" />
                 <span className="text-sm italic">পিজিপি কী</span>
               </Link>
             </div>
@@ -157,7 +149,7 @@ export default function Component() {
                 href="https://orcid.org/0009-0007-8994-5252"
                 target="_blank"
               >
-                <LiaOrcid className="text-base mb-1"  />
+                <LiaOrcid className="text-base mb-1" />
                 <span className="text-sm italic">অর্কিড</span>
               </Link>
             </div>
@@ -169,7 +161,7 @@ export default function Component() {
                 href="https://twitter.com/abusayed0206"
                 target="_blank"
               >
-                <BsTwitterX className="text-base mb-1"  />
+                <BsTwitterX className="text-base mb-1" />
                 <span className="text-sm italic">এক্স</span>
               </Link>
             </div>
@@ -183,7 +175,7 @@ export default function Component() {
                 href="https://mastodon.social/@abusayed"
                 target="_blank"
               >
-                <FaMastodon className="text-base mb-1"  />
+                <FaMastodon className="text-base mb-1" />
                 <span className="text-sm italic">মাস্টোডন</span>
               </Link>
             </div>
@@ -196,7 +188,6 @@ export default function Component() {
               >
                 <FaDiscord className="text-base mb-1" />
                 <span className="text-sm italic">ডিসকর্ড</span>{" "}
-
               </Link>
             </div>
 
@@ -206,7 +197,7 @@ export default function Component() {
                 className="text-blue-700 hover:text-blue-800 flex flex-col items-center"
                 href="/tv"
               >
-                <SiTrakt className="text-base mb-1"  />
+                <SiTrakt className="text-base mb-1" />
                 <span className="text-sm italic">টিভি</span>
               </Link>
             </div>
