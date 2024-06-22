@@ -212,10 +212,7 @@ export default function Component() {
 
           <CardFooter className="flex flex-wrap justify-around py-1">
             <div className="w-full sm:w-1/3 lg:w-1/3 xl:w-1/3 p-2 flex justify-center sm:justify-start">
-              <Link
-                aria-label="Bookshelf"
-                href="/bookshelf_en"
-              >
+              <Link aria-label="Bookshelf" href="/bookshelf_en">
                 <div className="rounded-lg overflow-hidden">
                   <Image
                     src="/book_en.png"
