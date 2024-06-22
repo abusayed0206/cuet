@@ -209,10 +209,27 @@ export default function Component() {
               </Link>
             </div>
           </CardFooter>
-          <CardFooter className="flex flex-wrap justify-around py">
-            <div className="w-full sm:w-1/2 p-2">
+
+          <CardFooter className="flex flex-wrap justify-around py-1">
+            <div className="w-full sm:w-1/3 lg:w-1/3 xl:w-1/3 p-2 flex justify-center sm:justify-start">
               <Link
-                aria-label="সর্বশেষ দেখা মুভি/টিভি সিরিজ রিভিউ"
+                aria-label="Bookshelf"
+                href="/bookshelf_en"
+              >
+                <div className="rounded-lg overflow-hidden">
+                  <Image
+                    src="/book_en.png"
+                    alt="As many books as I have read since June 2024."
+                    width={395}
+                    height={50}
+                    priority={true}
+                  />
+                </div>
+              </Link>
+            </div>
+            <div className="w-full sm:w-1/3 lg:w-1/3 xl:w-1/3 p-2 flex justify-center sm:justify-start">
+              <Link
+                aria-label="Movies/TV Series Recap"
                 href="https://recap.sayed.page/"
                 target="_blank"
               >
@@ -227,7 +244,7 @@ export default function Component() {
                 </div>
               </Link>
             </div>
-            <div className="w-full sm:w-1/2 p-2">
+            <div className="w-full sm:w-1/3 lg:w-1/3 xl:w-1/3 p-2 flex justify-center sm:justify-start">
               <Link
                 aria-label="Trakt Watched Banner"
                 href="https://trakt.tv/users/lrs"

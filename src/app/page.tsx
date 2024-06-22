@@ -204,7 +204,20 @@ export default function Component() {
           </CardFooter>
 
           <CardFooter className="flex flex-wrap justify-around py-1">
-            <div className="w-full sm:w-1/2 p-2">
+            <div className="w-full sm:w-1/3 lg:w-1/3 xl:w-1/3 p-2 flex justify-center sm:justify-start">
+              <Link aria-label="বইয়ের তাক" href="/bookshelf">
+                <div className="rounded-lg overflow-hidden">
+                  <Image
+                    src="/book.png"
+                    alt="এখন পর্যন্ত যত বই পড়েছি"
+                    width={395}
+                    height={50}
+                    priority={true}
+                  />
+                </div>
+              </Link>
+            </div>
+            <div className="w-full sm:w-1/3 lg:w-1/3 xl:w-1/3 p-2 flex justify-center">
               <Link
                 aria-label="সর্বশেষ দেখা মুভি/টিভি সিরিজ রিভিউ"
                 href="https://recap.sayed.page/"
@@ -221,16 +234,16 @@ export default function Component() {
                 </div>
               </Link>
             </div>
-            <div className="w-full sm:w-1/2 p-2">
+            <div className="w-full sm:w-1/3 lg:w-1/3 xl:w-1/3 p-2 flex justify-center sm:justify-end">
               <Link
-                aria-label="Trakt Watched Banner"
+                aria-label="সর্বশেষ যে মুভি/এপিসোড দেখেছি"
                 href="https://trakt.tv/users/lrs"
                 target="_blank"
               >
                 <div className="rounded-lg overflow-hidden">
                   <img
                     src="https://trakt-widgets.vercel.app/lrs/watched/banner"
-                    alt="Trakt Watched Banner"
+                    alt="সর্বশেষ যে মুভি/এপিসোড দেখেছি"
                     width={395}
                     height={50}
                   />

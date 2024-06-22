@@ -20,6 +20,7 @@
     "next": "^14.2.4",
     "react": "^18",
     "react-dom": "^18",
+    "react-goodreads-shelf": "^3.1.5",
     "react-icons": "^4.12.0",
     "react-scrollbars-custom": "^4.1.1",
     "tailwind-merge": "^2.1.0",
