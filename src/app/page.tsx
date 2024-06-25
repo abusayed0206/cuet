@@ -23,7 +23,10 @@ import { Button } from "@/components/ui/button";
 export default function Component() {
   return (
     <>
-      <div className="bg-[url(https://songstitch.art/collage?username=abusayed0206&method=album&period=overall&artist=false&album=false&playcount=true&rows=12&columns=8&webp=true&cacheid=1719293995513)] min-h-screen flex items-center justify-center bg-cover bg-center">
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{ backgroundColor: "rgb(178, 190, 181)" }}
+      >
         <Card className="max-w-auto mx-4 bg-[rgb(255,255,255)] text-[#000000] relative">
           <div className="absolute top-0 right-0 mt-4 mr-4">
             <Button className="p-2 bg-black text-white hover:text-red-800 border border-white">
@@ -53,7 +56,9 @@ export default function Component() {
               <AvatarImage
                 alt="A smily face of Sayed"
                 className="rounded-full"
-                src="https://cdn.hashnode.com/res/hashnode/image/upload/v1699648553222/cHpLJnlzJ.jpg?w=500&h=500&fit=crop&crop=faces&auto=compress,format&format=webp"
+                src="/dp.webp"
+                width={250}
+                height={250}
               />
               <AvatarFallback className="rounded-full">সাঈদ</AvatarFallback>
             </Avatar>
@@ -205,7 +210,7 @@ export default function Component() {
 
           <CardFooter className="flex flex-wrap justify-around py-1">
             {/* First Link */}
- <div className="w-full sm:w-1/2 lg:w-1/4 xl:w-1/4 p-2 flex justify-center sm:justify-center">
+            <div className="w-full sm:w-1/2 lg:w-1/4 xl:w-1/4 p-2 flex justify-center sm:justify-center">
               <Link aria-label="গানের এলবাম" href="/album">
                 <div className="rounded-lg overflow-hidden">
                   <Image
@@ -220,7 +225,7 @@ export default function Component() {
             </div>
 
             {/* Second Link */}
- <div className="w-full sm:w-1/2 lg:w-1/4 xl:w-1/4 p-2 flex justify-center sm:justify-center">
+            <div className="w-full sm:w-1/2 lg:w-1/4 xl:w-1/4 p-2 flex justify-center sm:justify-center">
               <Link aria-label="বইয়ের তাক" href="/bookshelf">
                 <div className="rounded-lg overflow-hidden">
                   <Image
@@ -235,7 +240,7 @@ export default function Component() {
             </div>
 
             {/* Third Link */}
- <div className="w-full sm:w-1/2 lg:w-1/4 xl:w-1/4 p-2 flex justify-center sm:justify-center">
+            <div className="w-full sm:w-1/2 lg:w-1/4 xl:w-1/4 p-2 flex justify-center sm:justify-center">
               <Link
                 aria-label="সর্বশেষ দেখা মুভি/টিভি সিরিজ রিভিউ"
                 href="https://recap.sayed.page/"
@@ -254,7 +259,7 @@ export default function Component() {
             </div>
 
             {/* Fourth Link */}
- <div className="w-full sm:w-1/2 lg:w-1/4 xl:w-1/4 p-2 flex justify-center sm:justify-center">
+            <div className="w-full sm:w-1/2 lg:w-1/4 xl:w-1/4 p-2 flex justify-center sm:justify-center">
               <Link aria-label="সর্বশেষ যে মুভি/এপিসোড দেখেছি" href="/tv">
                 <div className="rounded-lg overflow-hidden">
                   <img
