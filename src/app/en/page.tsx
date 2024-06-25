@@ -211,20 +211,38 @@ export default function Component() {
           </CardFooter>
 
           <CardFooter className="flex flex-wrap justify-around py-1">
-            <div className="w-full sm:w-1/3 lg:w-1/3 xl:w-1/3 p-2 flex justify-center sm:justify-start">
-              <Link aria-label="Bookshelf" href="/bookshelf_en">
+            {/* First Link */}
+            <div className="w-full sm:w-1/2 lg:w-1/4 xl:w-1/4 p-2 flex justify-center sm:justify-center">
+              <Link aria-label="Song albums" href="/album_en">
                 <div className="rounded-lg overflow-hidden">
                   <Image
-                    src="/book_en.png"
-                    alt="As many books as I have read since June 2024."
-                    width={395}
+                    src="/album_en.png"
+                    alt="Song albums"
+                    width={200}
                     height={50}
                     priority={true}
                   />
                 </div>
               </Link>
             </div>
-            <div className="w-full sm:w-1/3 lg:w-1/3 xl:w-1/3 p-2 flex justify-center sm:justify-start">
+
+            {/* Second Link */}
+            <div className="w-full sm:w-1/2 lg:w-1/4 xl:w-1/4 p-2 flex justify-center sm:justify-center">
+              <Link aria-label="Bookshelf" href="/bookshelf_en">
+                <div className="rounded-lg overflow-hidden">
+                  <Image
+                    src="/book_en.png"
+                    alt="As many books as I have read since June 2024."
+                    width={200}
+                    height={50}
+                    priority={true}
+                  />
+                </div>
+              </Link>
+            </div>
+
+            {/* Third Link */}
+            <div className="w-full sm:w-1/2 lg:w-1/4 xl:w-1/4 p-2 flex justify-center sm:justify-center">
               <Link
                 aria-label="Movies/TV Series Recap"
                 href="https://recap.sayed.page/"
@@ -234,24 +252,22 @@ export default function Component() {
                   <Image
                     src="/recap_en.png"
                     alt="Movie/TV Series Recap"
-                    width={395}
+                    width={200}
                     height={50}
                     priority={true}
                   />
                 </div>
               </Link>
             </div>
-            <div className="w-full sm:w-1/3 lg:w-1/3 xl:w-1/3 p-2 flex justify-center sm:justify-start">
-              <Link
-                aria-label="Trakt Watched Banner"
-                href="https://trakt.tv/users/lrs"
-                target="_blank"
-              >
+
+            {/* Fourth Link */}
+            <div className="w-full sm:w-1/2 lg:w-1/4 xl:w-1/4 p-2 flex justify-center sm:justify-center">
+              <Link aria-label="Trakt Watched Banner" href="/tv">
                 <div className="rounded-lg overflow-hidden">
                   <img
                     src="https://trakt-widgets.vercel.app/lrs/watched/banner"
                     alt="Trakt Watched Banner"
-                    width={395}
+                    width={200}
                     height={50}
                   />
                 </div>
