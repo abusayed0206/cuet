@@ -1,33 +1,31 @@
 import React from "react";
 import Link from "next/link";
-import { ImProfile } from "react-icons/im";
-import { LiaOrcid } from "react-icons/lia";
 import { GrLinkedin } from "react-icons/gr";
-import { BsTwitterX } from "react-icons/bs";
-import { VscGithubInverted } from "react-icons/vsc";
-import { BiKey } from "react-icons/bi";
 import { MdOutlineMarkEmailUnread } from "react-icons/md";
-import { SiTrakt } from "react-icons/si";
-import { FaMastodon, FaHashnode, FaDiscord } from "react-icons/fa6";
 import {
   CardTitle,
   CardDescription,
   CardHeader,
-  CardContent,
   CardFooter,
   Card,
 } from "@/components/ui/card";
 
 export default function Contact() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-200">
-      <nav className="bg-gray-800 text-gray-400 py-2 px-4 rounded-full mb-4 w-full md:w-auto flex justify-center">
+    <div className="w-full mx-auto min-h-screen flex flex-col items-center justify-center bg-[rgb(178,190,181)]">
+      <nav className="bg-gray-800 text-gray-400 py-2 px-4 rounded-full mb-4 flex justify-center">
         <div className="flex flex-wrap justify-center space-x-0 md:space-x-6">
           <Link
             href="/"
             className="px-3 py-1 rounded-full mb-2 md:mb-0 transform transition duration-300 ease-in-out hover:scale-110"
           >
             হোম
+          </Link>
+          <Link
+            href="/about"
+            className="px-3 py-1 rounded-full mb-2 md:mb-0 transform transition duration-300 ease-in-out hover:scale-110"
+          >
+            আমার সম্পর্কে
           </Link>
           <Link
             href="/blog"
@@ -37,16 +35,11 @@ export default function Contact() {
           </Link>
           <Link
             href="/contact"
-             className="px-3 py-1 rounded-full bg-gray-700 text-white mb-2 md:mb-0"
+            className="px-3 py-1 rounded-full bg-gray-700 text-white mb-2 md:mb-0"
           >
             যোগাযোগ
           </Link>
-          <Link
-            href="/about"
-           className="px-3 py-1 rounded-full mb-2 md:mb-0 transform transition duration-300 ease-in-out hover:scale-110"
-          >
-            আমার সম্পর্কে
-          </Link>
+
           <Link
             href="/contact_en"
             className="px-3 py-1 rounded-full mb-2 md:mb-0 transform transition duration-300 ease-in-out hover:scale-110"
@@ -55,8 +48,8 @@ export default function Contact() {
           </Link>
         </div>
       </nav>
-      <div className="flex flex-col items-center justify-center">
-        <Card className="max-w-auto mx-4 bg-white text-black relative w-full md:w-auto">
+      <div className="mx-6 rounded-2xl max-w-screen-md bg-white text-black">
+      <Card className="bg-white text-black ">
           <CardHeader className="flex flex-col items-center pt-6">
             <CardTitle className="text-xl font-bold">যোগাযোগ</CardTitle>
             <CardDescription className="text-center text-gray-500">

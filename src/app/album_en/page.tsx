@@ -23,10 +23,10 @@ export default function Song() {
             <Link
               aria-label="Index"
               className="text-white hover:text-red-800"
-              href="https://index.sayed.page/en"
+              href="https://www.last.fm/user/abusayed0206"
               target="_blank"
             >
-              Index
+              Lastfm
             </Link>
           </Button>
         </div>

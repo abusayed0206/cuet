@@ -1,5 +1,5 @@
 import { SiTrakt } from "react-icons/si";
-import { CardFooter, Card } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 

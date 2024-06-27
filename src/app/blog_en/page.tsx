@@ -1,13 +1,12 @@
 "use client";
-
 import React from "react";
 import Link from "next/link";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { FaHashnode } from "react-icons/fa6";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { CardFooter, Card } from "@/components/ui/card";
 
 export default function Song() {
   // Added schema of Api query to get the data from hashnode.
@@ -89,13 +88,14 @@ export default function Song() {
           </Link>
         </div>
       </nav>
-      <Card className="flex items-center justify-center max-w-auto mx-4 bg-grey-800 text-black relative w-full md:w-auto">
-        <SkeletonTheme baseColor="#b0c4de" highlightColor="#e0ffff">
-          {loading && (
-            <div className="p-10 mt-10">
-              <Skeleton height={500} count={1} />
-            </div>
-          )}
+      <Card className="flex items-center justify-center max-w-auto mx-4 bg-white text-black relative w-full md:w-auto">
+        <div className="flex flex-col items-center">
+          <SkeletonTheme baseColor="#b0c4de" highlightColor="#e0ffff">
+            {loading && (
+              <div className="p-10 mt-10">
+                <Skeleton height={500} count={1} />
+              </div>
+            )}
           <section className="text-gray-300 body-font">
             <div className="container px-5 py-24 mx-auto">
               <div className="flex flex-wrap -m-4 justify-center whitespace-break-spaces">
@@ -129,6 +129,17 @@ export default function Song() {
             </div>
           </section>
         </SkeletonTheme>
+        <CardFooter className="flex justify-center py-2 px-8">
+            <Link
+              className="group bg-gray-900 text-white px-7 py-3 flex items-center gap-2 rounded-full outline-none focus:scale-110 hover:scale-110 hover:bg-gray-950 active:scale-105 transition"
+              href="https://abusayed.dev/"
+              target="_blank"
+            >
+              Blog
+              <FaHashnode className="opacity-100 group-hover:translate-y-1 transition" />
+            </Link>
+          </CardFooter>
+        </div>
       </Card>
     </div>
   );
