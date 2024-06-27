@@ -62,35 +62,30 @@ export default function Song() {
     <div className="min-h-screen flex flex-col items-center justify-center bg-[rgb(178,190,181)]">
       <nav className="bg-gray-800 text-gray-400 py-2 px-4 rounded-full mb-4 w-full md:w-auto flex justify-center">
         <div className="flex flex-wrap justify-center space-x-0 md:space-x-6">
-          <Link
-            href="/"
-            className="px-3 py-1 rounded-full mb-2 md:mb-0 transform transition duration-300 ease-in-out hover:scale-110"
-          >
-            হোম
+          <Link href="/en" className="px-3 py-1 rounded-full mb-2 md:mb-0">
+            Home
           </Link>
           <Link
-            href="/blog"
-            className="px-3 py-1 rounded-full bg-gray-700 text-white mb-2 md:mb-0"
+            href="/about_en"
+            className="px-3 py-1 rounded-full mb-2 md:mb-0"
           >
-            ব্লগ
-          </Link>
-          <Link
-            href="/contact"
-            className="px-3 py-1 rounded-full mb-2 md:mb-0 transform transition duration-300 ease-in-out hover:scale-110"
-          >
-            যোগাযোগ
-          </Link>
-          <Link
-            href="/about"
-            className="px-3 py-1 rounded-full mb-2 md:mb-0 transform transition duration-300 ease-in-out hover:scale-110"
-          >
-            আমার সম্পর্কে
+            About
           </Link>
           <Link
             href="/blog_en"
-            className="px-3 py-1 rounded-full mb-2 md:mb-0 transform transition duration-300 ease-in-out hover:scale-110"
+            className="px-3 py-1 rounded-full bg-gray-700 text-white mb-2 md:mb-0"
           >
-            English
+            Blog
+          </Link>
+          <Link
+            href="/contact_en"
+            className="px-3 py-1 rounded-full mb-2 md:mb-0"
+          >
+            Contact
+          </Link>
+
+          <Link href="/blog" className="px-3 py-1 rounded-full mb-2 md:mb-0">
+            বাংলা
           </Link>
         </div>
       </nav>

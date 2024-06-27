@@ -23,13 +23,13 @@ export default function Book() {
           </Button>
           <p className="text-xl">Bookshelf📚</p>{" "}
           <Button className="p-2 bg-black text-white hover:text-red-800 border border-white">
-            <Link
+          <Link
               aria-label="Index"
               className="text-white hover:text-red-800"
-              href="https://index.sayed.page/en"
+              href="https://www.goodreads.com/user/show/96441373-lutfor-rashid-sayed"
               target="_blank"
             >
-              Index
+              Goodreads
             </Link>
           </Button>
         </div>

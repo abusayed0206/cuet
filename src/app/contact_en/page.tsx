@@ -23,46 +23,34 @@ export default function Contact() {
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-200">
       <nav className="bg-gray-800 text-gray-400 py-2 px-4 rounded-full mb-4 w-full md:w-auto flex justify-center">
         <div className="flex flex-wrap justify-center space-x-0 md:space-x-6">
-          <Link
-            href="/"
-            className="px-3 py-1 rounded-full mb-2 md:mb-0 transform transition duration-300 ease-in-out hover:scale-110"
-          >
-            হোম
+          <Link href="/en" className="px-3 py-1 rounded-full mb-2 md:mb-0">
+            Home
           </Link>
-          <Link
-            href="/blog"
-            className="px-3 py-1 rounded-full mb-2 md:mb-0 transform transition duration-300 ease-in-out hover:scale-110"
-          >
-            ব্লগ
+          <Link href="/about_en" className="px-3 py-1 rounded-full mb-2 md:mb-0">
+            About
           </Link>
-          <Link
-            href="/contact"
-             className="px-3 py-1 rounded-full bg-gray-700 text-white mb-2 md:mb-0"
-          >
-            যোগাযোগ
-          </Link>
-          <Link
-            href="/about"
-           className="px-3 py-1 rounded-full mb-2 md:mb-0 transform transition duration-300 ease-in-out hover:scale-110"
-          >
-            আমার সম্পর্কে
+          <Link href="/blog_en" className="px-3 py-1 rounded-full mb-2 md:mb-0">
+            Blog
           </Link>
           <Link
             href="/contact_en"
-            className="px-3 py-1 rounded-full mb-2 md:mb-0 transform transition duration-300 ease-in-out hover:scale-110"
+            className="px-3 py-1 rounded-full bg-gray-700 text-white mb-2 md:mb-0"
           >
-            English
+            Contact
+          </Link>
+
+          <Link href="/contact" className="px-3 py-1 rounded-full mb-2 md:mb-0">
+            বাংলা
           </Link>
         </div>
       </nav>
       <div className="flex flex-col items-center justify-center">
         <Card className="max-w-auto mx-4 bg-white text-black relative w-full md:w-auto">
           <CardHeader className="flex flex-col items-center pt-6">
-            <CardTitle className="text-xl font-bold">যোগাযোগ</CardTitle>
+            <CardTitle className="text-xl font-bold">Contact</CardTitle>
             <CardDescription className="text-center text-gray-500">
-              আমার সাথে যোগাযোগ করতে ইমেইল করতে পারেন বা লিংকডইন এ মেসেজ করতে
-              পারেন। এই ২ টি মাধ্যম বাদে অন্য মাধ্যমে প্রতিত্তোর পেতে দেরি হতে
-              পারে।
+            You can reach me by email or message me on LinkedIn. Please note that responses may be delayed if you use other methods of contact. 
+
             </CardDescription>
           </CardHeader>
 
@@ -75,7 +63,7 @@ export default function Contact() {
                 target="_blank"
               >
                 <MdOutlineMarkEmailUnread className="text-base mb-1" />
-                <span className="text-sm italic">ইমেইল</span>
+                <span className="text-sm italic">Email</span>
               </Link>
             </div>
 
@@ -87,7 +75,7 @@ export default function Contact() {
                 target="_blank"
               >
                 <GrLinkedin className="text-base mb-1" />
-                <span className="text-sm italic">লিংকডইন</span>
+                <span className="text-sm italic">LinkedIn</span>
               </Link>
             </div>
           </CardFooter>

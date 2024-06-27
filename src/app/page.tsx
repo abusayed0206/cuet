@@ -1,17 +1,6 @@
 import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
-import { GrLinkedin } from "react-icons/gr";
-import { BsTwitterX } from "react-icons/bs";
-import { VscGithubInverted } from "react-icons/vsc";
-import { BiKey } from "react-icons/bi";
-import { SiTrakt } from "react-icons/si";
-import Image from "next/image";
-import { ImProfile } from "react-icons/im";
 import { LiaOrcid } from "react-icons/lia";
-import { FaMastodon, FaHashnode, FaDiscord } from "react-icons/fa6";
-import { BsArrowRight, BsLinkedin } from "react-icons/bs";
 import { HiDownload } from "react-icons/hi";
-import { FaGithubSquare } from "react-icons/fa";
-import { MdOutlineMarkEmailUnread } from "react-icons/md";
 import {
   CardTitle,
   CardDescription,
@@ -21,7 +10,7 @@ import {
   Card,
 } from "@/components/ui/card";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+
 
 export default function Home() {
   return (
@@ -33,21 +22,21 @@ export default function Home() {
               href="/"
               className="px-3 py-1 rounded-full bg-gray-700 text-white mb-2 md:mb-0"
             >
-              Home
+              হোম
             </Link>
-            <Link href="/blog" className="px-3 py-1 rounded-full mb-2 md:mb-0">
-              Blog
+            <Link href="/blog" className="px-3 py-1 rounded-full mb-2 md:mb-0 transform transition duration-300 ease-in-out hover:scale-110">
+              ব্লগ
             </Link>
             <Link
               href="/contact"
-              className="px-3 py-1 rounded-full mb-2 md:mb-0"
+              className="px-3 py-1 rounded-full mb-2 md:mb-0 transform transition duration-300 ease-in-out hover:scale-110"
             >
-              Contact
+              যোগাযোগ
             </Link>
-            <Link href="/about" className="px-3 py-1 rounded-full mb-2 md:mb-0">
-              About
+            <Link href="/about" className="px-3 py-1 rounded-full mb-2 md:mb-0 transform transition duration-300 ease-in-out hover:scale-110">
+              আমার সম্পর্কে
             </Link>
-            <Link href="/en" className="px-3 py-1 rounded-full mb-2 md:mb-0">
+            <Link href="/en" className="px-3 py-1 rounded-full mb-2 md:mb-0 transform transition duration-300 ease-in-out hover:scale-110">
               English
             </Link>
           </div>
@@ -77,9 +66,7 @@ export default function Home() {
               চট্টগ্রাম প্রকৌশল ও প্রযুক্তি বিশ্ববিদ্যালয় (চুয়েট) এর পুরকৌশল
               বিভাগে চতুর্থ বর্ষে অধ্যয়নরত। আমি মূলত কাঠামোগত প্রকৌশল
               (স্ট্রাকচারাল ইঞ্জিনিয়ারিং) নিয়ে পড়াশোনা করছি। এছাড়াও পানি ও
-              পরিবেশ বিষয়ক গবেষণায় আমার বিশেষ আগ্রহ রয়েছে। আমার গবেষনা
-              প্রোফাইলের বিস্তারিত পাওয়া যাবে/ আমার সম্পর্কে বিস্তারিত জানতে
-              'আমার সম্পর্কে' পৃষ্টাটি দেখুন। অথবা আমার সিভি দেখুন/ডাউনলোড করুন।
+              পরিবেশ বিষয়ক গবেষণায় আমার বিশেষ আগ্রহ রয়েছে।
             </p>
           </CardContent>
           <CardFooter className="flex justify-around justify-center py-2">
@@ -88,7 +75,7 @@ export default function Home() {
               href="/sayed_CV.pdf"
               target="_blank"
             >
-              CV
+              সিভি
               <HiDownload className="opacity-100 group-hover:translate-y-1 transition" />
             </Link>
             <Link

@@ -26,10 +26,10 @@ export default function Book() {
             <Link
               aria-label="Index"
               className="text-white hover:text-red-800"
-              href="https://index.sayed.page/"
+              href="https://www.goodreads.com/user/show/96441373-lutfor-rashid-sayed"
               target="_blank"
             >
-              সূচিপত্র
+              গুডরিড
             </Link>
           </Button>
         </div>

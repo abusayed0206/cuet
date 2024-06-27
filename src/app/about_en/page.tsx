@@ -26,43 +26,35 @@ export default function Home() {
       <div className="min-h-screen flex flex-col items-center justify-center bg-[rgb(178,190,181)]">
         <nav className="bg-gray-800 text-gray-400 py-2 px-4 rounded-full mb-4 w-full md:w-auto flex justify-center">
           <div className="flex flex-wrap justify-center space-x-0 md:space-x-6">
-            <Link
-              href="/"
-              className="px-3 py-1 rounded-full mb-2 md:mb-0 transform transition duration-300 ease-in-out hover:scale-110"
-            >
-              হোম
-            </Link>
-            <Link
-              href="/blog"
-              className="px-3 py-1 rounded-full mb-2 md:mb-0 transform transition duration-300 ease-in-out hover:scale-110"
-            >
-              ব্লগ
-            </Link>
-            <Link
-              href="/contact"
-             className="px-3 py-1 rounded-full mb-2 md:mb-0 transform transition duration-300 ease-in-out hover:scale-110"
-            >
-              যোগাযোগ
-            </Link>
-            <Link
-              href="/about"
-            className="px-3 py-1 rounded-full bg-gray-700 text-white mb-2 md:mb-0"
-            >
-              আমার সম্পর্কে
+            <Link href="/en" className="px-3 py-1 rounded-full mb-2 md:mb-0">
+              Home
             </Link>
             <Link
               href="/about_en"
-              className="px-3 py-1 rounded-full mb-2 md:mb-0 transform transition duration-300 ease-in-out hover:scale-110"
+              className="px-3 py-1 rounded-full bg-gray-700 text-white mb-2 md:mb-0"
             >
-              English
+              About
+            </Link>
+            <Link href="/blog_en" className="px-3 py-1 rounded-full mb-2 md:mb-0">
+              Blog
+            </Link>
+            <Link
+              href="/contact_en"
+              className="px-3 py-1 rounded-full mb-2 md:mb-0"
+            >
+              Contact
+            </Link>
+
+            <Link href="/about" className="px-3 py-1 rounded-full mb-2 md:mb-0">
+              বাংলা
             </Link>
           </div>
         </nav>
         <Card className="max-w-auto mx-4 bg-white text-black relative w-full md:w-auto">
           <CardHeader className="flex flex-col items-center pt-6">
-            <CardTitle className="text-xl font-bold">আমার সম্পর্কে</CardTitle>
+            <CardTitle className="text-xl font-bold">About Me</CardTitle>
             <CardDescription className="text-center text-gray-500">
-              আমার সম্পর্কে বিস্তারিত জানতে নিচের লিংক গুলি দেখুন। ধন্যবাদ।
+              To learn more about me, please see the following links. Thank you.
             </CardDescription>
           </CardHeader>
 
@@ -75,7 +67,7 @@ export default function Home() {
                 target="_blank"
               >
                 <ImProfile className="text-base mb-1" />
-                <span className="text-sm italic">সিভি</span>
+                <span className="text-sm italic">CV</span>
               </Link>
             </div>
 
@@ -87,7 +79,7 @@ export default function Home() {
                 target="_blank"
               >
                 <VscGithubInverted className="text-base mb-1" />
-                <span className="text-sm italic">গিটহাব</span>
+                <span className="text-sm italic">Github</span>
               </Link>
             </div>
 
@@ -99,7 +91,7 @@ export default function Home() {
                 target="_blank"
               >
                 <GrLinkedin className="text-base mb-1" />
-                <span className="text-sm italic">লিংকডইন</span>
+                <span className="text-sm italic">LinkedIn</span>
               </Link>
             </div>
           </CardFooter>
@@ -113,7 +105,7 @@ export default function Home() {
                 target="_blank"
               >
                 <LiaOrcid className="text-base mb-1" />
-                <span className="text-sm italic">অর্কিড</span>
+                <span className="text-sm italic">ORCID</span>
               </Link>
             </div>
 
@@ -125,7 +117,7 @@ export default function Home() {
                 target="_blank"
               >
                 <BsTwitterX className="text-base mb-1" />
-                <span className="text-sm italic">এক্স</span>
+                <span className="text-sm italic">X</span>
               </Link>
             </div>
           </CardFooter>
@@ -139,7 +131,7 @@ export default function Home() {
                 target="_blank"
               >
                 <FaMastodon className="text-base mb-1" />
-                <span className="text-sm italic">মাস্টোডন</span>
+                <span className="text-sm italic">Mastodon</span>
               </Link>
             </div>
             <div className="flex flex-col items-center text-center">
@@ -150,7 +142,7 @@ export default function Home() {
                 target="_blank"
               >
                 <FaDiscord className="text-base mb-1" />
-                <span className="text-sm italic">ডিসকর্ড</span>{" "}
+                <span className="text-sm italic">Discord</span>{" "}
               </Link>
             </div>
 
@@ -161,7 +153,7 @@ export default function Home() {
                 href="/tv"
               >
                 <SiTrakt className="text-base mb-1" />
-                <span className="text-sm italic">টিভি</span>
+                <span className="text-sm italic">Trakt.tv</span>
               </Link>
             </div>
           </CardFooter>
@@ -169,11 +161,11 @@ export default function Home() {
           <CardFooter className="flex flex-wrap justify-around py-1">
             {/* First Link */}
             <div className="w-full sm:w-1/2 lg:w-1/4 xl:w-1/4 p-2 flex justify-center sm:justify-center">
-              <Link aria-label="গানের এলবাম" href="/album">
+              <Link aria-label="Song albums" href="/album_en">
                 <div className="rounded-lg overflow-hidden">
                   <Image
-                    src="/album.png"
-                    alt="গানের এলবাম কলাজ"
+                    src="/album_en.png"
+                    alt="Song albums"
                     width={200}
                     height={50}
                     priority={true}
@@ -184,11 +176,11 @@ export default function Home() {
 
             {/* Second Link */}
             <div className="w-full sm:w-1/2 lg:w-1/4 xl:w-1/4 p-2 flex justify-center sm:justify-center">
-              <Link aria-label="বইয়ের তাক" href="/bookshelf">
+              <Link aria-label="Bookshelf" href="/bookshelf_en">
                 <div className="rounded-lg overflow-hidden">
                   <Image
-                    src="/book.png"
-                    alt="এখন পর্যন্ত যত বই পড়েছি"
+                    src="/book_en.png"
+                    alt="As many books as I have read since June 2024."
                     width={200}
                     height={50}
                     priority={true}
@@ -200,14 +192,14 @@ export default function Home() {
             {/* Third Link */}
             <div className="w-full sm:w-1/2 lg:w-1/4 xl:w-1/4 p-2 flex justify-center sm:justify-center">
               <Link
-                aria-label="সর্বশেষ দেখা মুভি/টিভি সিরিজ রিভিউ"
+                aria-label="Movies/TV Series Recap"
                 href="https://recap.sayed.page/"
                 target="_blank"
               >
                 <div className="rounded-lg overflow-hidden">
                   <Image
-                    src="/recap.png"
-                    alt="সর্বশেষ দেখা মুভি/টিভি সিরিজ"
+                    src="/recap_en.png"
+                    alt="Movie/TV Series Recap"
                     width={200}
                     height={50}
                     priority={true}
@@ -218,11 +210,11 @@ export default function Home() {
 
             {/* Fourth Link */}
             <div className="w-full sm:w-1/2 lg:w-1/4 xl:w-1/4 p-2 flex justify-center sm:justify-center">
-              <Link aria-label="সর্বশেষ যে মুভি/এপিসোড দেখেছি" href="/tv">
+              <Link aria-label="Trakt Watched Banner" href="/tv">
                 <div className="rounded-lg overflow-hidden">
                   <img
                     src="https://trakt-widgets.vercel.app/lrs/watched/banner"
-                    alt="সর্বশেষ যে মুভি/এপিসোড দেখেছি"
+                    alt="Trakt Watched Banner"
                     width={200}
                     height={50}
                   />
