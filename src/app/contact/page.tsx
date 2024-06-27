@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { GrLinkedin } from "react-icons/gr";
 import { MdOutlineMarkEmailUnread } from "react-icons/md";
+import { FaKey } from "react-icons/fa6";
 import {
   CardTitle,
   CardDescription,
@@ -60,7 +61,8 @@ export default function Contact() {
               <CardDescription className="text-center text-gray-500">
                 আমার সাথে যোগাযোগ করতে ইমেইল করতে পারেন বা লিংকডইন এ মেসেজ করতে
                 পারেন। এই ২ টি মাধ্যম বাদে অন্য মাধ্যমে প্রতিত্তোর পেতে দেরি হতে
-                পারে।
+                পারে। নিরাপদ ইমেইল যোগাযোগের জন্য, দয়া করে আপনার বার্তাগুলি
+                এনক্রিপ্ট করতে প্রদত্ত PGP কী ব্যবহার করুন।
               </CardDescription>
             </CardHeader>
 
@@ -74,6 +76,18 @@ export default function Contact() {
                 >
                   <MdOutlineMarkEmailUnread className="text-base mb-1" />
                   <span className="text-sm italic">ইমেইল</span>
+                </Link>
+              </div>
+              <div className="flex flex-col items-center text-center">
+                <Link
+                  aria-label="Email"
+                  className="text-blue-800 hover:text-gray-600 flex flex-col items-center"
+                  href="https://sayed.page/gpg-public-key.asc
+                "
+                  target="_blank"
+                >
+                  <FaKey className="text-base mb-1" />
+                  <span className="text-sm italic">পিজিপি</span>
                 </Link>
               </div>
 

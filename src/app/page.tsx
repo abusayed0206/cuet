@@ -98,7 +98,7 @@ export default function Home() {
                   target="_blank"
                 >
                   অর্কিড
-                  <LiaOrcid />
+                  <LiaOrcid className="opacity-100 group-hover:translate-y-1 transition" />
                 </Link>
               </CardFooter>
             </Card>

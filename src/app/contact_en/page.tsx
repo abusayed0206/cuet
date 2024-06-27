@@ -3,6 +3,7 @@ import Link from "next/link";
 import { GrLinkedin } from "react-icons/gr";
 import { MdOutlineMarkEmailUnread } from "react-icons/md";
 import ParticleBackground from "@/components/ui/Particle";
+import { FaKey } from "react-icons/fa6";
 
 import {
   CardTitle,
@@ -58,7 +59,8 @@ export default function Contact() {
               <CardDescription className="text-center text-gray-500">
                 You can reach me by email or message me on LinkedIn. Please note
                 that responses may be delayed if you use other methods of
-                contact.
+                contact. For secure email communication, please use the PGP key
+                provided to encrypt your messages.
               </CardDescription>
             </CardHeader>
 
@@ -72,6 +74,18 @@ export default function Contact() {
                 >
                   <MdOutlineMarkEmailUnread className="text-base mb-1" />
                   <span className="text-sm italic">Email</span>
+                </Link>
+              </div>
+              <div className="flex flex-col items-center text-center">
+                <Link
+                  aria-label="Email"
+                  className="text-blue-800 hover:text-gray-600 flex flex-col items-center"
+                  href="https://sayed.page/gpg-public-key.asc
+                "
+                  target="_blank"
+                >
+                  <FaKey className="text-base mb-1" />
+                  <span className="text-sm italic">PGP</span>
                 </Link>
               </div>
 

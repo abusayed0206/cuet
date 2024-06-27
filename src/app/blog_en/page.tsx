@@ -1,13 +1,14 @@
 "use client";
-
 import React from "react";
 import Link from "next/link";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { FaHashnode } from "react-icons/fa6";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { CardFooter, Card } from "@/components/ui/card";
+
+
 
 export default function Song() {
   // Added schema of Api query to get the data from hashnode.

@@ -23,7 +23,7 @@ export default function Home() {
           <nav className="bg-gray-800 text-gray-400 py-2 px-4 rounded-full mb-4 flex justify-center">
             <div className="flex flex-wrap justify-center space-x-0 md:space-x-6">
               <Link
-                href="/"
+                href="/en"
                 className="px-3 py-1 rounded-full bg-gray-700 text-white mb-2 md:mb-0"
               >
                 Home
