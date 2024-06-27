@@ -8,6 +8,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { CardFooter, Card } from "@/components/ui/card";
 
+
 export default function Song() {
   const [post, setPosts] = useState<
     {

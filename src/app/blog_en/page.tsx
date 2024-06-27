@@ -1,12 +1,13 @@
 "use client";
+
 import React from "react";
 import Link from "next/link";
-import { FaHashnode } from "react-icons/fa6";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { CardFooter, Card } from "@/components/ui/card";
 
 export default function Song() {
   // Added schema of Api query to get the data from hashnode.
@@ -135,7 +136,7 @@ export default function Song() {
               href="https://abusayed.dev/"
               target="_blank"
             >
-              Blog
+              Blog/ব্লগ
               <FaHashnode className="opacity-100 group-hover:translate-y-1 transition" />
             </Link>
           </CardFooter>
