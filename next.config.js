@@ -9,6 +9,10 @@ module.exports = {
         protocol: "https",
         hostname: "trakt-widgets.vercel.app",
       },
+      {
+        protocol: "https",
+        hostname: "cdn.hashnode.com",
+      },
     ],
   },
 };
