@@ -13,9 +13,9 @@ export default function Song() {
             <Link
               aria-label="Homepage"
               className="text-white hover:text-blue-800"
-              href="/en"
+              href="/about_en"
             >
-              HomePage
+              About
             </Link>
           </Button>
           <p className="text-xl">Song Albums🎶</p>{" "}

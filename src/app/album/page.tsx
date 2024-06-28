@@ -13,9 +13,9 @@ export default function Song() {
             <Link
               aria-label="Homepage"
               className="text-white hover:text-blue-800"
-              href="/"
+              href="/about"
             >
-              বাড়ি
+              আমার সম্পর্কে
             </Link>
           </Button>
           <p className="text-xl">গানের এলবাম🎶</p>{" "}

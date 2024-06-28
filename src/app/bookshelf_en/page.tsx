@@ -16,9 +16,9 @@ export default function Book() {
             <Link
               aria-label="Homepage"
               className="text-white hover:text-blue-800"
-              href="/en"
+              href="/about_en"
             >
-              HomePage
+              About Me
             </Link>
           </Button>
           <p className="text-xl">Bookshelf📚</p>{" "}

@@ -159,7 +159,7 @@ export default function Home() {
                   <Link
                     aria-label="Trakt.tv"
                     className="text-blue-700 hover:text-blue-800 flex flex-col items-center"
-                    href="/tv"
+                    href="https://trakt.tv/users/lrs"
                   >
                     <SiTrakt className="text-base mb-1" />
                     <span className="text-sm italic">Trakt.tv</span>
@@ -219,7 +219,7 @@ export default function Home() {
 
                 {/* Fourth Link */}
                 <div className="w-full sm:w-1/2 lg:w-1/4 xl:w-1/4 p-2 flex justify-center sm:justify-center">
-                  <Link aria-label="Trakt Watched Banner" href="/tv">
+                  <Link aria-label="Trakt Watched Banner" href="/tv_en">
                     <div className="rounded-lg overflow-hidden">
                       <img
                         src="https://trakt-widgets.vercel.app/lrs/watched/banner"

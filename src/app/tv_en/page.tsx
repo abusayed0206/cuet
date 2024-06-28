@@ -28,9 +28,9 @@ export default function Component() {
               <Link
                 aria-label="বাংলা"
                 className="text-white hover:text-blue-800"
-                href="/about"
+                href="/about_en"
               >
-                আমার সম্পর্কে
+                About Me
               </Link>
             </Button>
 
