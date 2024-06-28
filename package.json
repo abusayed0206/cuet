@@ -19,11 +19,13 @@
     "@tsparticles/preset-sea-anemone": "^3.1.0",
     "@types/react-icons": "^3.0.0",
     "axios": "^1.6.7",
+    "bangla-calendar": "^7.0.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "lucide-react": "^0.294.0",
     "next": "^14.2.4",
     "react": "^18",
+    "react-date-object": "^2.1.8",
     "react-dom": "^18",
     "react-goodreads-shelf": "^3.1.5",
     "react-hot-toast": "^2.4.1",
@@ -35,6 +37,7 @@
     "resend": "^3.4.0",
     "tailwind-merge": "^2.1.0",
     "tailwindcss-animate": "^1.0.7",
+    "to-bengali": "^1.0.2",
     "tsparticles": "^3.4.0"
   },
   "devDependencies": {

@@ -12,7 +12,10 @@ import {
 } from "@/components/ui/card";
 import ParticleBackground from "@/components/ui/Particle";
 
+
 export default function Contact() {
+
+
   return (
     <div className="relative w-full h-screen overflow-hidden">
       <div className="absolute inset-0 z-0">
@@ -59,10 +62,11 @@ export default function Contact() {
             <CardHeader className="flex flex-col items-center pt-6">
               <CardTitle className="text-xl font-bold">যোগাযোগ</CardTitle>
               <CardDescription className="text-center text-gray-500">
-                আমার সাথে যোগাযোগ করতে ইমেইল করতে পারেন বা লিংকডইন এ মেসেজ করতে
-                পারেন। এই ২ টি মাধ্যম বাদে অন্য মাধ্যমে প্রতিত্তোর পেতে দেরি হতে
-                পারে। নিরাপদ ইমেইল যোগাযোগের জন্য, দয়া করে আপনার বার্তাগুলি
-                এনক্রিপ্ট করতে প্রদত্ত PGP কী ব্যবহার করুন।
+                আমার সাথে যোগাযোগ করতে ইমেইল করতে
+                পারেন বা লিংকডইন এ মেসেজ করতে পারেন। এই ২ টি মাধ্যম বাদে অন্য
+                মাধ্যমে প্রতিত্তোর পেতে দেরি হতে পারে। নিরাপদে ইমেইলের মাধ্যমে যোগাযোগের
+                জন্য নিচের PGP কী
+                ব্যবহার করুন।
               </CardDescription>
             </CardHeader>
 
@@ -82,8 +86,7 @@ export default function Contact() {
                 <Link
                   aria-label="Email"
                   className="text-blue-800 hover:text-gray-600 flex flex-col items-center"
-                  href="https://sayed.page/gpg-public-key.asc
-                "
+                  href="https://sayed.page/gpg-public-key.asc"
                   target="_blank"
                 >
                   <FaKey className="text-base mb-1" />
