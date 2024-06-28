@@ -31,7 +31,7 @@ export default function Contact() {
               href="/about"
               className="px-3 py-1 rounded-full mb-2 md:mb-0 transform transition duration-300 ease-in-out hover:scale-110"
             >
-              আমার সম্পর্কে
+              সম্পর্কে
             </Link>
             <Link
               href="/blog"

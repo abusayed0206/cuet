@@ -10,7 +10,7 @@ const inter = Hind_Siliguri({
 
 export const metadata: Metadata = {
   title: "Lutfor Rashid Sayed",
-  description: "Negative by Blood💖⭐, Just a Normie🙂.",
+  description: "A Civil Engineering student majoring in Structural Engineering.",
   metadataBase: new URL("https://sayed.page/"),
   icons: [
     {
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     },
   ],
   openGraph: {
-    images: '/OG_Image.png',
+    images: '/OG.png',
   },
 };
 

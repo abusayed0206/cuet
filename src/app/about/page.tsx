@@ -37,7 +37,7 @@ export default function Home() {
                 href="/about"
                 className="px-3 py-1 rounded-full bg-gray-700 text-white mb-2 md:mb-0"
               >
-                আমার সম্পর্কে
+                সম্পর্কে
               </Link>
               <Link
                 href="/blog"
