@@ -26,7 +26,7 @@ export default function Book() {
           <Link
               aria-label="Index"
               className="text-white hover:text-red-800"
-              href="https://www.goodreads.com/user/show/96441373-lutfor-rashid-sayed"
+              href="https://www.goodreads.com/abusayed0206"
               target="_blank"
             >
               Goodreads
@@ -36,7 +36,7 @@ export default function Book() {
       </Card>
 
       <Card>
-        <GoodreadsBookshelf userId="96441373" />
+        <GoodreadsBookshelf userId="135486693" />
       </Card>
     </div>
   );
