@@ -67,7 +67,12 @@ export default function Home() {
                   আমার সম্পর্কে
                 </CardTitle>
                 <CardDescription className="text-center text-gray-500">
-                  আমার সম্পর্কে বিস্তারিত জানতে নিচের লিংক গুলি দেখুন। ধন্যবাদ।
+                  আমার সম্পর্কে বিস্তারিত জানতে নিচের লিংক গুলি দেখুন। এছাড়া এই
+                  মূহর্তে আমি কোন মুভি/এপিসোড দেখছি{" "}
+                  <Link href="/watching" className="text-xl underline">
+                    এখানে
+                  </Link>{" "}
+                  ক্লিক করে জেনে নিতে পারেন। ধন্যবাদ।
                 </CardDescription>
               </CardHeader>
 

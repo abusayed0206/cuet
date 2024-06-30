@@ -12,6 +12,7 @@ const RedirectPage: React.FC = () => {
       twitter: "https://twitter.com/abusayed0206",
       x: "https://twitter.com/abusayed0206",
       facebook: "https://facebook.com/abusayed0206",
+      fb: "https://facebook.com/abusayed0206",
       instagram: "https://instagram.com/abusayed0206",
       goodreads: "https://www.goodreads.com/abusayed0206",
       letterboxd: "https://letterboxd.com/abusayed/films",
@@ -30,9 +31,10 @@ const RedirectPage: React.FC = () => {
   }, []);
 
   return (
-    <div>
-      Redirecting to your destination/ আপনার গন্তব্যে পাঠানো হচ্ছে। যদিও আমার
-      জীবনে আমি সঠিক গন্তব্যে যেতে পারিনি!
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="text-center">
+        Redirecting to your destination/ আপনার গন্তব্যে পাঠানো হচ্ছে।
+      </div>
     </div>
   );
 };
