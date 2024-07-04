@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -216,9 +216,9 @@ export default function Component() {
                     Source Code
                   </label>
                   <p>
-                    I will transfer the website's source code to your GitHub
-                    account either as a repository or zip file.
+                    {`I will transfer the website's source code to your GitHub account (either as a repository or zip file).`}
                   </p>
+
                   <select
                     value={sourceCode ? "with" : "without"}
                     onChange={(e) => setSourceCode(e.target.value === "with")}
