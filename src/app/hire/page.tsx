@@ -110,9 +110,9 @@ export default function Component() {
       <div className="absolute inset-0 z-0">
         <ParticleBackground />
       </div>
-      <div className="relative z-10 w-full min-h-screen flex flex-col items-center justify-center p-4">
-        <nav className="bg-gray-800 text-gray-400 py-2 px-4 rounded-full mb-4 w-full max-w-xl overflow-w-fit">
-          <div className="flex justify-center space-x-4">
+      <div className="relative z-10 w-full h-full flex flex-col items-center justify-center">
+        <nav className="bg-gray-800 text-gray-400 py-2 px-4 rounded-full mb-4 flex justify-center">
+          <div className="flex flex-wrap justify-center space-x-0 md:space-x-6">
             <Link
               href="/en"
               className="whitespace-nowrap px-3 py-1 rounded-full transform transition duration-300 ease-in-out hover:scale-110"
@@ -123,7 +123,7 @@ export default function Component() {
               href="/about_en"
               className="whitespace-nowrap px-3 py-1 rounded-full transform transition duration-300 ease-in-out hover:scale-110"
             >
-              About Me
+              About
             </Link>
             <Link
               href="/blog_en"
