@@ -1,6 +1,6 @@
 "use client";
 import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
-import { LiaOrcid } from "react-icons/lia";
+import { CiBarcode } from "react-icons/ci";
 import { HiDownload } from "react-icons/hi";
 import ParticleBackground from "@/components/ui/Particle";
 import {
@@ -135,11 +135,11 @@ export default function Home() {
                 </Link>
                 <Link
                   className="group bg-gray-900 text-white px-7 py-3 flex items-center gap-2 rounded-full outline-none focus:scale-110 hover:scale-110 hover:bg-gray-950 active:scale-105 transition ml-4"
-                  href="https://orcid.org/0009-0007-8994-5252"
+                  href="/hire"
                   target="_blank"
                 >
-                  অর্কিড
-                  <LiaOrcid className="opacity-100 group-hover:translate-y-1 transition" />
+                  হায়ার করুন
+                  <CiBarcode className="opacity-100 group-hover:translate-y-1 transition" />
                 </Link>
               </CardFooter>
             </Card>

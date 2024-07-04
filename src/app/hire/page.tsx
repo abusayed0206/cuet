@@ -111,7 +111,7 @@ export default function Component() {
         <ParticleBackground />
       </div>
       <div className="relative z-10 w-full min-h-screen flex flex-col items-center justify-center p-4">
-        <nav className="bg-gray-800 text-gray-400 py-2 px-4 rounded-full mb-4 w-full max-w-xl overflow-x-auto">
+        <nav className="bg-gray-800 text-gray-400 py-2 px-4 rounded-full mb-4 w-full max-w-xl overflow-w-fit">
           <div className="flex justify-center space-x-4">
             <Link
               href="/en"
@@ -150,8 +150,9 @@ export default function Component() {
                   <h3 className="text-sm md:text-base text-center italic">
                     I will create a professional portfolio website to showcase
                     your achievements, research papers, CV, blog, and more. I
-                    utilize the Next.js framework and Tailwind CSS for a modern,
-                    customizable design.
+                    utilize the NextJS framework and Tailwind CSS for a modern,
+                    customizable design. Besides I can design website by
+                    Wordpress but you may need external paid hosting service.
                   </h3>
 
                   <div className="mb-4 text-center">
@@ -172,7 +173,9 @@ export default function Component() {
                       <option value="with">
                         With custom domain (e.g., yourname.com, yourname.me)
                       </option>
-                      <option value="without">Without custom domain</option>
+                      <option value="without">
+                        Without custom domain(vercel.io, github.io)
+                      </option>
                     </select>
                   </div>
 
@@ -199,9 +202,9 @@ export default function Component() {
                       Blog
                     </label>
                     <p>
-                      I will integrate your Hashnode blog seamlessly into your
-                      website (without Hashnode branding) and enable automatic
-                      backups to GitHub.
+                      I will integrate your blog(Hosted on Hahsnode:free, any
+                      other platform) seamlessly into your website (without
+                      Hashnode branding) and enable automatic backups to GitHub.
                     </p>
                     <select
                       value={blog ? "with" : "without"}
@@ -220,7 +223,7 @@ export default function Component() {
                       Source Code
                     </label>
                     <p>
-                      {`I will transfer the website's source code to your GitHub account (either as a repository or zip file).`}
+                      {`I will transfer the website's source code to your GitHub/GitLab account (either as a repository or zip file).`}
                     </p>
 
                     <select
@@ -255,7 +258,7 @@ export default function Component() {
 
                   <div className="mb-4 text-center ">
                     <label className="block text-center text-xl text-gray-700 font-bold mb-2">
-                      Short Name
+                      Name
                     </label>
                     <input
                       type="text"
@@ -269,7 +272,7 @@ export default function Component() {
 
                   <div className="mb-4 text-center">
                     <label className="block text-xl text-gray-700 font-bold mb-2">
-                      WhatsApp Phone Number
+                      WhatsApp Number
                     </label>
                     <p className="text-center mb-2">Where I can reach you.</p>
 
@@ -281,7 +284,7 @@ export default function Component() {
                         value={whatsappNumber}
                         onChange={(e) => setWhatsappNumber(e.target.value)}
                         className="px-3 py-2 border border-gray-300 rounded-full text-center min-w-fit"
-                        placeholder="09696563931"
+                        placeholder="015555555555"
                         required
                       />
                     </div>
@@ -289,7 +292,7 @@ export default function Component() {
 
                   <div className="mb-4 text-center">
                     <h3 className="text-lg font-bold">
-                      Total Price: ${totalPrice} [Tk {totalPriceInBDT}]
+                      Total Charge: ${totalPrice} [Tk {totalPriceInBDT}]
                     </h3>
                   </div>
 
