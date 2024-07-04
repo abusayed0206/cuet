@@ -13,6 +13,10 @@ module.exports = {
         protocol: "https",
         hostname: "cdn.hashnode.com",
       },
+      {
+        protocol: "https",
+        hostname: "songstitch.art",
+      },
     ],
   },
 };
