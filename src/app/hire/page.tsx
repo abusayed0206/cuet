@@ -106,261 +106,269 @@ export default function Component() {
   };
 
   return (
-    <>
-      <div className="relative w-full h-screen overflow-auto">
-        <div className="absolute inset-0 z-0">
-          <ParticleBackground />
-        </div>
-        <div className="relative z-10 w-full h-full flex flex-col items-center justify-center">
-          <nav className="bg-gray-800 text-gray-400 py-2 px-4 rounded-full mb-4 flex justify-center">
-            <div className="flex flex-wrap justify-center space-x-0 md:space-x-6">
-              <Link
-                href="/en"
-                className="px-3 py-1 rounded-full mb-2 md:mb-0 transform transition duration-300 ease-in-out hover:scale-110"
-              >
-                Home
-              </Link>
-              <Link
-                href="/about_en"
-                className="px-3 py-1 rounded-full mb-2 md:mb-0 transform transition duration-300 ease-in-out hover:scale-110"
-              >
-                About Me
-              </Link>
-              <Link
-                href="/blog_en"
-                className="px-3 py-1 rounded-full mb-2 md:mb-0 transform transition duration-300 ease-in-out hover:scale-110"
-              >
-                Blog
-              </Link>
-              <Link
-                href="/contact_en"
-                className="px-3 py-1 rounded-full mb-2 md:mb-0 transform transition duration-300 ease-in-out hover:scale-110"
-              >
-                Contact
-              </Link>
-            </div>
-          </nav>
-          <Card className="max-w-lg mx-4 bg-white text-black p-6 rounded-lg shadow-lg overflow-y-auto">
-            {!submitted ? (
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <h2 className="text-xl md:text-2xl font-bold text-center">
-                  Portfolio Website Development Service
-                </h2>
-                <h3 className="text-sm md:text-base text-center italic">
-                  I will create a professional portfolio website to showcase
-                  your achievements, research papers, CV, blog, and more. I
-                  utilize the Next.js framework and Tailwind CSS for a modern,
-                  customizable design.
-                </h3>
+    <div className="relative w-full min-h-screen overflow-hidden">
+      <div className="absolute inset-0 z-0">
+        <ParticleBackground />
+      </div>
+      <div className="relative z-10 w-full min-h-screen flex flex-col items-center justify-center p-4">
+        <nav className="bg-gray-800 text-gray-400 py-2 px-4 rounded-full mb-4 w-full max-w-xl overflow-x-auto">
+          <div className="flex justify-center space-x-4">
+            <Link
+              href="/en"
+              className="whitespace-nowrap px-3 py-1 rounded-full transform transition duration-300 ease-in-out hover:scale-110"
+            >
+              Home
+            </Link>
+            <Link
+              href="/about_en"
+              className="whitespace-nowrap px-3 py-1 rounded-full transform transition duration-300 ease-in-out hover:scale-110"
+            >
+              About Me
+            </Link>
+            <Link
+              href="/blog_en"
+              className="whitespace-nowrap px-3 py-1 rounded-full transform transition duration-300 ease-in-out hover:scale-110"
+            >
+              Blog
+            </Link>
+            <Link
+              href="/contact_en"
+              className="whitespace-nowrap px-3 py-1 rounded-full transform transition duration-300 ease-in-out hover:scale-110"
+            >
+              Contact
+            </Link>
+          </div>
+        </nav>
+        <div className="w-full max-w-4xl mx-auto">
+          <Card className="bg-white text-black mx-4 overflow-y-auto max-h-[80vh]">
+            <div className="p-4 md:p-6 lg:p-8">
+              {!submitted ? (
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <h2 className="text-xl md:text-2xl font-bold text-center">
+                    Portfolio Website Development Service
+                  </h2>
+                  <h3 className="text-sm md:text-base text-center italic">
+                    I will create a professional portfolio website to showcase
+                    your achievements, research papers, CV, blog, and more. I
+                    utilize the Next.js framework and Tailwind CSS for a modern,
+                    customizable design.
+                  </h3>
 
-                <div className="mb-4 text-center ">
-                  <label className="block text-center text-xl text-gray-700 font-bold mb-2">
-                    Domain
-                  </label>
-                  <p>
-                    I will buy domain for you and it will be billed separately.
-                    I will purchase the domain for you and provide full access.
-                    You will be responsible for renewals after the first year.
-                  </p>
-                  <select
-                    value={domain ? "with" : "without"}
-                    onChange={(e) => setDomain(e.target.value === "with")}
-                    className="px-3 py-2 border border-gray-300 rounded-full text-center min-w-fit"
-                  >
-                    <option value="with">
-                      With custom domain (e.g., yourname.com, yourname.me)
-                    </option>
-                    <option value="without">Without custom domain</option>
-                  </select>
-                </div>
+                  <div className="mb-4 text-center">
+                    <label className="block text-xl text-gray-700 font-bold mb-2">
+                      Domain
+                    </label>
+                    <p className="text-sm md:text-base mb-2">
+                      I will buy domain for you and it will be billed
+                      separately. I will purchase the domain for you and provide
+                      full access. You will be responsible for renewals after
+                      the first year.
+                    </p>
+                    <select
+                      value={domain ? "with" : "without"}
+                      onChange={(e) => setDomain(e.target.value === "with")}
+                      className="w-full md:w-auto px-3 py-2 border border-gray-300 rounded-full text-center"
+                    >
+                      <option value="with">
+                        With custom domain (e.g., yourname.com, yourname.me)
+                      </option>
+                      <option value="without">Without custom domain</option>
+                    </select>
+                  </div>
 
-                <div className="mb-4 text-center">
-                  <label className="block text-xl text-gray-700 font-bold mb-2">
-                    CV
-                  </label>
-                  <p className="text-center mb-2">
-                    I will create a professional CV using MS Word, LaTeX, or
-                    your preferred format.
-                  </p>
-                  <select
-                    value={cv ? "with" : "without"}
-                    onChange={(e) => setCv(e.target.value === "with")}
-                    className="px-3 py-2 border border-gray-300 rounded-full text-center min-w-fit"
-                  >
-                    <option value="with">With CV (PDF) – $3</option>
-                    <option value="without">Without CV – $0</option>
-                  </select>
-                </div>
+                  <div className="mb-4 text-center">
+                    <label className="block text-xl text-gray-700 font-bold mb-2">
+                      CV
+                    </label>
+                    <p className="text-center mb-2">
+                      I will create a professional CV using MS Word, LaTeX, or
+                      your preferred format.
+                    </p>
+                    <select
+                      value={cv ? "with" : "without"}
+                      onChange={(e) => setCv(e.target.value === "with")}
+                      className="px-3 py-2 border border-gray-300 rounded-full text-center min-w-fit"
+                    >
+                      <option value="with">With CV (PDF) – $3</option>
+                      <option value="without">Without CV – $0</option>
+                    </select>
+                  </div>
 
-                <div className="mb-4 text-center ">
-                  <label className="block text-center text-xl text-gray-700 font-bold mb-2">
-                    Blog
-                  </label>
-                  <p>
-                    I will integrate your Hashnode blog seamlessly into your
-                    website (without Hashnode branding) and enable automatic
-                    backups to GitHub.
-                  </p>
-                  <select
-                    value={blog ? "with" : "without"}
-                    onChange={(e) => setBlog(e.target.value === "with")}
-                    className="px-3 py-2 border border-gray-300 rounded-full text-center min-w-fit"
-                  >
-                    <option value="with">With blog function – $5</option>
-                    <option value="without">Without blog function – $0</option>
-                  </select>
-                </div>
+                  <div className="mb-4 text-center ">
+                    <label className="block text-center text-xl text-gray-700 font-bold mb-2">
+                      Blog
+                    </label>
+                    <p>
+                      I will integrate your Hashnode blog seamlessly into your
+                      website (without Hashnode branding) and enable automatic
+                      backups to GitHub.
+                    </p>
+                    <select
+                      value={blog ? "with" : "without"}
+                      onChange={(e) => setBlog(e.target.value === "with")}
+                      className="px-3 py-2 border border-gray-300 rounded-full text-center min-w-fit"
+                    >
+                      <option value="with">With blog function – $5</option>
+                      <option value="without">
+                        Without blog function – $0
+                      </option>
+                    </select>
+                  </div>
 
-                <div className="mb-4 text-center ">
-                  <label className="block text-center text-xl text-gray-700 font-bold mb-2">
-                    Source Code
-                  </label>
-                  <p>
-                    {`I will transfer the website's source code to your GitHub account (either as a repository or zip file).`}
-                  </p>
+                  <div className="mb-4 text-center ">
+                    <label className="block text-center text-xl text-gray-700 font-bold mb-2">
+                      Source Code
+                    </label>
+                    <p>
+                      {`I will transfer the website's source code to your GitHub account (either as a repository or zip file).`}
+                    </p>
 
-                  <select
-                    value={sourceCode ? "with" : "without"}
-                    onChange={(e) => setSourceCode(e.target.value === "with")}
-                    className="px-3 py-2 bordeFr border-gray-300 rounded-full text-center min-w-fit"
-                  >
-                    <option value="with">Yes – $5</option>
-                    <option value="without">No – $0</option>
-                  </select>
-                </div>
+                    <select
+                      value={sourceCode ? "with" : "without"}
+                      onChange={(e) => setSourceCode(e.target.value === "with")}
+                      className="px-3 py-2 bordeFr border-gray-300 rounded-full text-center min-w-fit"
+                    >
+                      <option value="with">Yes – $5</option>
+                      <option value="without">No – $0</option>
+                    </select>
+                  </div>
 
-                <div className="mb-4 text-center ">
-                  <label className="block text-center text-xl text-gray-700 font-bold mb-2">
-                    Annual Maintenance
-                  </label>
-                  <p>
-                    I will provide annual maintenance services, including domain
-                    renewals reminder, security updates.
-                  </p>
-                  <select
-                    value={maintenance ? "with" : "without"}
-                    onChange={(e) => setMaintenance(e.target.value === "with")}
-                    className="px-3 py-2 border border-gray-300 rounded-full text-center min-w-fit"
-                  >
-                    <option value="with">Yes – $12</option>
-                    <option value="without">No – $0</option>
-                  </select>
-                </div>
+                  <div className="mb-4 text-center ">
+                    <label className="block text-center text-xl text-gray-700 font-bold mb-2">
+                      Annual Maintenance
+                    </label>
+                    <p>
+                      I will provide annual maintenance services, including
+                      domain renewals reminder, security updates.
+                    </p>
+                    <select
+                      value={maintenance ? "with" : "without"}
+                      onChange={(e) =>
+                        setMaintenance(e.target.value === "with")
+                      }
+                      className="px-3 py-2 border border-gray-300 rounded-full text-center min-w-fit"
+                    >
+                      <option value="with">Yes – $12</option>
+                      <option value="without">No – $0</option>
+                    </select>
+                  </div>
 
-                <div className="mb-4 text-center ">
-                  <label className="block text-center text-xl text-gray-700 font-bold mb-2">
-                    Short Name
-                  </label>
-                  <input
-                    type="text"
-                    value={shortName}
-                    onChange={(e) => setShortName(e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-full text-center min-w-fit"
-                    placeholder="Enter your short name"
-                    required
-                  />
-                </div>
-
-                <div className="mb-4 text-center">
-                  <label className="block text-xl text-gray-700 font-bold mb-2">
-                    WhatsApp Phone Number
-                  </label>
-                  <p className="text-center mb-2">Where I can reach you.</p>
-
-                  <div className="flex items-center justify-center">
-                    {" "}
-                    <span className="mr-2">+88</span>
+                  <div className="mb-4 text-center ">
+                    <label className="block text-center text-xl text-gray-700 font-bold mb-2">
+                      Short Name
+                    </label>
                     <input
                       type="text"
-                      value={whatsappNumber}
-                      onChange={(e) => setWhatsappNumber(e.target.value)}
+                      value={shortName}
+                      onChange={(e) => setShortName(e.target.value)}
                       className="px-3 py-2 border border-gray-300 rounded-full text-center min-w-fit"
-                      placeholder="09696563931"
+                      placeholder="Enter your short name"
                       required
                     />
                   </div>
-                </div>
 
-                <div className="mb-4 text-center">
-                  <h3 className="text-lg font-bold">
-                    Total Price: ${totalPrice} [Tk {totalPriceInBDT}]
-                  </h3>
-                </div>
+                  <div className="mb-4 text-center">
+                    <label className="block text-xl text-gray-700 font-bold mb-2">
+                      WhatsApp Phone Number
+                    </label>
+                    <p className="text-center mb-2">Where I can reach you.</p>
 
-                <div className="text-center">
-                  <button
-                    type="submit"
-                    className="bg-blue-500 text-white px-3 py-2 rounded-full text-center min-w-fit"
-                  >
-                    Submit Order
-                  </button>
-                </div>
-              </form>
-            ) : (
-              <div className="text-center">
-                <h2 className="text-xl md:text-2xl font-bold">
-                  Your order has been placed successfully.
-                </h2>
-                <p className="text-lg">
-                  Fee: ${totalPrice} (Tk {totalPriceInBDT})
-                </p>
-                <p className="mt-4">Payment Options</p>
-                <p className="text-center py-4">
-                  <Button
-                    onClick={() => handleBkashPayment(totalPriceInBDT)}
-                    className="mr-2"
-                  >
-                    <Image
-                      src="/bkash.png"
-                      alt="bKah Payment"
-                      width={200}
-                      height={50}
-                      priority={true}
-                    />
-                  </Button>
-                </p>
-                <p className="mt-4 text-xl group bg-gray-900 text-white px-7 py-3 inline-flex items-center gap-2 rounded-full outline-none focus:scale-110 hover:scale-110 hover:bg-gray-950 active:scale-105 transition ml-4">
-                  <Button onClick={toggleBankDetails}>Bank Transfer</Button>
-                </p>
-                <p className="mt-4">
-                  <strong>Payment Instructions</strong>
-                  <p>
-                    For overseas clients, please use the bank transfer option.{" "}
-                  </p>
-                </p>
-
-                {showBankDetails && (
-                  <div className="mt-4 p-4 bg-gray-100 rounded-lg text-left">
-                    <p>
-                      <strong>Account Holder Name:</strong>{" "}
-                      {bankDetails.accountName}
-                    </p>
-                    <p>
-                      <strong>
-                        Account Number: 1053518970001
-                        <CopyToClipboardButton
-                          text={bankDetails.accountNumber}
-                        />
-                      </strong>
-                      <strong>Bank Name:</strong> {bankDetails.bankName}
-                    </p>
-                    <p>
-                      <strong>Bank Branch:</strong> {bankDetails.branchAddress}
-                    </p>
-                    <p>
-                      <strong>SWIFT Code:</strong> {bankDetails.swiftCode}
-                    </p>
-                    <p>
-                      <strong>Routing Number:</strong>{" "}
-                      {bankDetails.routingNumber}
-                    </p>
+                    <div className="flex items-center justify-center">
+                      {" "}
+                      <span className="mr-2">+88</span>
+                      <input
+                        type="text"
+                        value={whatsappNumber}
+                        onChange={(e) => setWhatsappNumber(e.target.value)}
+                        className="px-3 py-2 border border-gray-300 rounded-full text-center min-w-fit"
+                        placeholder="09696563931"
+                        required
+                      />
+                    </div>
                   </div>
-                )}
-              </div>
-            )}
+
+                  <div className="mb-4 text-center">
+                    <h3 className="text-lg font-bold">
+                      Total Price: ${totalPrice} [Tk {totalPriceInBDT}]
+                    </h3>
+                  </div>
+
+                  <div className="text-center">
+                    <button
+                      type="submit"
+                      className="bg-blue-500 text-white px-3 py-2 rounded-full text-center min-w-fit"
+                    >
+                      Submit Order
+                    </button>
+                  </div>
+                </form>
+              ) : (
+                <div className="text-center">
+                  <h2 className="text-xl md:text-2xl font-bold">
+                    Your order has been placed successfully.
+                  </h2>
+                  <p className="text-lg">
+                    Fee: ${totalPrice} (Tk {totalPriceInBDT})
+                  </p>
+                  <p className="mt-4">Payment Options</p>
+                  <p className="text-center py-4">
+                    <Button
+                      onClick={() => handleBkashPayment(totalPriceInBDT)}
+                      className="mr-2"
+                    >
+                      <Image
+                        src="/bkash.png"
+                        alt="bKah Payment"
+                        width={200}
+                        height={50}
+                        priority={true}
+                      />
+                    </Button>
+                  </p>
+                  <p className="mt-4 text-xl group bg-gray-900 text-white px-7 py-3 inline-flex items-center gap-2 rounded-full outline-none focus:scale-110 hover:scale-110 hover:bg-gray-950 active:scale-105 transition ml-4">
+                    <Button onClick={toggleBankDetails}>Bank Transfer</Button>
+                  </p>
+                  <p className="mt-4">
+                    <strong>Payment Instructions</strong>
+                    <p>
+                      For overseas clients, please use the bank transfer option.{" "}
+                    </p>
+                  </p>
+
+                  {showBankDetails && (
+                    <div className="mt-4 p-4 bg-gray-100 rounded-lg text-left">
+                      <p>
+                        <strong>Account Holder Name:</strong>{" "}
+                        {bankDetails.accountName}
+                      </p>
+                      <p>
+                        <strong>
+                          Account Number: 1053518970001
+                          <CopyToClipboardButton
+                            text={bankDetails.accountNumber}
+                          />
+                        </strong>
+                        <strong>Bank Name:</strong> {bankDetails.bankName}
+                      </p>
+                      <p>
+                        <strong>Bank Branch:</strong>{" "}
+                        {bankDetails.branchAddress}
+                      </p>
+                      <p>
+                        <strong>SWIFT Code:</strong> {bankDetails.swiftCode}
+                      </p>
+                      <p>
+                        <strong>Routing Number:</strong>{" "}
+                        {bankDetails.routingNumber}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </Card>
         </div>
       </div>
-    </>
+    </div>
   );
 }

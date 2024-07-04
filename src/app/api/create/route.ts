@@ -20,7 +20,7 @@ export async function POST(req: Request) {
         amount: amount,
         currency: "BDT",
         intent: "sale",
-        merchantInvoiceNumber: "LRS" + uuidv4().substring(0, 5),
+        merchantInvoiceNumber: "sayed" + uuidv4().substring(0, 5),
       }),
       headers: {
         "Content-Type": "application/json",
