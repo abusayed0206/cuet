@@ -22,6 +22,7 @@
     "axios": "^1.7.2",
     "bangla-calendar": "^7.0.0",
     "class-variance-authority": "^0.7.0",
+    "clipboard-copy": "^4.0.1",
     "clsx": "^2.0.0",
     "lucide-react": "^0.294.0",
     "next": "^14.2.4",
@@ -39,12 +40,14 @@
     "tailwind-merge": "^2.1.0",
     "tailwindcss-animate": "^1.0.7",
     "to-bengali": "^1.0.2",
-    "tsparticles": "^3.4.0"
+    "tsparticles": "^3.4.0",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18",
+    "@types/uuid": "^10.0.0",
     "autoprefixer": "^10.0.1",
     "eslint": "^8",
     "eslint-config-next": "14.0.4",
