@@ -174,7 +174,7 @@ export default function Component() {
                         With custom domain (e.g., yourname.com, yourname.me)
                       </option>
                       <option value="without">
-                        Without custom domain(vercel.io, github.io)
+                        Without custom domain (e.g., yourname.vercel.app, yourname.github.io)
                       </option>
                     </select>
                   </div>
