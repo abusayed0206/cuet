@@ -217,7 +217,7 @@ export default function Component() {
                   </label>
                   <p>
                     I will transfer the website's source code to your GitHub
-                    account (either as a repository or zip file).
+                    account either as a repository or zip file.
                   </p>
                   <select
                     value={sourceCode ? "with" : "without"}
