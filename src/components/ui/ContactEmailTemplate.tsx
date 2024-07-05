@@ -42,7 +42,8 @@ export const ContactEmailTemplate: React.FC<ContactEmailTemplateProps> = ({
 
             <Section className="p-4">
               <Text className="text-gray-700 text-center mb-6">
-                I appreciate you reaching out. Here's a summary of your message:
+                I appreciate you reaching out. Here&apos;s a summary of your
+                message:
               </Text>
 
               {/* Message Details */}
@@ -65,8 +66,8 @@ export const ContactEmailTemplate: React.FC<ContactEmailTemplateProps> = ({
               </div>
 
               <Text className="text-gray-700 text-center mb-6">
-                I'll get back to you as soon as possible. You're also welcome to
-                reply directly to this email.
+                I&apos;ll get back to you as soon as possible. You&apos;re also
+                welcome to reply directly to this email.
               </Text>
 
               {/* Best regards and image */}
