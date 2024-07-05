@@ -280,7 +280,7 @@ export default function Component() {
                       {" "}
                       <span className="mr-2">+88</span>
                       <input
-                        type="text"
+                        type="number"
                         value={whatsappNumber}
                         onChange={(e) => setWhatsappNumber(e.target.value)}
                         className="px-3 py-2 border border-gray-300 rounded-full text-center min-w-fit"
@@ -339,7 +339,7 @@ export default function Component() {
                   </p>
 
                   {showBankDetails && (
-                    <div className="mt-4 p-4 bg-gray-100 rounded-lg text-left">
+                    <div className="mt-4 p-4 bg-gray-100 rounded-lg text-center">
                       <p>
                         <strong>Account Holder Name:</strong>{" "}
                         {bankDetails.accountName}
