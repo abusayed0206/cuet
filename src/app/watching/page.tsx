@@ -7,7 +7,7 @@ export default function Component() {
   return (
     <>
       <div className="bg-[url('https://bing.biturl.top/?resolution=1920&format=image&index=0&mkt=en-US')] min-h-screen flex items-center justify-center">
-        <Card className="max-w-auto mx-4 bg-[rgb(255,255,255)] text-[#000000]">
+        <Card className="max-w-auto mx-5 bg-[rgb(255,255,255)] text-[#000000]">
           <Button className="absolute top-0 right-0 mt-4 mr-4 text-white hover:text-red-800 ">
             <Link
               aria-label="Trakt.tv"

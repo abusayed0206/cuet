@@ -140,7 +140,7 @@ export default function Component() {
           </div>
         </nav>
         <div className="w-full max-w-4xl mx-auto">
-          <Card className="bg-white text-black mx-4 overflow-y-auto max-h-[80vh]">
+          <Card className="bg-white text-black mx-5 overflow-y-auto max-h-[80vh]">
             <div className="p-4 md:p-6 lg:p-8">
               {!submitted ? (
                 <form onSubmit={handleSubmit} className="space-y-4">

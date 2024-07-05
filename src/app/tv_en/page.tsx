@@ -12,7 +12,7 @@ export default function Component() {
           <ParticleBackground />
         </div>
         <div className="relative z-10 w-full h-full flex flex-col items-center justify-center">
-          <Card className="max-w-auto mx-4 bg-[rgb(255,255,255)] text-[#000000]">
+          <Card className="max-w-auto mx-5 bg-[rgb(255,255,255)] text-[#000000]">
             <Button className="absolute top-0 right-0 mt-4 mr-4 p-2 bg-white text-white hover:text-red-800 border border-white">
               <Link
                 aria-label="Trakt.tv"

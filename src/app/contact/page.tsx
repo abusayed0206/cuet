@@ -56,7 +56,7 @@ export default function Contact() {
           </div>
         </nav>
         <div className="w-full max-w-4xl mx-auto">
-          <Card className="bg-white text-black mx-4 overflow-y-auto max-h-[80vh]">
+          <Card className="bg-white text-black mx-5 overflow-y-auto max-h-[80vh]">
             <CardHeader className="flex flex-col items-center pt-6">
               <CardTitle className="text-xl font-bold">যোগাযোগ</CardTitle>
               <CardDescription className="text-center text-gray-500">

@@ -62,7 +62,7 @@ export default function Payment() {
             </div>
           </nav>
           <div className="w-full max-w-4xl mx-auto">
-            <Card className="bg-white text-black mx-4 overflow-y-auto max-h-[80vh]">
+            <Card className="bg-white text-black mx-5 overflow-y-auto max-h-[80vh]">
               <CardHeader className="flex flex-col items-center pt-6">
                 <CardTitle className="text-center text-xl font-bold">
                   bKash Payment(Manual Payment)

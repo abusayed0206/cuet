@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { CardFooter, Card } from "@/components/ui/card";
 
 
-export default function Song() {
+export default function Blog() {
   const [post, setPosts] = useState<
     {
       node: {
@@ -93,7 +93,7 @@ export default function Song() {
           </Link>
         </div>
       </nav>
-      <Card className="flex items-center justify-center max-w-auto mx-4 bg-white text-black relative w-full md:w-auto">
+      <Card className="flex items-center justify-center max-w-auto mx-5 bg-white text-black relative w-full md:w-auto">
         <div className="flex flex-col items-center">
           <SkeletonTheme baseColor="#b0c4de" highlightColor="#e0ffff">
             {loading && (

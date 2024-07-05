@@ -1,6 +1,7 @@
 // ContactForm.tsx
 "use client";
-import { useState } from "react";
+import { useState, useRef } from "react";
+import CaptchaWidget from "./CaptchaWidget";
 
 const ContactForm = () => {
   const [fullName, setFullName] = useState("");
@@ -9,15 +10,35 @@ const ContactForm = () => {
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const turnstileWidgetRef = useRef<string>();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Form validation logic here
+    if (!turnstileToken) {
+      alert("Please complete the Turnstile challenge before submitting.");
+      return;
+    }
 
     try {
       setSubmitting(true);
 
+      // First, verify the Turnstile token
+      const verifyResponse = await fetch("/api/verify-turnstile", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token: turnstileToken }),
+      });
+
+      if (!verifyResponse.ok) {
+        const error = await verifyResponse.json();
+        throw new Error(error.message || "Failed to verify Turnstile token");
+      }
+
+      // If verification is successful, proceed with form submission
       const response = await fetch("/api/sendbn", {
         method: "POST",
         headers: {
@@ -32,11 +53,16 @@ const ContactForm = () => {
         setEmail("");
         setPhoneNumber("");
         setMessage("");
+        setTurnstileToken("");
+        if (turnstileWidgetRef.current && window.turnstile) {
+          window.turnstile.reset(turnstileWidgetRef.current);
+        }
       } else {
-        console.error("Failed to send email");
+        throw new Error("Failed to send email");
       }
     } catch (error) {
-      console.error("Error sending email:", error);
+      console.error("Error:", error);
+      alert(error instanceof Error ? error.message : "An error occurred");
     } finally {
       setSubmitting(false);
     }
@@ -58,12 +84,12 @@ const ContactForm = () => {
               required
             />
           </label>
-
+ 
           <label htmlFor="email" className="block text-center">
             ইমেইল ঠিকানা
             <input
               type="email"
-              placeholder="আমনার ইমেইল ঠিকানা লিখুন"
+              placeholder="আপনার ইমেইল ঠিকানা লিখুন"
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -97,13 +123,29 @@ const ContactForm = () => {
             />
           </label>
 
+          <div className="flex justify-center">
+            <CaptchaWidget
+              sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+              callback={(token) => {
+                setTurnstileToken(token);
+              }}
+              onWidgetId={(widgetId) => {
+                turnstileWidgetRef.current = widgetId;
+              }}
+            />
+          </div>
+
           <button
             type="submit"
             className={`
-        inline-flex justify-center items-center min-w-fit px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
-        ${submitting ? "opacity-50 cursor-not-allowed" : ""}
-    `}
-            disabled={submitting}
+              inline-flex justify-center items-center min-w-fit px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
+              ${
+                submitting || !turnstileToken
+                  ? "opacity-50 cursor-not-allowed"
+                  : ""
+              }
+            `}
+            disabled={submitting || !turnstileToken}
           >
             {submitting ? "পাঠানো হচ্ছে..." : "বার্তা পাঠান"}
           </button>
@@ -113,7 +155,6 @@ const ContactForm = () => {
           <p className="text-green-600 font-semibold">
             সফলভাবে বার্তা পাঠানো হয়েছে!
           </p>
-          {/* Additional success message or redirect logic can be added here */}
         </div>
       )}
     </div>
