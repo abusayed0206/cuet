@@ -52,7 +52,7 @@ export default function Payment() {
 
   return (
     <>
-      <div className="relative w-full h-screen overflow-hidden">
+      <div className="relative w-full min-h-screen overflow-hidden">
         <div className="absolute inset-0 z-0">
           <ParticleBackground />
         </div>
@@ -70,7 +70,7 @@ export default function Payment() {
           <div className="mx-6 rounded-2xl max-w-screen-md bg-white text-black">
             <Card className="bg-white text-black ">
               <CardHeader className="flex flex-col items-center pt-6">
-                <CardTitle className="text-xl font-bold">
+                <CardTitle className="text-center text-xl font-bold">
                   bKash Payment(Manual Payment)
                 </CardTitle>
                 <CardDescription className="text-center text-gray-500">
