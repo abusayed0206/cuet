@@ -11,11 +11,9 @@ import {
   Card,
 } from "@/components/ui/card";
 import ParticleBackground from "@/components/ui/Particle";
-
+import ContactFormbn from "@/components/ui/ContactFormbn";
 
 export default function Contact() {
-
-
   return (
     <div className="relative w-full h-screen overflow-hidden">
       <div className="absolute inset-0 z-0">
@@ -57,17 +55,17 @@ export default function Contact() {
             </Link>
           </div>
         </nav>
-        <div className="mx-6 rounded-2xl max-w-screen-md bg-white text-black">
-          <Card className="bg-white text-black ">
+        <div className="w-full max-w-4xl mx-auto">
+          <Card className="bg-white text-black mx-4 overflow-y-auto max-h-[80vh]">
             <CardHeader className="flex flex-col items-center pt-6">
               <CardTitle className="text-xl font-bold">যোগাযোগ</CardTitle>
               <CardDescription className="text-center text-gray-500">
-                আমার সাথে যোগাযোগ করতে ইমেইল করতে
-                পারেন বা লিংকডইন এ মেসেজ করতে পারেন। এই ২ টি মাধ্যম বাদে অন্য
-                মাধ্যমে প্রতিত্তোর পেতে দেরি হতে পারে। নিরাপদে ইমেইলের মাধ্যমে যোগাযোগের
-                জন্য নিচের PGP কী
-                ব্যবহার করুন।
+                আমার সাথে যোগাযোগ করতে নিচের ফর্ম টা পূরণ করতে পারেন, ইমেইল করতে
+                পারেন বা লিংকডইন এ মেসেজ করতে পারেন। অন্য মাধ্যমে প্রতিত্তোর
+                পেতে দেরি হতে পারে। নিরাপদে ইমেইলের মাধ্যমে যোগাযোগের জন্য নিচের
+                PGP কী ব্যবহার করুন।
               </CardDescription>
+              <ContactFormbn />
             </CardHeader>
 
             <CardFooter className="flex justify-around py-2">

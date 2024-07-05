@@ -321,7 +321,7 @@ export default function Component() {
                     >
                       <Image
                         src="/bkash.png"
-                        alt="bKah Payment"
+                        alt="bKash Payment"
                         width={200}
                         height={50}
                         priority={true}

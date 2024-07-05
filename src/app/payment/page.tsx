@@ -1,8 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import { GrLinkedin } from "react-icons/gr";
-import { VscGithubInverted } from "react-icons/vsc";
-import { ImProfile } from "react-icons/im";
 import Image from "next/image";
 import {
   CardTitle,
@@ -100,7 +97,7 @@ export default function Payment() {
                   bKash Payment(bKash App)
                 </CardTitle>
                 <CardDescription className="text-center text-gray-500">
-                  Please use the below QR code to scan from your bKahs App and
+                  Please use the below QR code to scan from your bKash App and
                   pay.
                 </CardDescription>
               </CardHeader>
@@ -119,7 +116,8 @@ export default function Payment() {
                   Bank Payment
                 </CardTitle>
                 <CardDescription className="text-center text-gray-500">
-                  You can pay via bank transfer using the below details. For smoth transaction, please use EFT method instead of NPSB.
+                  You can pay via bank transfer using the details below. For a
+                  smooth transaction, please use EFT instead of NPSB.
                 </CardDescription>
               </CardHeader>
               <CardFooter className="flex justify-around py-2">

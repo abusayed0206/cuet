@@ -4,6 +4,7 @@ import { GrLinkedin } from "react-icons/gr";
 import { MdOutlineMarkEmailUnread } from "react-icons/md";
 import ParticleBackground from "@/components/ui/Particle";
 import { FaKey } from "react-icons/fa6";
+import ContactForm from "@/components/ui/ContactForm";
 
 import {
   CardTitle,
@@ -21,7 +22,7 @@ export default function Contact() {
       </div>
       <div className="relative z-10 w-full h-full flex flex-col items-center justify-center">
         <nav className="bg-gray-800 text-gray-400 py-2 px-4 rounded-full mb-4 flex justify-center">
-          <div className="flex flex-wrap justify-center space-x-0 md:space-x-6">
+          <div className="flex flex-wrap justify-center space-x-0 md:space-x-2">
             <Link href="/en" className="px-3 py-1 rounded-full mb-2 md:mb-0">
               Home
             </Link>
@@ -52,16 +53,17 @@ export default function Contact() {
             </Link>
           </div>
         </nav>
-        <div className="mx-6 rounded-2xl max-w-screen-md bg-white text-black">
-          <Card className="bg-white text-black ">
+        <div className="w-full max-w-4xl mx-auto">
+          <Card className="bg-white text-black mx-4 overflow-y-auto max-h-[80vh]">
             <CardHeader className="flex flex-col items-center pt-6">
               <CardTitle className="text-xl font-bold">Contact</CardTitle>
               <CardDescription className="text-center text-gray-500">
-                You can reach me by email or message me on LinkedIn. Please note
-                that responses may be delayed if you use other methods of
-                contact. For secure email communication, please use the PGP key
-                provided to encrypt your messages.
+                To contact me, please fill the form below, email me, or message
+                me on LinkedIn. Responses may be delayed if you use other
+                methods. For secure communication, use the PGP key provided to
+                encrypt your emails.
               </CardDescription>
+              <ContactForm />
             </CardHeader>
 
             <CardFooter className="flex justify-around py-2">

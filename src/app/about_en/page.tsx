@@ -57,8 +57,8 @@ export default function Home() {
               </Link>
             </div>
           </nav>
-          <div className="mx-6 rounded-2xl max-w-screen-md bg-white text-black">
-            <Card className="bg-white text-black ">
+          <div className="w-full max-w-4xl mx-auto">
+            <Card className="bg-white text-black mx-6 overflow-y-auto max-h-[80vh]">
               <CardHeader className="flex flex-col items-center pt-6">
                 <CardTitle className="text-xl font-bold">About Me</CardTitle>
                 <CardDescription className="text-center text-gray-500">
