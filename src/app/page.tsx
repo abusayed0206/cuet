@@ -86,8 +86,8 @@ export default function Home() {
               </Link>
             </div>
           </nav>
-          <div className="w-full max-w-4xl mx-auto">
-            <Card className="bg-white text-black mx-6 overflow-y-auto max-h-[80vh]">
+          <div className="mx-6 rounded-2xl max-w-screen-md bg-white text-black">
+            <Card className="bg-white text-black ">
               <CardHeader className="flex flex-col items-center pt-6">
                 <Avatar className="w-28 h-28 mb-4">
                   <AvatarImage

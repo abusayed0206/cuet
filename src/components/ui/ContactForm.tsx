@@ -139,10 +139,9 @@ const ContactForm = () => {
             type="submit"
             className={`
               inline-flex justify-center items-center min-w-fit px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
-              ${
-                submitting || !turnstileToken
-                  ? "opacity-50 cursor-not-allowed"
-                  : ""
+              ${submitting || !turnstileToken
+                ? "opacity-50 cursor-not-allowed"
+                : ""
               }
             `}
             disabled={submitting || !turnstileToken}

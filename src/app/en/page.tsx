@@ -85,8 +85,8 @@ export default function Home() {
             </Link>
           </div>
         </nav>
-        <div className="w-full max-w-4xl mx-auto">
-          <Card className="bg-white text-black mx-5 overflow-y-auto max-h-[80vh]">
+        <div className="mx-6 rounded-2xl max-w-screen-md bg-white text-black">
+          <Card className="bg-white text-black ">
             <CardHeader className="flex flex-col items-center pt-6">
               <Avatar className="w-28 h-28 mb-4">
                 <AvatarImage
@@ -106,7 +106,7 @@ export default function Home() {
               </CardDescription>
             </CardHeader>
             <CardContent className="p-4 border-t border-b">
-            <p className="text-lg md:text-xl text-center">
+              <p className="text-lg md:text-xl text-center">
                 I am a Civil Engineering student currently in my fourth year at
                 Chittagong University of Engineering and Technology (CUET). My
                 major is Structural Engineering, and I have a keen interest in
@@ -131,7 +131,7 @@ export default function Home() {
                 target="_blank"
               >
                 Hire Me
-                <CiBarcode />
+                <CiBarcode className="opacity-100 group-hover:translate-y-1 transition" />
               </Link>
             </CardFooter>
           </Card>
