@@ -58,36 +58,23 @@ export default function Payment() {
         </div>
         <div className="relative z-10 w-full h-full flex flex-col items-center justify-center">
           <nav className="bg-gray-800 text-gray-400 py-2 px-4 rounded-full mb-4 flex justify-center">
-            <div className="flex flex-wrap justify-center space-x-0 md:space-x-6">
-              <Link
-                href="/"
-                className="px-3 py-1 rounded-full bg-gray-700 text-white mb-2 md:mb-0"
-              >
+            <div className="flex flex-wrap justify-center space-x-0 md:space-x-2">
+              <Link href="/" className="px-3 py-1 text-white mb-2 md:mb-0">
                 প্রথম পাতা/HomePage
               </Link>
             </div>
           </nav>
-          <div className="mx-6 rounded-2xl max-w-screen-md bg-white text-black">
-            <Card className="bg-white text-black ">
+          <div className="w-full max-w-4xl mx-auto">
+            <Card className="bg-white text-black mx-4 overflow-y-auto max-h-[80vh]">
               <CardHeader className="flex flex-col items-center pt-6">
                 <CardTitle className="text-center text-xl font-bold">
                   bKash Payment(Manual Payment)
                 </CardTitle>
                 <CardDescription className="text-center text-gray-500">
-                  Please input the amount you want to pay via bKash Payment or
-                  use the below QR code to scan from your bKahs App and pay.
-                  Also, you can transfer the amount to the below bank account.
+                  Please input the amount you want to pay via bKash Payment.
                 </CardDescription>
               </CardHeader>
 
-              <CardFooter className="flex justify-around py-2">
-                <Image
-                  src="/qr.png"
-                  alt="bKash QR Code"
-                  width={200}
-                  height={200}
-                />
-              </CardFooter>
               <CardFooter className="flex flex-col md:flex-row justify-around items-center py-2">
                 <div className="flex flex-col md:flex-row items-center justify-center mt-4 space-x-4 w-full md:w-auto">
                   <input
@@ -108,6 +95,33 @@ export default function Payment() {
                 </div>
               </CardFooter>
 
+              <CardHeader className="flex flex-col items-center pt-6">
+                <CardTitle className="text-center text-xl font-bold">
+                  bKash Payment(bKash App)
+                </CardTitle>
+                <CardDescription className="text-center text-gray-500">
+                  Please use the below QR code to scan from your bKahs App and
+                  pay.
+                </CardDescription>
+              </CardHeader>
+
+              <CardFooter className="flex justify-around py-2">
+                <Image
+                  src="/qr.png"
+                  alt="bKash QR Code"
+                  width={200}
+                  height={200}
+                />
+              </CardFooter>
+
+              <CardHeader className="flex flex-col items-center pt-6">
+                <CardTitle className="text-center text-xl font-bold">
+                  Bank Payment
+                </CardTitle>
+                <CardDescription className="text-center text-gray-500">
+                  You can pay via bank transfer using the below details. For smoth transaction, please use EFT method instead of NPSB.
+                </CardDescription>
+              </CardHeader>
               <CardFooter className="flex justify-around py-2">
                 <p className="mt-4 text-xl group bg-gray-900 text-white px-7 py-3 inline-flex items-center gap-2 rounded-full outline-none focus:scale-110 hover:scale-110 hover:bg-gray-950 active:scale-105 transition ml-4">
                   <button onClick={toggleBankDetails}>Bank Transfer</button>
