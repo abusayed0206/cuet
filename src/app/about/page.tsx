@@ -96,26 +96,32 @@ export default function About() {
                   আমার সম্পর্কে
                 </CardTitle>
 <CardDescription className="text-center text-gray-500">
-  আমার সম্পর্কে বিস্তারিত জানতে নিচের লিংক গুলি দেখুন। এই মূহর্তে আমি কোন মুভি/এপিসোড দেখছি{" "}
-  <Link href="/watching" className="text-xl underline">
-    এখানে
-  </Link>{" "}
-  ক্লিক করে জেনে নিতে পারেন।
-  {isLoading ? (
-    <p>এবং,এখন কোন গান শুনছি না। ধন্যবাদ</p>
-  ) : hasError ? (
-    <p>কোন একটা জামেলা হইছে।.</p>
-  ) : lastFMSong ? (
-    <p>
-      আর,এখন শুনছি {" "}
-      <span className="text-xl underline">{lastFMSong.artist}</span>{" "}
-      এর {" "}
-      <span className="text-xl underline">{lastFMSong.name}</span>{" "}
-      গানটি। ধন্যবাদ।
-    </p>
-  ) : (
-    <p>গান শুনতেছি না সম্ভবত।</p>
-  )}
+  <p>
+    আমার সম্পর্কে বিস্তারিত জানতে নিচের লিংক গুলি দেখুন। এই মূহর্তে আমি কোন মুভি/এপিসোড দেখছি{" "}
+    <Link href="/watching" className="text-xl underline">
+      এখানে
+    </Link>{" "}
+    ক্লিক করে জেনে নিতে পারেন।{" "}
+    {isLoading ? (
+      "এবং,এখন কোন গান শুনছি না। ধন্যবাদ"
+    ) : hasError ? (
+      "কোন একটা জামেলা হইছে।"
+    ) : lastFMSong ? (
+      <>
+        আর,এখন শুনছি{" "}
+        <span className="font-bold italic bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-green-500 to-purple-500">
+          {lastFMSong.artist}
+        </span>{" "}
+        এর{" "}
+        <span className="font-bold italic bg-clip-text text-transparent bg-gradient-to-r from-red-500 via-yellow-500 to-pink-500">
+          {lastFMSong.name}
+        </span>{" "}
+        গানটি। ধন্যবাদ।
+      </>
+    ) : (
+      "গান শুনতেছি না সম্ভবত।"
+    )}
+  </p>
 </CardDescription>
               </CardHeader>
 
