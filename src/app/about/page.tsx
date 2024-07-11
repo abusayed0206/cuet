@@ -1,25 +1,69 @@
-import { GrLinkedin } from "react-icons/gr";
-import { BsTwitterX } from "react-icons/bs";
-import { VscGithubInverted } from "react-icons/vsc";
-import { SiTrakt } from "react-icons/si";
-import Image from "next/image";
-import { ImProfile } from "react-icons/im";
-import { LiaOrcid } from "react-icons/lia";
-import { FaMastodon, FaDiscord } from "react-icons/fa6";
-import ParticleBackground from "@/components/ui/Particle";
-import { useLastFM } from 'use-last-fm'; // Import useLastFM hook
+"use client"
+import { useEffect, useState } from "react";
 
-import {
-  CardTitle,
-  CardDescription,
-  CardHeader,
-  CardFooter,
-  Card,
-} from "@/components/ui/card";
+import { GrLinkedin } from "react-icons/gr";
+
+import { BsTwitterX } from "react-icons/bs";
+
+import { VscGithubInverted } from "react-icons/vsc";
+
+import { SiTrakt } from "react-icons/si";
+
+import Image from "next/image";
+
+import { ImProfile } from "react-icons/im";
+
+import { LiaOrcid } from "react-icons/lia";
+
+import { FaMastodon, FaDiscord } from "react-icons/fa6";
+
+import ParticleBackground from "@/components/ui/Particle";
+
+import { useLastFM } from 'use-last-fm';
+
+import { CardTitle, CardDescription, CardHeader, CardFooter, Card } from "@/components/ui/card";
+
 import Link from "next/link";
 
+
+
 export default function Home() {
-  const lastFM = useLastFM('abusayed0206', 'b3272b7b5464a17b80ab52795cfe57ba'); // Replace with your Last.fm username and API token
+
+ const [lastFMSong, setLastFMSong] = useState<any>(null);
+
+ const [isLoading, setIsLoading] = useState(true);
+
+ const [error, setError] = useState(null);
+
+
+
+ const lastFM = useLastFM('abusayed0206', 'b3272b7b5464a17b80ab52795cfe57ba'); // Replace with your Last.fm username and API token
+
+
+
+ useEffect(() => {
+
+  if (lastFM.status === 'error') {
+
+   setError(lastFM.error); 
+
+   setIsLoading(false);
+
+  } else if (lastFM.status === 'playing') {
+
+   setLastFMSong({
+
+    artist: lastFM.song.artist,
+
+    name: lastFM.song.name
+
+   });
+
+   setIsLoading(false);
+
+  }
+
+ }, [lastFM.status, lastFM.song, lastFM.error]);
 
   return (
     <>
@@ -76,13 +120,18 @@ export default function Home() {
                     এখানে
                   </Link>{" "}
                   ক্লিক করে জেনে নিতে পারেন।
-                  {lastFM.status !== 'playing' ? (
-                    <p>এখন কোন কিছু শুনছি না।</p>
-                  ) : (
-                    <p>
-                      এখন শুনছি  {lastFM.song.artist} এর {lastFM.song.name}  গানটি। ধন্যবাদ। 
-                    </p>
-                  )}
+                  {isLoading ? (
+              <p>Loading Last.fm data...</p> 
+            ) : error ? (
+              <p>Error loading Last.fm: {error.message}</p>
+            ) : lastFMSong ? (
+              <p>
+                এখন শুনছি {lastFMSong.artist} এর {lastFMSong.name} গানটি। ধন্যবাদ। 
+              </p>
+            ) : (
+              <p>এখন কোন কিছু শুনছি না।</p>
+            )}
+                
                 </CardDescription>
               </CardHeader>
 
