@@ -74,6 +74,20 @@ export default function Home() {
                   </Link>{" "}
                   ক্লিক করে জেনে নিতে পারেন। ধন্যবাদ।
                 </CardDescription>
+                <CardDescription>এখন যে গান শুনছি:</CardDescription>
+                <CardDescription>
+                  <div className="rounded-lg overflow-hidden">
+                    <iframe
+                      src="https://lastfm.aiden.tv/abusayed0206"
+                      width="300"
+                      height="70"
+                      frameBorder="0"
+                      allow="autoplay; encrypted-media"
+                      title="এখন যে গান শুনছি"
+                      loading="lazy"
+                    ></iframe>
+                  </div>
+                </CardDescription>
               </CardHeader>
 
               <CardFooter className="flex justify-around py-2">
