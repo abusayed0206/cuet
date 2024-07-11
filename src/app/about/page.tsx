@@ -95,26 +95,28 @@ export default function About() {
                 <CardTitle className="text-xl font-bold">
                   আমার সম্পর্কে
                 </CardTitle>
-                <CardDescription className="text-center text-gray-500">
-                  আমার সম্পর্কে বিস্তারিত জানতে নিচের লিংক গুলি দেখুন। এছাড়া এই
-                  মূহর্তে আমি কোন মুভি/এপিসোড দেখছি{" "}
-                  <Link href="/watching" className="text-xl underline">
-                    এখানে
-                  </Link>{" "}
-                  ক্লিক করে জেনে নিতে পারেন।
-                  {isLoading ? (
-              <p>Loading Last.fm data...</p>
-            ) : hasError ? (
-              <p>Error loading Last.fm. Please try again later.</p> // Generic error message
-            ) : lastFMSong ? (
-              <p>
-                এখন শুনছি {lastFMSong.artist} এর {lastFMSong.name} গানটি। ধন্যবাদ। 
-              </p>
-            ) : (
-              <p>এখন কোন কিছু শুনছি না।</p>
-            )}
-                
-                </CardDescription>
+<CardDescription className="text-center text-gray-500">
+  আমার সম্পর্কে বিস্তারিত জানতে নিচের লিংক গুলি দেখুন। এছাড়া এই মূহর্তে আমি কোন মুভি/এপিসোড দেখছি{" "}
+  <Link href="/watching" className="text-xl underline">
+    এখানে
+  </Link>{" "}
+  ক্লিক করে জেনে নিতে পারেন।
+  {isLoading ? (
+    <p>এখন কোন গান শুনছি না। ধন্যবাদ</p>
+  ) : hasError ? (
+    <p>কোন একটা জামেলা হইছে।.</p>
+  ) : lastFMSong ? (
+    <p>
+      এখন শুনছি {" "}
+      <span className="text-xl underline">{lastFMSong.artist}</span>{" "}
+      এর {" "}
+      <span className="text-xl underline">{lastFMSong.name}</span>{" "}
+      গানটি। ধন্যবাদ।
+    </p>
+  ) : (
+    <p>গান শুনতেছি না সম্ভবত।</p>
+  )}
+</CardDescription>;
               </CardHeader>
 
               <CardFooter className="flex justify-around py-2">
