@@ -67,7 +67,7 @@ export default function Home() {
                   <Link href="/watching" className="text-xl underline">
                     here
                   </Link>{" "}
-                  to know what movie/episode I'm watching rn.
+                  to know what movie/episode I am watching rn.
                 </CardDescription>
                 <CardDescription>Listening now:</CardDescription>
                 <CardDescription>
