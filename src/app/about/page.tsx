@@ -7,6 +7,7 @@ import { ImProfile } from "react-icons/im";
 import { LiaOrcid } from "react-icons/lia";
 import { FaMastodon, FaDiscord } from "react-icons/fa6";
 import ParticleBackground from "@/components/ui/Particle";
+import { useLastFM } from 'use-last-fm'; // Import useLastFM hook
 
 import {
   CardTitle,
@@ -18,6 +19,8 @@ import {
 import Link from "next/link";
 
 export default function Home() {
+  const lastFM = useLastFM('abusayed0206', 'b3272b7b5464a17b80ab52795cfe57ba'); // Replace with your Last.fm username and API token
+
   return (
     <>
       <div className="relative w-full h-screen overflow-hidden">
@@ -72,21 +75,14 @@ export default function Home() {
                   <Link href="/watching" className="text-xl underline">
                     এখানে
                   </Link>{" "}
-                  ক্লিক করে জেনে নিতে পারেন। ধন্যবাদ।
-                </CardDescription>
-                <CardDescription>এখন যে গান শুনছি:</CardDescription>
-                <CardDescription>
-                  <div className="rounded-lg overflow-hidden">
-                    <iframe
-                      src="https://lastfm.aiden.tv/abusayed0206"
-                      width="300"
-                      height="70"
-                      frameBorder="0"
-                      allow="autoplay; encrypted-media"
-                      title="এখন যে গান শুনছি"
-                      loading="lazy"
-                    ></iframe>
-                  </div>
+                  ক্লিক করে জেনে নিতে পারেন।
+                  {lastFM.status !== 'playing' ? (
+                    <p>এখন কোন কিছু শুনছি না।</p>
+                  ) : (
+                    <p>
+                      এখন শুনছি  {lastFM.song.artist} এর {lastFM.song.name}  গানটি। ধন্যবাদ। 
+                    </p>
+                  )}
                 </CardDescription>
               </CardHeader>
 
@@ -260,4 +256,4 @@ export default function Home() {
       </div>
     </>
   );
-}
+                    }
