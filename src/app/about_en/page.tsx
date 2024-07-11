@@ -1,3 +1,5 @@
+"use client"
+import { useEffect, useState } from "react";
 import { GrLinkedin } from "react-icons/gr";
 import { BsTwitterX } from "react-icons/bs";
 import { VscGithubInverted } from "react-icons/vsc";
@@ -7,6 +9,7 @@ import { ImProfile } from "react-icons/im";
 import { LiaOrcid } from "react-icons/lia";
 import { FaMastodon, FaDiscord } from "react-icons/fa6";
 import ParticleBackground from "@/components/ui/Particle";
+import { useLastFM } from 'use-last-fm';
 
 import {
   CardTitle,
@@ -17,7 +20,26 @@ import {
 } from "@/components/ui/card";
 import Link from "next/link";
 
-export default function Home() {
+export default function About() {
+
+ const [lastFMSong, setLastFMSong] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false); // Use a boolean for error state
+
+  const lastFM = useLastFM('abusayed0206', 'b3272b7b5464a17b80ab52795cfe57ba');
+
+  useEffect(() => {
+    if (lastFM.status === 'error') {
+      setHasError(true); // Set error state to true
+      setIsLoading(false);
+    } else if (lastFM.status === 'playing') {
+      setLastFMSong({
+        artist: lastFM.song.artist,
+        name: lastFM.song.name
+      });
+      setIsLoading(false);
+    }
+  }, [lastFM.status, lastFM.song]);
   return (
     <>
       <div className="relative w-full h-screen overflow-hidden">
@@ -62,9 +84,33 @@ export default function Home() {
               <CardHeader className="flex flex-col items-center pt-6">
                 <CardTitle className="text-xl font-bold">About Me</CardTitle>
                 <CardDescription className="text-center text-gray-500">
-                  To learn more about me, please see the following links. Thank
-                  you.
-                </CardDescription>
+  <p>
+    To learn more about me, please see the following links. Click{" "}
+    <Link href="/watching" className="text-base underline">
+      here
+    </Link>{" "}
+    to check what movie/episode I am watching rn.{" "}
+    {isLoading ? (
+      "btw,Not listening any song now.
+    ) : hasError ? (
+      "কোন একটা জামেলা হইছে।"
+    ) : lastFMSong ? (
+      <>
+        Now listening{" "}
+        <span className="font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-green-500 to-purple-500">
+          {lastFMSong.name}
+        </span>{" "}
+        by {" "}
+        <span className="font-bold bg-clip-text text-transparent bg-gradient-to-r from-red-500 via-yellow-500 to-pink-500">
+          {lastFMSong.artist}
+        </span>{" "}
+        Thank You🫶
+      </>
+    ) : (
+      "গান শুনতেছি না সম্ভবত।"
+    )}
+  </p>
+</CardDescription>
               </CardHeader>
 
               <CardFooter className="flex justify-around py-2">
