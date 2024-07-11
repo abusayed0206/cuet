@@ -98,7 +98,7 @@ export default function About() {
 <CardDescription className="text-center text-gray-500">
   <p>
     আমার সম্পর্কে বিস্তারিত জানতে নিচের লিংক গুলি দেখুন। এই মূহর্তে আমি কোন মুভি/এপিসোড দেখছি{" "}
-    <Link href="/watching" className="text-xl underline">
+    <Link href="/watching" className="text-base underline">
       এখানে
     </Link>{" "}
     ক্লিক করে জেনে নিতে পারেন।{" "}
@@ -109,11 +109,11 @@ export default function About() {
     ) : lastFMSong ? (
       <>
         আর,এখন শুনছি{" "}
-        <span className="font-bold italic bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-green-500 to-purple-500">
+        <span className="font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-green-500 to-purple-500">
           {lastFMSong.artist}
         </span>{" "}
         এর{" "}
-        <span className="font-bold italic bg-clip-text text-transparent bg-gradient-to-r from-red-500 via-yellow-500 to-pink-500">
+        <span className="font-bold bg-clip-text text-transparent bg-gradient-to-r from-red-500 via-yellow-500 to-pink-500">
           {lastFMSong.name}
         </span>{" "}
         গানটি। ধন্যবাদ।
