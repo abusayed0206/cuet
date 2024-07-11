@@ -63,7 +63,25 @@ export default function Home() {
                 <CardTitle className="text-xl font-bold">About Me</CardTitle>
                 <CardDescription className="text-center text-gray-500">
                   To learn more about me, please see the following links. Thank
-                  you.
+                  you. Click{" "}
+                  <Link href="/watching" className="text-xl underline">
+                    here
+                  </Link>{" "}
+                  to know what movie/episode I'm watching rn.
+                </CardDescription>
+                <CardDescription>Listening now:</CardDescription>
+                <CardDescription>
+                  <div className="rounded-lg overflow-hidden">
+                    <iframe
+                      src="https://lastfm.aiden.tv/abusayed0206"
+                      width="300"
+                      height="70"
+                      frameBorder="0"
+                      allow="autoplay; encrypted-media"
+                      title="what i am listening"
+                      loading="lazy"
+                    ></iframe>
+                  </div>
                 </CardDescription>
               </CardHeader>
 
