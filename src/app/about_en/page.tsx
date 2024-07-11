@@ -91,7 +91,7 @@ export default function About() {
     </Link>{" "}
     to check what movie/episode I am watching rn.{" "}
     {isLoading ? (
-      "btw,Not listening any song now.
+      "btw,Not listening any song now."
     ) : hasError ? (
       "কোন একটা জামেলা হইছে।"
     ) : lastFMSong ? (
