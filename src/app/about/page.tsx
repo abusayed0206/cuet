@@ -27,44 +27,26 @@ import Link from "next/link";
 
 
 
-export default function Home() {
+export default function About() {
 
  const [lastFMSong, setLastFMSong] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false); // Use a boolean for error state
 
- const [isLoading, setIsLoading] = useState(true);
+  const lastFM = useLastFM('abusayed0206', 'b3272b7b5464a17b80ab52795cfe57ba');
 
- const [error, setError] = useState(null);
-
-
-
- const lastFM = useLastFM('abusayed0206', 'b3272b7b5464a17b80ab52795cfe57ba'); // Replace with your Last.fm username and API token
-
-
-
- useEffect(() => {
-
-  if (lastFM.status === 'error') {
-
-   setError(lastFM.error); 
-
-   setIsLoading(false);
-
-  } else if (lastFM.status === 'playing') {
-
-   setLastFMSong({
-
-    artist: lastFM.song.artist,
-
-    name: lastFM.song.name
-
-   });
-
-   setIsLoading(false);
-
-  }
-
- }, [lastFM.status, lastFM.song, lastFM.error]);
-
+  useEffect(() => {
+    if (lastFM.status === 'error') {
+      setHasError(true); // Set error state to true
+      setIsLoading(false);
+    } else if (lastFM.status === 'playing') {
+      setLastFMSong({
+        artist: lastFM.song.artist,
+        name: lastFM.song.name
+      });
+      setIsLoading(false);
+    }
+  }, [lastFM.status, lastFM.song]);
   return (
     <>
       <div className="relative w-full h-screen overflow-hidden">
@@ -121,9 +103,9 @@ export default function Home() {
                   </Link>{" "}
                   ক্লিক করে জেনে নিতে পারেন।
                   {isLoading ? (
-              <p>Loading Last.fm data...</p> 
-            ) : error ? (
-              <p>Error loading Last.fm: {error.message}</p>
+              <p>Loading Last.fm data...</p>
+            ) : hasError ? (
+              <p>Error loading Last.fm. Please try again later.</p> // Generic error message
             ) : lastFMSong ? (
               <p>
                 এখন শুনছি {lastFMSong.artist} এর {lastFMSong.name} গানটি। ধন্যবাদ। 
