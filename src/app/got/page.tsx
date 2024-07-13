@@ -72,7 +72,7 @@ export default function Home() {
             <CardContent className="p-6">
               {quote ? (
                 <div className="text-center">
-                  <p className="text-xl font-bold">"{quote.sentence}"</p>
+                  <p className="text-xl font-bold">&quot;{quote.sentence}&quot;</p>
                   <p className="text-sm mt-2">
                     - {quote.character.name}, {quote.character.house.name}
                   </p>
