@@ -54,13 +54,13 @@ export default function Home() {
   const banglaTime = new BengaliDate(currentDate).format("AAAA hh:mm:ss");
 
   return (
-    <div className="relative w-full h-screen overflow-hidden">
+<div className="relative w-full h-screen overflow-hidden flex items-center justify-center">
       <div className="absolute inset-0 z-0">
         <ParticleBackground />
       </div>
-<div className="mx-6 rounded-2xl max-w-screen-md bg-white text-black flex flex-wrap justify-center space-x-0 md:space-x-6">
-            <Card className="bg-white text-black ">
-            <CardContent className="p-2 border-t border-b">
+      <div className="rounded-2xl bg-white text-black flex flex-col justify-center items-center max-w-screen-md w-full mx-6"> {/* mx-6 applied here */}
+        <Card className="bg-white text-black w-full">
+          <CardContent className="p-2 border-t border-b">
               <p className="text-sm text-center">
                 {banglaWeekDay} | {banglaTime}{" "}
               </p>
