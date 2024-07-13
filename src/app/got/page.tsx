@@ -58,8 +58,8 @@ export default function Home() {
       <div className="absolute inset-0 z-0">
         <ParticleBackground />
       </div>
-<div className="relative z-10 flex flex-col items-center justify-center mx-5">
-  <Card className="bg-white text-black shadow-lg rounded-2xl w-full max-w-screen-md">
+<div className="mx-6 rounded-2xl max-w-screen-md bg-white text-black flex flex-wrap justify-center space-x-0 md:space-x-6">
+            <Card className="bg-white text-black ">
             <CardContent className="p-2 border-t border-b">
               <p className="text-sm text-center">
                 {banglaWeekDay} | {banglaTime}{" "}
@@ -72,10 +72,10 @@ export default function Home() {
               {quote ? (
                 <div className="text-center">
                   <p className="text-xl font-bold">&quot;{quote.sentence}&quot;</p>
-                  <p className="text-base font-italic mt-2">
+                  <p className="text-base italic mt-2">
                     - {quote.character.name}
                   </p>
-                  <p className="text-sm mt-2 font-italic">
+                  <p className="text-sm mt-2 italic">
                   {quote.character.house.name}
                   </p>
                 </div>
