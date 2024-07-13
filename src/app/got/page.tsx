@@ -1,7 +1,11 @@
 "use client";
-import { Card,CardTitle,
+import {
+  Card,
+  CardTitle,
   CardDescription,
-  CardHeader, CardContent } from "@/components/ui/card";
+  CardHeader,
+  CardContent,
+} from "@/components/ui/card";
 import ParticleBackground from "@/components/ui/Particle";
 import { getDate, getWeekDay } from "bangla-calendar";
 import { BengaliDate } from "to-bengali";
@@ -56,14 +60,14 @@ export default function Home() {
   const banglaTime = new BengaliDate(currentDate).format("AAAA hh:mm:ss");
 
   return (
-<div className="relative w-full h-screen overflow-hidden flex items-center justify-center">
+    <div className="relative w-full h-screen overflow-hidden flex items-center justify-center">
       <div className="absolute inset-0 z-0">
         <ParticleBackground />
       </div>
-  <div className="relative z-10 w-full h-full flex flex-col items-center justify-center">
+      <div className="relative z-10 w-full h-full flex flex-col items-center justify-center">
         <div className="mx-6 rounded-2xl max-w-screen-md bg-white text-black">
           <Card className="bg-white text-black">
-  <CardDescription className="p-2 border-t border-b">
+            <CardDescription className="p-2 border-t border-b">
               <p className="text-sm text-center">
                 {banglaWeekDay} | {banglaTime}{" "}
               </p>
@@ -75,25 +79,28 @@ export default function Home() {
               {quote ? (
                 <div className="text-center">
                   <p className="text-xl font-bold">&quot;{quote.sentence}&quot;</p>
-                </CardTitle>
-<CardContent>
-  <p className="text-base italic mt-2">
-                    - {quote.character.name}
-                 </p>
-  </CardContent>
-  
-  <CardContent>
-<p className="text-sm mt-2 italic">
-                  {quote.character.house.name}
-                  </p>
                 </div>
               ) : (
                 <p className="text-center">গেম অব থ্রোনস💥</p>
               )}
-            </CardContent>
+            </CardTitle>
+            {quote && (
+              <CardContent>
+                <p className="text-base italic mt-2">
+                  - {quote.character.name}
+                </p>
+              </CardContent>
+            )}
+            {quote && (
+              <CardContent>
+                <p className="text-sm mt-2 italic">
+                  {quote.character.house.name}
+                </p>
+              </CardContent>
+            )}
           </Card>
         </div>
-    </div>
+      </div>
     </div>
   );
-}
+    }
