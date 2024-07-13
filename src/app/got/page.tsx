@@ -67,7 +67,7 @@ export default function Home() {
       <div className="relative z-10 w-full h-full flex flex-col items-center justify-center">
         <div className="mx-6 rounded-2xl max-w-screen-md bg-white text-black">
           <Card className="bg-white text-black">
-            <CardDescription className="p-2 border-t border-b">
+            <CardDescription className="p-2 border-b">
               <p className="text-sm text-center">
                 {banglaWeekDay} | {banglaTime}{" "}
               </p>
@@ -85,14 +85,10 @@ export default function Home() {
               )}
             </CardTitle>
             {quote && (
-              <CardContent>
+              <CardContent className="text-center">
                 <p className="text-base italic mt-2">
                   - {quote.character.name}
                 </p>
-              </CardContent>
-            )}
-            {quote && (
-              <CardContent>
                 <p className="text-sm mt-2 italic">
                   {quote.character.house.name}
                 </p>
@@ -103,4 +99,4 @@ export default function Home() {
       </div>
     </div>
   );
-    }
+}
