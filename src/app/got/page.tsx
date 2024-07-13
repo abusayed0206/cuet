@@ -1,5 +1,7 @@
 "use client";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card,CardTitle,
+  CardDescription,
+  CardHeader, CardContent } from "@/components/ui/card";
 import ParticleBackground from "@/components/ui/Particle";
 import { getDate, getWeekDay } from "bangla-calendar";
 import { BengaliDate } from "to-bengali";
@@ -69,21 +71,26 @@ export default function Home() {
                 {banglaDate} | {banglaDateTime}
               </p>
             </CardDescription>
-            <CardHeader className="p-6">
+            <CardTitle className="p-6">
               {quote ? (
                 <div className="text-center">
                   <p className="text-xl font-bold">&quot;{quote.sentence}&quot;</p>
-                  <p className="text-base italic mt-2">
+                </CardTitle>
+<CardContent>
+  <p className="text-base italic mt-2">
                     - {quote.character.name}
-                  </p>
-                  <p className="text-sm mt-2 italic">
+                 </p>
+  </CardContent>
+  
+  <CardContent>
+<p className="text-sm mt-2 italic">
                   {quote.character.house.name}
                   </p>
                 </div>
               ) : (
                 <p className="text-center">গেম অব থ্রোনস💥</p>
               )}
-            </CardHeader>
+            </CardContent>
           </Card>
         </div>
     </div>
