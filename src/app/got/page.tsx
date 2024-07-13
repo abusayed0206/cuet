@@ -58,17 +58,18 @@ export default function Home() {
       <div className="absolute inset-0 z-0">
         <ParticleBackground />
       </div>
-      <div className="rounded-2xl bg-white text-black flex flex-col justify-center items-center max-w-screen-md w-full mx-6"> {/* mx-6 applied here */}
-        <Card className="bg-white text-black w-full">
-          <CardContent className="p-2 border-t border-b">
+  <div className="relative z-10 w-full h-full flex flex-col items-center justify-center">
+        <div className="mx-6 rounded-2xl max-w-screen-md bg-white text-black">
+          <Card className="bg-white text-black">
+  <CardDescription className="p-2 border-t border-b">
               <p className="text-sm text-center">
                 {banglaWeekDay} | {banglaTime}{" "}
               </p>
               <p className="text-sm text-center">
                 {banglaDate} | {banglaDateTime}
               </p>
-            </CardContent>
-            <CardContent className="p-6">
+            </CardDescription>
+            <CardHeader className="p-6">
               {quote ? (
                 <div className="text-center">
                   <p className="text-xl font-bold">&quot;{quote.sentence}&quot;</p>
@@ -82,9 +83,10 @@ export default function Home() {
               ) : (
                 <p className="text-center">গেম অব থ্রোনস💥</p>
               )}
-            </CardContent>
+            </CardHeader>
           </Card>
         </div>
+    </div>
     </div>
   );
 }
