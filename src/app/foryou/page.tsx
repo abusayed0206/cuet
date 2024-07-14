@@ -34,26 +34,27 @@ const RandomQuranVersePage = () => {
 
   useEffect(() => {
     fetchRandomVerse();
-
     setCurrentDate(new Date());
-
     const intervalId = setInterval(() => {
       setCurrentDate(new Date());
     }, 1000);
-
     return () => clearInterval(intervalId);
   }, []);
 
   const fetchRandomVerse = async () => {
     try {
-      const response = await axios.get('https://api.alquran.cloud/v1/ayah/random/editions/quran-simple,bn.bengali,ar.alafasy');
-      const data = response.data.data;
+      const surahNo = Math.floor(Math.random() * 114) + 1;
+      const surahResponse = await axios.get(`https://quranapi.pages.dev/api/${surahNo}/1.json`);
+      const totalAyahs = surahResponse.data.totalAyah;
+      const ayahNo = Math.floor(Math.random() * totalAyahs) + 1;
+      const response = await axios.get(`https://quranapi.pages.dev/api/${surahNo}/${ayahNo}.json`);
+      const data = response.data;
       setQuranVerse({
-        arabic: data[0].text,
-        translation: data[1].text,
-        surah: data[0].surah.englishName,
-        ayah: data[0].numberInSurah,
-        audio: data[2].audio
+        arabic: data.arabic1,
+        translation: data.english, // Note: This is English, not Bengali
+        surah: data.surahName,
+        ayah: data.ayahNo,
+        audio: data.audio["1"].url
       });
       setAudioLoaded(false);
     } catch (error) {
