@@ -1,6 +1,6 @@
 "use client";
 import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
-import { CiBarcode } from "react-icons/ci";
+import { GrLinkedin } from "react-icons/gr";
 import { HiDownload } from "react-icons/hi";
 import ParticleBackground from "@/components/ui/Particle";
 import {
@@ -135,11 +135,11 @@ export default function Home() {
                 </Link>
                 <Link
                   className="group bg-gray-900 text-white px-7 py-3 flex items-center gap-2 rounded-full outline-none focus:scale-110 hover:scale-110 hover:bg-gray-950 active:scale-105 transition ml-4"
-                  href="/hire"
+                  href="/linkedin"
                   target="_blank"
                 >
-                  হায়ার করুন
-                  <CiBarcode className="opacity-100 group-hover:translate-y-1 transition" />
+                  লিংকড-ইন
+                  <GrLinkedin className="opacity-100 group-hover:translate-y-1 transition" />
                 </Link>
               </CardFooter>
             </Card>
