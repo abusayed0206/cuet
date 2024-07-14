@@ -10,12 +10,15 @@ import ParticleBackground from "@/components/ui/Particle";
 import { getDate, getWeekDay } from "bangla-calendar";
 import { BengaliDate } from "to-bengali";
 import { useState, useEffect } from "react";
+import AudioPlayer from 'react-h5-audio-player';
+import 'react-h5-audio-player/lib/styles.css';
 
 interface QuranVerse {
   verse: string;
   surah: string;
   ayah: number;
   translation: string;
+  audio: string;
 }
 
 export default function RandomQuranVersePage() {
@@ -41,23 +44,28 @@ export default function RandomQuranVersePage() {
   }, []);
 
   useEffect(() => {
-    fetch("https://api.alquran.cloud/v1/ayah/random")
-      .then((response) => response.json())
-      .then((data) => {
+    const fetchQuranVerse = async () => {
+      try {
+        const response = await fetch("https://api.alquran.cloud/v1/ayah/random");
+        const data = await response.json();
         const verseData = data.data;
-        fetch(`https://api.alquran.cloud/v1/ayah/${verseData.number}/bn.bengali`)
-          .then((response) => response.json())
-          .then((translationData) => {
-            setQuranVerse({
-              verse: verseData.text,
-              surah: verseData.surah.englishName,
-              ayah: verseData.numberInSurah,
-              translation: translationData.data.text,
-            });
-          })
-          .catch((error) => console.error("Error fetching translation:", error));
-      })
-      .catch((error) => console.error("Error fetching Quran verse:", error));
+
+        const translationResponse = await fetch(`https://api.alquran.cloud/v1/ayah/${verseData.number}/bn.bengali`);
+        const translationData = await translationResponse.json();
+
+        setQuranVerse({
+          verse: verseData.text,
+          surah: verseData.surah.englishName,
+          ayah: verseData.numberInSurah,
+          translation: translationData.data.text,
+          audio: verseData.audio
+        });
+      } catch (error) {
+        console.error("Error fetching Quran verse:", error);
+      }
+    };
+
+    fetchQuranVerse();
   }, []);
 
   if (!currentDate) {
@@ -88,6 +96,7 @@ export default function RandomQuranVersePage() {
                 <div className="text-center">
                   <p className="text-xl font-bold">&quot;{quranVerse.verse}&quot;</p>
                   <p className="text-lg mt-4">{quranVerse.translation}</p>
+                  <AudioPlayer src={quranVerse.audio} autoPlay={false} />
                 </div>
               ) : (
                 <p className="text-center">আপনার জন্য🌼</p>
