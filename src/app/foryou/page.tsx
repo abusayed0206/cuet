@@ -3,25 +3,21 @@ import {
   Card,
   CardTitle,
   CardDescription,
-  CardHeader,
   CardContent,
 } from "@/components/ui/card";
 import ParticleBackground from "@/components/ui/Particle";
 import { getDate, getWeekDay } from "bangla-calendar";
 import { BengaliDate } from "to-bengali";
 import { useState, useEffect } from "react";
-import AudioPlayer from 'react-h5-audio-player';
-import 'react-h5-audio-player/lib/styles.css';
 
 interface QuranVerse {
   verse: string;
   surah: string;
   ayah: number;
   translation: string;
-  audio: string;
 }
 
-export default function RandomQuranVersePage() {
+const RandomQuranVersePage = () => {
   const banglaDate = getDate(new Date(), {
     format: "D MMMM, YYYY",
     calculationMethod: "BD",
@@ -32,8 +28,17 @@ export default function RandomQuranVersePage() {
   });
   const [currentDate, setCurrentDate] = useState<Date | null>(null);
   const [quranVerse, setQuranVerse] = useState<QuranVerse | null>(null);
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
 
   useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://cdn.jsdelivr.net/gh/rrakibul/quran-quotes/js/quran.js";
+    script.async = true;
+    script.onload = () => {
+      fetchQuranVerse();
+    };
+    document.body.appendChild(script);
+
     setCurrentDate(new Date());
 
     const intervalId = setInterval(() => {
@@ -43,30 +48,30 @@ export default function RandomQuranVersePage() {
     return () => clearInterval(intervalId);
   }, []);
 
+  const fetchQuranVerse = async () => {
+    try {
+      const quran = new Quran();
+      const verses = await quran.getRandomVerses();
+      const verseData = verses[0]; // Assuming getRandomVerses returns an array of verses
+
+      setQuranVerse({
+        verse: verseData.verse,
+        surah: verseData.surahName,
+        ayah: verseData.ayahNumber,
+        translation: verseData.translation,
+      });
+      setAudioUrl(`https://cdn.islamic.network/quran/audio/128/ar.alafasy/${verseData.ayahNumber}.mp3`);
+    } catch (error) {
+      console.error("Error fetching Quran verse or audio:", error);
+    }
+  };
+
   useEffect(() => {
-    const fetchQuranVerse = async () => {
-      try {
-        const response = await fetch("https://api.alquran.cloud/v1/ayah/random");
-        const data = await response.json();
-        const verseData = data.data;
-
-        const translationResponse = await fetch(`https://api.alquran.cloud/v1/ayah/${verseData.number}/bn.bengali`);
-        const translationData = await translationResponse.json();
-
-        setQuranVerse({
-          verse: verseData.text,
-          surah: verseData.surah.englishName,
-          ayah: verseData.numberInSurah,
-          translation: translationData.data.text,
-          audio: verseData.audio
-        });
-      } catch (error) {
-        console.error("Error fetching Quran verse:", error);
-      }
-    };
-
-    fetchQuranVerse();
-  }, []);
+    if (audioUrl) {
+      const audio = new Audio(audioUrl);
+      audio.play().catch((error) => console.error("Error playing audio:", error));
+    }
+  }, [audioUrl]);
 
   if (!currentDate) {
     return null; // or a loading spinner
@@ -96,7 +101,6 @@ export default function RandomQuranVersePage() {
                 <div className="text-center">
                   <p className="text-xl font-bold">&quot;{quranVerse.verse}&quot;</p>
                   <p className="text-lg mt-4">{quranVerse.translation}</p>
-                  <AudioPlayer src={quranVerse.audio} autoPlay={false} />
                 </div>
               ) : (
                 <p className="text-center">আপনার জন্য🌼</p>
@@ -107,6 +111,11 @@ export default function RandomQuranVersePage() {
                 <p className="text-base italic mt-2">
                   - Surah {quranVerse.surah}, Ayah {quranVerse.ayah}
                 </p>
+                {audioUrl && (
+                  <div className="mt-4">
+                    <audio src={audioUrl} controls autoPlay />
+                  </div>
+                )}
               </CardContent>
             )}
           </Card>
@@ -114,4 +123,6 @@ export default function RandomQuranVersePage() {
       </div>
     </div>
   );
-}
+};
+
+export default RandomQuranVersePage;
