@@ -9,12 +9,14 @@ import ParticleBackground from "@/components/ui/Particle";
 import { getDate, getWeekDay } from "bangla-calendar";
 import { BengaliDate } from "to-bengali";
 import { useState, useEffect } from "react";
+import axios from 'axios';
 
 interface QuranVerse {
-  verse: string;
+  arabic: string;
+  translation: string;
   surah: string;
   ayah: number;
-  translation: string;
+  audio: string;
 }
 
 const RandomQuranVersePage = () => {
@@ -28,16 +30,10 @@ const RandomQuranVersePage = () => {
   });
   const [currentDate, setCurrentDate] = useState<Date | null>(null);
   const [quranVerse, setQuranVerse] = useState<QuranVerse | null>(null);
-  const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [audioLoaded, setAudioLoaded] = useState(false);
 
   useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://cdn.jsdelivr.net/gh/rrakibul/quran-quotes/js/quran.js";
-    script.async = true;
-    script.onload = () => {
-      fetchQuranVerse();
-    };
-    document.body.appendChild(script);
+    fetchRandomVerse();
 
     setCurrentDate(new Date());
 
@@ -48,30 +44,32 @@ const RandomQuranVersePage = () => {
     return () => clearInterval(intervalId);
   }, []);
 
-  const fetchQuranVerse = async () => {
+  const fetchRandomVerse = async () => {
     try {
-      const quran = new Quran();
-      const verses = await quran.getRandomVerses();
-      const verseData = verses[0]; // Assuming getRandomVerses returns an array of verses
-
+      const response = await axios.get('https://api.alquran.cloud/v1/ayah/random/editions/quran-simple,bn.bengali,ar.alafasy');
+      const data = response.data.data;
       setQuranVerse({
-        verse: verseData.verse,
-        surah: verseData.surahName,
-        ayah: verseData.ayahNumber,
-        translation: verseData.translation,
+        arabic: data[0].text,
+        translation: data[1].text,
+        surah: data[0].surah.englishName,
+        ayah: data[0].numberInSurah,
+        audio: data[2].audio
       });
-      setAudioUrl(`https://cdn.islamic.network/quran/audio/128/ar.alafasy/${verseData.ayahNumber}.mp3`);
+      setAudioLoaded(false);
     } catch (error) {
-      console.error("Error fetching Quran verse or audio:", error);
+      console.error("Error fetching Quran verse:", error);
     }
   };
 
   useEffect(() => {
-    if (audioUrl) {
-      const audio = new Audio(audioUrl);
-      audio.play().catch((error) => console.error("Error playing audio:", error));
+    if (quranVerse) {
+      const audio = new Audio(quranVerse.audio);
+      audio.addEventListener('canplaythrough', () => setAudioLoaded(true));
+      return () => {
+        audio.removeEventListener('canplaythrough', () => setAudioLoaded(true));
+      }
     }
-  }, [audioUrl]);
+  }, [quranVerse]);
 
   if (!currentDate) {
     return null; // or a loading spinner
@@ -99,7 +97,7 @@ const RandomQuranVersePage = () => {
             <CardTitle className="p-6">
               {quranVerse ? (
                 <div className="text-center">
-                  <p className="text-xl font-bold">&quot;{quranVerse.verse}&quot;</p>
+                  <p className="text-xl font-bold" dir="rtl">{quranVerse.arabic}</p>
                   <p className="text-lg mt-4">{quranVerse.translation}</p>
                 </div>
               ) : (
@@ -111,9 +109,9 @@ const RandomQuranVersePage = () => {
                 <p className="text-base italic mt-2">
                   - Surah {quranVerse.surah}, Ayah {quranVerse.ayah}
                 </p>
-                {audioUrl && (
+                {audioLoaded && (
                   <div className="mt-4">
-                    <audio src={audioUrl} controls autoPlay />
+                    <audio src={quranVerse.audio} controls />
                   </div>
                 )}
               </CardContent>
