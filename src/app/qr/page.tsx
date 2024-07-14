@@ -1,25 +1,19 @@
 "use client";
-import { useEffect } from "react";
-import { useRouter } from "next/router";
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 const RedirectPage: React.FC = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const predefinedRoutes = ["/dark", "/got", "/advice", "/foryou"];
-    const lastRoute = localStorage.getItem("lastRoute");
-
-    // Remove the last route from the options
-    const availableRoutes = predefinedRoutes.filter(route => route !== lastRoute);
-
-    // Select a random route from the available routes
-    const randomRoute = availableRoutes[Math.floor(Math.random() * availableRoutes.length)];
-
-    // Store the current route as the last route for future visits
-    localStorage.setItem("lastRoute", randomRoute);
-
-    // Redirect to the selected route
-    router.push(randomRoute);
+    if (typeof window !== 'undefined') {
+      const predefinedRoutes = ['/dark', '/got', '/advice', '/foryou'];
+      const lastRoute = localStorage.getItem('lastRoute');
+      const availableRoutes = predefinedRoutes.filter(route => route !== lastRoute);
+      const randomRoute = availableRoutes[Math.floor(Math.random() * availableRoutes.length)];
+      localStorage.setItem('lastRoute', randomRoute);
+      router.push(randomRoute);
+    }
   }, [router]);
 
   return (
