@@ -43,18 +43,25 @@ const RandomQuranVersePage = () => {
 
   const fetchRandomVerse = async () => {
     try {
-      const surahNo = Math.floor(Math.random() * 114) + 1;
-      const surahResponse = await axios.get(`https://quranapi.pages.dev/api/${surahNo}/1.json`);
-      const totalAyahs = surahResponse.data.totalAyah;
-      const ayahNo = Math.floor(Math.random() * totalAyahs) + 1;
-      const response = await axios.get(`https://quranapi.pages.dev/api/${surahNo}/${ayahNo}.json`);
-      const data = response.data;
+      // Fetch a random verse from api.quran.com
+      const randomVerseResponse = await axios.get('https://api.quran.com/api/v4/verses/random?translations=161', {
+        headers: { 'Accept': 'application/json' }
+      });
+      const randomVerse = randomVerseResponse.data.verse;
+      const surahNo = parseInt(randomVerse.verse_key.split(":")[0]);
+      const ayahNo = randomVerse.verse_number;
+
+      // Fetch the Arabic text and audio from quranapi.pages.dev
+      const quranApiResponse = await axios.get(`https://quranapi.pages.dev/api/${surahNo}/${ayahNo}.json`);
+      const quranApiData = quranApiResponse.data;
+
+      // Set the verse state
       setQuranVerse({
-        arabic: data.arabic1,
-        translation: data.english, // Note: This is English, not Bengali
-        surah: data.surahName,
-        ayah: data.ayahNo,
-        audio: data.audio["1"].url
+        arabic: quranApiData.arabic1,
+        translation: randomVerse.translations[0].text,
+        surah: quranApiData.surahName,
+        ayah: ayahNo,
+        audio: quranApiData.audio["1"].url
       });
       setAudioLoaded(false);
     } catch (error) {
