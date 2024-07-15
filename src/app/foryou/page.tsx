@@ -1,25 +1,25 @@
 "use client";
-
-import { useState, useEffect, useRef } from "react";
-import { Card, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
 import ParticleBackground from "@/components/ui/Particle";
 import { getDate, getWeekDay } from "bangla-calendar";
 import { BengaliDate } from "to-bengali";
-import axios from "axios";
+import { useState, useEffect } from "react";
+import axios from 'axios';
 
 interface QuranVerse {
-  arabicText: string;
-  banglaTranslation: string;
-  surahName: string;
-  ayahNumber: number;
-  audioUrl: string;
+  arabic: string;
+  translation: string;
+  surah: string;
+  ayah: number;
+  audio: string;
 }
 
 const RandomQuranVersePage = () => {
-  const [quranVerse, setQuranVerse] = useState<QuranVerse | null>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement>(null);
-
   const banglaDate = getDate(new Date(), {
     format: "D MMMM, YYYY",
     calculationMethod: "BD",
@@ -29,6 +29,8 @@ const RandomQuranVersePage = () => {
     calculationMethod: "BD",
   });
   const [currentDate, setCurrentDate] = useState<Date | null>(null);
+  const [quranVerse, setQuranVerse] = useState<QuranVerse | null>(null);
+  const [audioLoaded, setAudioLoaded] = useState(false);
 
   useEffect(() => {
     fetchRandomVerse();
@@ -41,95 +43,89 @@ const RandomQuranVersePage = () => {
 
   const fetchRandomVerse = async () => {
     try {
-      const response = await axios.get(
-        "http://api.quran.com/api/v4/quran/random",
-        {
-          params: {
-            language: "bn",
-            translations: "131",
-            audio: 1,
-            fields: "text,translations,audio,surah",
-          },
+      const response = await axios.get('https://api.quran.com/api/v4/verses/random', {
+        params: {
+          language: 'bn',
+          translations: '41', // Bangla translation ID
+          audio: 7, // Mishary Al-Afasy recitation ID
+        },
+        headers: {
+          'Accept': 'application/json'
         }
-      );
-
-      const data = response.data.data;
-
-      setQuranVerse({
-        arabicText: data.text,
-        banglaTranslation: data.translations[0].text,
-        surahName: data.surah.name,
-        ayahNumber: data.number,
-        audioUrl: data.audio.url,
       });
 
-      if (audioRef.current) {
-        audioRef.current.pause();
-        setIsPlaying(false);
-      }
+      const data = response.data.verse;
+      setQuranVerse({
+        arabic: data.text_uthmani,
+        translation: data.translations[0].text,
+        surah: data.surah_name,
+        ayah: data.verse_number,
+        audio: data.audio.url
+      });
+
+      setAudioLoaded(false);
     } catch (error) {
       console.error("Error fetching Quran verse:", error);
     }
   };
 
-  const togglePlay = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
+  useEffect(() => {
+    if (quranVerse) {
+      const audio = new Audio(quranVerse.audio);
+      audio.addEventListener('canplaythrough', () => setAudioLoaded(true));
+      return () => {
+        audio.removeEventListener('canplaythrough', () => setAudioLoaded(true));
+      };
     }
-  };
+  }, [quranVerse]);
 
   if (!currentDate) {
-    return null; // Or a loading state
+    return null; // or a loading spinner
   }
 
   const banglaDateTime = new BengaliDate(currentDate).format("date");
   const banglaTime = new BengaliDate(currentDate).format("AAAA hh:mm:ss");
 
   return (
-    <div className="relative w-full h-screen overflow-hidden flex items-center justify-center bg-gradient-to-br from-blue-200 to-purple-300">
+    <div className="relative w-full h-screen overflow-hidden flex items-center justify-center">
       <div className="absolute inset-0 z-0">
         <ParticleBackground />
       </div>
       <div className="relative z-10 w-full h-full flex flex-col items-center justify-center">
-        <Card className="bg-white shadow-md rounded-xl p-6 max-w-screen-md text-black">
-          <CardDescription className="p-2 border-b">
-            <p className="text-sm text-center">
-              {banglaWeekDay} | {banglaTime}{" "}
-            </p>
-            <p className="text-sm text-center">
-              {banglaDate} | {banglaDateTime}
-            </p>
-          </CardDescription>
-          <CardTitle className="p-4 text-4xl font-serif" dir="rtl">
-            {quranVerse ? quranVerse.arabicText : "আপনার জন্য🌼"}
-          </CardTitle>
-          {quranVerse && (
-            <CardContent>
-              <p className="text-2xl font-medium mt-4">
-                {quranVerse.banglaTranslation}
+        <div className="mx-6 rounded-2xl max-w-screen-md bg-white text-black">
+          <Card className="bg-white text-black">
+            <CardDescription className="p-2 border-b">
+              <p className="text-sm text-center">
+                {banglaWeekDay} | {banglaTime}{" "}
               </p>
-              <p className="text-base italic mt-2">
-                - Surah {quranVerse.surahName}, Ayah {quranVerse.ayahNumber}
+              <p className="text-sm text-center">
+                {banglaDate} | {banglaDateTime}
               </p>
-              {quranVerse.audioUrl && (
-                <div className="mt-4 flex justify-center">
-                  <button
-                    onClick={togglePlay}
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                  >
-                    {isPlaying ? "Pause" : "Play"}
-                  </button>
-                  <audio ref={audioRef} src={quranVerse.audioUrl} />
+            </CardDescription>
+            <CardTitle className="p-6">
+              {quranVerse ? (
+                <div className="text-center">
+                  <p className="text-xl font-bold" dir="rtl">{quranVerse.arabic}</p>
+                  <p className="text-lg mt-4">{quranVerse.translation}</p>
                 </div>
+              ) : (
+                <p className="text-center">আপনার জন্য🌼</p>
               )}
-            </CardContent>
-          )}
-        </Card>
+            </CardTitle>
+            {quranVerse && (
+              <CardContent className="text-center">
+                <p className="text-base italic mt-2">
+                  - Surah {quranVerse.surah}, Ayah {quranVerse.ayah}
+                </p>
+                {audioLoaded && (
+                  <div className="mt-4">
+                    <audio src={quranVerse.audio} controls />
+                  </div>
+                )}
+              </CardContent>
+            )}
+          </Card>
+        </div>
       </div>
     </div>
   );
