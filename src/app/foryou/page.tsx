@@ -45,9 +45,8 @@ const RandomQuranVersePage = () => {
     try {
       const response = await axios.get('https://api.quran.com/api/v4/verses/random', {
         params: {
-          language: 'bn',
-          translations: '41', // Bangla translation ID
-          audio: 7, // Mishary Al-Afasy recitation ID
+          language: 'bengali',
+          translations: '161'
         },
         headers: {
           'Accept': 'application/json'
@@ -55,14 +54,23 @@ const RandomQuranVersePage = () => {
       });
 
       const data = response.data.verse;
+      const ayahKey = `${data.surah_number}:${data.verse_number}`;
+
+      const audioResponse = await axios.get(`https://api.quran.com/api/v4/recitations/7/by_ayah/${ayahKey}`, {
+        headers: {
+          'Accept': 'application/json'
+        }
+      });
+
+      const audioUrl = audioResponse.data.audio_files[0].url;
+
       setQuranVerse({
         arabic: data.text_uthmani,
         translation: data.translations[0].text,
         surah: data.surah_name,
         ayah: data.verse_number,
-        audio: data.audio.url
+        audio: audioUrl
       });
-
       setAudioLoaded(false);
     } catch (error) {
       console.error("Error fetching Quran verse:", error);
@@ -75,7 +83,7 @@ const RandomQuranVersePage = () => {
       audio.addEventListener('canplaythrough', () => setAudioLoaded(true));
       return () => {
         audio.removeEventListener('canplaythrough', () => setAudioLoaded(true));
-      };
+      }
     }
   }, [quranVerse]);
 
