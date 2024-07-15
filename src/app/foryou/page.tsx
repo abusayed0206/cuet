@@ -1,12 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Card, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import ParticleBackground from "@/components/ui/Particle";
 import { getDate, getWeekDay } from "bangla-calendar";
 import { BengaliDate } from "to-bengali";
 import axios from "axios";
-import PlayPauseButton from "@/components/ui/play_pause_button";
 
 interface QuranVerse {
   arabicText: string;
@@ -19,7 +18,7 @@ interface QuranVerse {
 const RandomQuranVersePage = () => {
   const [quranVerse, setQuranVerse] = useState<QuranVerse | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
 
   const banglaDate = getDate(new Date(), {
     format: "D MMMM, YYYY",
@@ -64,28 +63,24 @@ const RandomQuranVersePage = () => {
         audioUrl: data.audio.url,
       });
 
-      if (audio) {
-        audio.pause();
+      if (audioRef.current) {
+        audioRef.current.pause();
         setIsPlaying(false);
       }
-      
     } catch (error) {
       console.error("Error fetching Quran verse:", error);
     }
   };
 
   const togglePlay = () => {
-    if (!audio) {
-      const newAudio = new Audio(quranVerse!.audioUrl);
-      setAudio(newAudio);
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
     }
-
-    if (isPlaying) {
-      audio!.pause();
-    } else {
-      audio!.play();
-    }
-    setIsPlaying(!isPlaying);
   };
 
   if (!currentDate) {
@@ -121,10 +116,15 @@ const RandomQuranVersePage = () => {
               <p className="text-base italic mt-2">
                 - Surah {quranVerse.surahName}, Ayah {quranVerse.ayahNumber}
               </p>
-
               {quranVerse.audioUrl && (
                 <div className="mt-4 flex justify-center">
-                  <PlayPauseButton isPlaying={isPlaying} onClick={togglePlay} />
+                  <button
+                    onClick={togglePlay}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  >
+                    {isPlaying ? "Pause" : "Play"}
+                  </button>
+                  <audio ref={audioRef} src={quranVerse.audioUrl} />
                 </div>
               )}
             </CardContent>
