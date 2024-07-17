@@ -1,6 +1,6 @@
 "use client"
-import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import StudentDetails from '../components/StudentDetails';
 
 const validateStudentId = (id: string) => {
@@ -18,17 +18,17 @@ const validateStudentId = (id: string) => {
   return true;
 };
 
-const StudentPage = () => {
+const StudentPage = ({ params }: { params: { studentId: string } }) => {
   const router = useRouter();
-  const { studentId } = router.query;
+  const { studentId } = params;
   const [studentData, setStudentData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    if (studentId && typeof studentId === 'string') {
+    if (studentId) {
       if (!validateStudentId(studentId)) {
-        setError('Type right CUET ID on the link. Not just random number');
+        setError('Type the right CUET ID on the link. Not just random number');
         setIsLoading(false);
         return;
       }
@@ -51,6 +51,12 @@ const StudentPage = () => {
       fetchStudentData();
     }
   }, [studentId]);
+
+  useEffect(() => {
+    if (error) {
+      router.push('/');
+    }
+  }, [error, router]);
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 py-6 flex flex-col justify-center items-center">
