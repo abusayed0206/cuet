@@ -52,6 +52,8 @@ const StudentDetails: React.FC<StudentDetailsProps> = ({ data }) => {
               <a href={`mailto:${data.email}`} className="text-blue-500">
                 {data.email}
               </a>
+            ) : (
+              "Not Added Yet"
             )}
           </p>
           <p className="text-black">{data.phonenumber}</p>
