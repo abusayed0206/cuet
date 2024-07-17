@@ -31,7 +31,7 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 py-6 flex flex-col justify-center items-center">
       <div className="relative py-3 sm:max-w-xl sm:mx-auto">
         <div className="absolute inset-0 bg-gradient-to-r from-teal-400 to-cyan-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
-        <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
+        <div className="relative px-4 py-10 bg-slate-600 shadow-lg sm:rounded-3xl sm:p-20">
           <div className="max-w-md mx-auto">
             <div>
               <h1 className="text-2xl font-semibold text-center text-black">CUET Student Information</h1>
