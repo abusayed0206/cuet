@@ -16,7 +16,7 @@ export default function Home() {
     try {
       const response = await fetch(`/api/student/${studentId}`)
       if (!response.ok) {
-        throw new Error('Student not found')
+        throw new Error('He/She is not a CUET Student'😓)
       }
       const data = await response.json()
       setStudentData(data)
@@ -34,7 +34,7 @@ export default function Home() {
         <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
           <div className="max-w-md mx-auto">
             <div>
-              <h1 className="text-3xl font-semibold text-center text-gray-800 mb-8">Student Information</h1>
+              <h1 className="text-3xl font-semibold text-center text-gray-800 mb-8">CUET Student Information</h1>
             </div>
             <div className="divide-y divide-gray-200">
               <form onSubmit={handleSubmit} className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
@@ -55,7 +55,7 @@ export default function Home() {
                 </div>
               </form>
             </div>
-            {isLoading && <p className="text-center">Loading...</p>}
+            {isLoading && <p className="text-black text-center">Loading CUETian information...</p>}
             {error && <p className="text-center text-red-500">{error}</p>}
             {studentData && <StudentDetails data={studentData} />}
           </div>
