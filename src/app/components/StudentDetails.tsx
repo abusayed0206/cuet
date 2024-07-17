@@ -1,21 +1,21 @@
-import React from 'react'
+import React from 'react';
 
 interface StudentDetailsProps {
   data: {
-    name: string,
-    studentid: string,
-    uniqueid: string,
-    batch: string,
-    session: string,
-    department: string,
-    admissionroll: string,
-    admissionmerit: string,
-    hall: string,
-    email: string,
-    phonenumber: string,
-    bloodgroup: string,
-    linkedin: string
-  }
+    name: string;
+    studentid: string;
+    uniqueid: string;
+    batch: string;
+    session: string;
+    department: string;
+    admissionroll: string;
+    admissionmerit: string;
+    hall: string;
+    email: string;
+    phonenumber: string;
+    bloodgroup: string;
+    linkedin: string;
+  };
 }
 
 const StudentDetails: React.FC<StudentDetailsProps> = ({ data }) => {
@@ -47,14 +47,31 @@ const StudentDetails: React.FC<StudentDetailsProps> = ({ data }) => {
           <p className="text-black">{data.admissionroll}</p>
           <p className="text-black">{data.admissionmerit}</p>
           <p className="text-black">{data.hall}</p>
-          <p className="text-black">{data.email ? <a href={`mailto:${data.email}`} className="text-blue-500">{data.email}</a>}</p>
+          {data.email ? (
+            <p className="text-black">
+              <a href={`mailto:${data.email}`} className="text-blue-500">
+                {data.email}
+              </a>
+            </p>
+              )}
           <p className="text-black">{data.phonenumber}</p>
           <p className="text-black">{data.bloodgroup}</p>
-          <p className="text-black">{data.linkedin && <a href={data.linkedin} className="text-blue-500" target="_blank" rel="noopener noreferrer">Profile</a>}</p>
+          {data.linkedin ? (
+            <p className="text-black">
+              <a
+                href={data.linkedin}
+                className="text-blue-500"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Profile
+              </a>
+            </p>
+              )}
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default StudentDetails
+export default StudentDetails;
