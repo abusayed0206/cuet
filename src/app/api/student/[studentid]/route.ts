@@ -10,7 +10,7 @@ export async function GET(
   try {
     const { data, error } = await supabaseServer
       .from('apidata')
-      .select('name', 'studentid', 'uniqueid', 'batch', 'session', 'department', 'admissionroll', 'admissionmerit', 'hall', 'email', 'phonenumber', 'bloodgroup', 'linkedin') // Specify columns explicitly
+      .select<'name' | 'studentid' | 'uniqueid' | 'batch' | 'session' | 'department' | 'admissionroll' | 'admissionmerit' | 'hall' | 'email' | 'phonenumber' | 'bloodgroup' | 'linkedin'>('*') // Specify type for select
       .eq('studentid', studentId)
       .single();
 
@@ -23,8 +23,11 @@ export async function GET(
       return NextResponse.json({ error: 'Student not found' }, { status: 404 });
     }
 
-    return NextResponse.json(data);
-  } catch (error) {
+    // Type assertion to avoid TypeScript errors
+    const responseData: any = data;
+
+    return NextResponse.json(responseData);
+  } catch (error: any) {
     console.error('Error fetching student data:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
