@@ -21,8 +21,8 @@ interface StudentDetailsProps {
 const StudentDetails: React.FC<StudentDetailsProps> = ({ data }) => {
   return (
     <div className="mt-6 p-6 bg-white rounded-lg shadow-lg">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-lg">
-        <div>
+      <div className="flex flex-wrap gap-4 text-lg">
+        <div className="w-full sm:w-auto sm:mr-4">
           <p className="font-bold text-gray-700">Name:</p>
           <p className="font-bold text-gray-700">Student ID:</p>
           <p className="font-bold text-gray-700">Unique ID:</p>
@@ -37,7 +37,7 @@ const StudentDetails: React.FC<StudentDetailsProps> = ({ data }) => {
           <p className="font-bold text-gray-700">Blood Group:</p>
           <p className="font-bold text-gray-700">LinkedIn:</p>
         </div>
-        <div>
+        <div className="w-full sm:w-auto">
           <p className="text-black">{data.name}</p>
           <p className="text-black">{data.studentid}</p>
           <p className="text-black">{data.uniqueid}</p>
@@ -52,8 +52,6 @@ const StudentDetails: React.FC<StudentDetailsProps> = ({ data }) => {
               <a href={`mailto:${data.email}`} className="text-blue-500">
                 {data.email}
               </a>
-            ) : (
-              "Not Added Yet"
             )}
           </p>
           <p className="text-black">{data.phonenumber}</p>
