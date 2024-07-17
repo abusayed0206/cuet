@@ -43,7 +43,7 @@ export default function Home() {
                     id="studentId" 
                     name="studentId" 
                     type="text" 
-                    className="peer placeholder-transparent h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:border-rose-600" 
+                    className="peer placeholder-transparent h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:border-rose-600 justify-center" 
                     placeholder="Student ID" 
                     value={studentId}
                     onChange={(e) => setStudentId(e.target.value)}
