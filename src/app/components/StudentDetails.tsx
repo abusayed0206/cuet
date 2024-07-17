@@ -47,17 +47,19 @@ const StudentDetails: React.FC<StudentDetailsProps> = ({ data }) => {
           <p className="text-black">{data.admissionroll}</p>
           <p className="text-black">{data.admissionmerit}</p>
           <p className="text-black">{data.hall}</p>
-          {data.email ? (
-            <p className="text-black">
+          <p className="text-black">
+            {data.email ? (
               <a href={`mailto:${data.email}`} className="text-blue-500">
                 {data.email}
               </a>
-            </p>
-              )}
+            ) : (
+              "Not Added Yet"
+            )}
+          </p>
           <p className="text-black">{data.phonenumber}</p>
           <p className="text-black">{data.bloodgroup}</p>
-          {data.linkedin ? (
-            <p className="text-black">
+          <p className="text-black">
+            {data.linkedin && (
               <a
                 href={data.linkedin}
                 className="text-blue-500"
@@ -66,8 +68,8 @@ const StudentDetails: React.FC<StudentDetailsProps> = ({ data }) => {
               >
                 Profile
               </a>
-            </p>
-              )}
+            )}
+          </p>
         </div>
       </div>
     </div>
