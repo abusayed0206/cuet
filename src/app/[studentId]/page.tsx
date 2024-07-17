@@ -28,7 +28,7 @@ const StudentPage = () => {
   useEffect(() => {
     if (studentId && typeof studentId === 'string') {
       if (!validateStudentId(studentId)) {
-        setError('Invalid Student ID format');
+        setError('Type right CUET ID on the link. Not just random number');
         setIsLoading(false);
         return;
       }
@@ -42,11 +42,7 @@ const StudentPage = () => {
           const data = await response.json();
           setStudentData(data);
         } catch (err) {
-          if (err instanceof Error) {
-            setError(err.message);
-          } else {
-            setError('An unknown error occurred');
-          }
+          setError((err as Error).message);
         } finally {
           setIsLoading(false);
         }
