@@ -7,9 +7,29 @@ export default function Home() {
   const [studentData, setStudentData] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
-  
+
+  const validateStudentId = (id: string) => {
+    const regex = /^[0-9]{7}$/;
+    if (!regex.test(id)) return false;
+
+    const batchYear = parseInt(id.slice(0, 2), 10);
+    const departmentCode = parseInt(id.slice(2, 4), 10);
+    const classRoll = parseInt(id.slice(4, 7), 10);
+
+    if (batchYear < 0 || batchYear > 99) return false;
+    if (departmentCode < 1 || departmentCode > 12) return false;
+    if (classRoll < 1 || classRoll > 200) return false;
+
+    return true;
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!validateStudentId(studentId)) {
+      setError('Please enter a CUET ID. Not just a random number!')
+      return
+    }
+
     setIsLoading(true)
     setError('')
     setStudentData(null)
@@ -21,7 +41,7 @@ export default function Home() {
       const data = await response.json()
       setStudentData(data)
     } catch (err) {
-      setError('Failed to fetch student data')
+      setError('There is no student by this ID')
     } finally {
       setIsLoading(false)
     }
@@ -38,11 +58,11 @@ export default function Home() {
             </div>
             <div className="divide-y divide-gray-200">
               <form onSubmit={handleSubmit} className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
-                <div className="relative">
+                <div className="relative rounded-full">
                   <input 
                     id="studentId" 
                     name="studentId" 
-                    type="text" 
+                    type="number" 
                     className="peer placeholder-transparent h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:border-rose-600 text-center" 
                     placeholder="Student ID" 
                     value={studentId}
