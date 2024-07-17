@@ -9,7 +9,7 @@ export async function GET(
 
   try {
     const { data, error } = await supabaseServer
-      .from('api.apidata')  // Note the 'api.' prefix
+      .from('apidata')  // No need for 'api.' prefix
       .select('*')
       .eq('studentid', studentId)
       .single()
