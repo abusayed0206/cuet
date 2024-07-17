@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { supabaseServer } from '@/lib/supabase'  // Changed this line
+import { supabaseServer } from '@/lib/supabase'
 
 export async function GET(
   request: Request,
@@ -8,13 +8,14 @@ export async function GET(
   const studentId = params.studentid
 
   try {
-    const { data, error } = await supabaseServer  // Changed this line
-      .from('apidata')
+    const { data, error } = await supabaseServer
+      .from('api.apidata')  // Note the 'api.' prefix
       .select('*')
       .eq('studentid', studentId)
       .single()
 
     if (error) {
+      console.error('Supabase error:', error)
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
