@@ -6,39 +6,53 @@ type BatchSummary = { [batch: string]: DepartmentCount };
 
 export async function GET(request: Request) {
   try {
-    // Get all batch and department data
-    const { data, error } = await supabaseServer
+    // Get all unique batches
+    const { data: batchesData, error: batchesError } = await supabaseServer
       .from('apidata')
-      .select('batch, department');
+      .select('batch')
+      .order('batch', { ascending: false });
 
-    if (error) {
-      console.error('Supabase query error:', error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+    if (batchesError) {
+      console.error('Supabase batches query error:', batchesError);
+      return NextResponse.json({ error: batchesError.message }, { status: 500 });
     }
 
-    // Process the data
-    const batchSummary: BatchSummary = {};
+    const batches = [...new Set(batchesData.map(item => item.batch))];
 
-    data.forEach((student) => {
-      const { batch, department } = student;
-      if (!batchSummary[batch]) {
-        batchSummary[batch] = {};
-      }
-      batchSummary[batch][department] = (batchSummary[batch][department] || 0) + 1;
-    });
+    // Get all unique departments
+    const { data: deptsData, error: deptsError } = await supabaseServer
+      .from('apidata')
+      .select('department')
+      .order('department');
 
-    // Sort batches in descending order
-    const sortedBatchSummary = Object.entries(batchSummary)
-      .sort(([a], [b]) => parseInt(b) - parseInt(a))
-      .reduce<BatchSummary>((obj, [key, value]) => ({ ...obj, [key]: value }), {});
+    if (deptsError) {
+      console.error('Supabase departments query error:', deptsError);
+      return NextResponse.json({ error: deptsError.message }, { status: 500 });
+    }
+
+    const departments = [...new Set(deptsData.map(item => item.department))];
 
     // Prepare the response
-    const response = Object.entries(sortedBatchSummary).map(([batch, departments]) => ({
-      batch,
-      departments: Object.entries(departments as DepartmentCount).map(([dept, count]) => ({
-        name: dept,
-        students: count
-      }))
+    const response = await Promise.all(batches.map(async (batch) => {
+      const departmentCounts = await Promise.all(departments.map(async (dept) => {
+        const { count, error } = await supabaseServer
+          .from('apidata')
+          .select('*', { count: 'exact', head: true })
+          .eq('batch', batch)
+          .eq('department', dept);
+
+        if (error) {
+          console.error(`Error fetching count for batch ${batch}, department ${dept}:`, error);
+          return { name: dept, students: 0 };
+        }
+
+        return { name: dept, students: count || 0 };
+      }));
+
+      return {
+        batch,
+        departments: departmentCounts.filter(dept => dept.students > 0)
+      };
     }));
 
     return NextResponse.json(response);
