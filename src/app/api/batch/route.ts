@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabase';
 
-type DepartmentCount = { [department: string]: number };
-type BatchSummary = { [batch: string]: DepartmentCount };
+type DepartmentCount = { name: string; students: number };
+type BatchSummary = { batch: string; departments: DepartmentCount[] };
 
 export async function GET(request: Request) {
   try {
@@ -17,7 +17,7 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: batchesError.message }, { status: 500 });
     }
 
-    const batches = [...new Set(batchesData.map(item => item.batch))];
+    const batches = Array.from(new Set(batchesData.map(item => item.batch)));
 
     // Get all unique departments
     const { data: deptsData, error: deptsError } = await supabaseServer
@@ -30,10 +30,10 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: deptsError.message }, { status: 500 });
     }
 
-    const departments = [...new Set(deptsData.map(item => item.department))];
+    const departments = Array.from(new Set(deptsData.map(item => item.department)));
 
     // Prepare the response
-    const response = await Promise.all(batches.map(async (batch) => {
+    const response: BatchSummary[] = await Promise.all(batches.map(async (batch) => {
       const departmentCounts = await Promise.all(departments.map(async (dept) => {
         const { count, error } = await supabaseServer
           .from('apidata')
