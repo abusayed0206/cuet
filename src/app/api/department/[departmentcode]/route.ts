@@ -3,7 +3,7 @@ import { supabaseServer } from '@/lib/supabase';
 
 const departmentMap: { [key: string]: string } = {
   "ce": "Department of Civil Engineering",
-  "ete": "Department of Electrical & Electronic Engineering",
+  "eee": "Department of Electrical & Electronic Engineering",
   "me": "Department of Mechanical Engineering",
   "cse": "Department of Computer Science & Engineering",
   "urp": "Department of Urban & Regional Planning",
