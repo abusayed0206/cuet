@@ -5,43 +5,45 @@ export async function GET(
   request: Request,
   { params }: { params: { batch: string } }
 ) {
-  const batch = params.batch;
+  const batchNumber = params.batch;
 
   try {
-    // Fetch total number of students in the batch
-    const { data: totalStudentsData, error: totalStudentsError } = await supabaseServer
+    // Get total number of students in the batch
+    const { count: totalStudents, error: countError } = await supabaseServer
       .from('apidata')
-      .select('studentid', { count: 'exact' })
-      .eq('batch', batch);
+      .select('*', { count: 'exact', head: true })
+      .eq('batch', batchNumber);
 
-    if (totalStudentsError) {
-      console.error('Supabase error:', totalStudentsError);
-      return NextResponse.json({ error: totalStudentsError.message }, { status: 500 });
+    if (countError) {
+      console.error('Supabase count error:', countError);
+      return NextResponse.json({ error: countError.message }, { status: 500 });
     }
 
-    const totalStudents = totalStudentsData.length;
-
-    // Fetch department wise student count
-    const { data: departmentData, error: departmentError } = await supabaseServer
+    // Get department-wise student count
+    const { data: departmentData, error: deptError } = await supabaseServer
       .from('apidata')
-      .select('department, count(*)', { head: true })
-      .eq('batch', batch)
-      .group('department');
+      .select('department')
+      .eq('batch', batchNumber);
 
-    if (departmentError) {
-      console.error('Supabase error:', departmentError);
-      return NextResponse.json({ error: departmentError.message }, { status: 500 });
+    if (deptError) {
+      console.error('Supabase department error:', deptError);
+      return NextResponse.json({ error: deptError.message }, { status: 500 });
     }
 
-    const departmentWiseCount = departmentData.reduce((acc: any, item: any) => {
-      acc[item.department] = item.count;
-      return acc;
-    }, {});
-
-    return NextResponse.json({
-      totalStudents,
-      departmentWiseCount,
+    // Count students by department
+    const departmentCounts: { [key: string]: number } = {};
+    departmentData.forEach((student) => {
+      const dept = student.department;
+      departmentCounts[dept] = (departmentCounts[dept] || 0) + 1;
     });
+
+    // Prepare the response
+    const response = {
+      totalStudents,
+      departmentWiseCount: departmentCounts,
+    };
+
+    return NextResponse.json(response);
   } catch (error) {
     console.error('Error fetching batch data:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
