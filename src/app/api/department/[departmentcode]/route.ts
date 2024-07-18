@@ -39,8 +39,6 @@ export async function GET(
       return NextResponse.json({ error: deptError.message }, { status: 500 });
     }
 
-    const totalStudents = departmentData.length;
-
     // Count students by batch
     const batchCounts: { [key: string]: number } = {};
     departmentData.forEach((student) => {
@@ -56,7 +54,6 @@ export async function GET(
     // Prepare the response
     const response = {
       name: departmentName,
-      totalStudents: totalStudents,
       batchwiseStudents: sortedBatches
     };
 
