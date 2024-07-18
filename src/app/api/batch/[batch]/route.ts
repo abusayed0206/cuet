@@ -8,39 +8,37 @@ export async function GET(
   const batchNumber = params.batch;
 
   try {
-    // Get total number of students in the batch
-    const { count: totalStudents, error: countError } = await supabaseServer
+    // Get all students for the batch
+    const { data: batchData, error: batchError } = await supabaseServer
       .from('apidata')
-      .select('*', { count: 'exact', head: true })
+      .select('department, session')
       .eq('batch', batchNumber);
 
-    if (countError) {
-      console.error('Supabase count error:', countError);
-      return NextResponse.json({ error: countError.message }, { status: 500 });
+    if (batchError) {
+      console.error('Supabase batch error:', batchError);
+      return NextResponse.json({ error: batchError.message }, { status: 500 });
     }
 
-    // Get department-wise student count
-    const { data: departmentData, error: deptError } = await supabaseServer
-      .from('apidata')
-      .select('department')
-      .eq('batch', batchNumber);
-
-    if (deptError) {
-      console.error('Supabase department error:', deptError);
-      return NextResponse.json({ error: deptError.message }, { status: 500 });
+    if (batchData.length === 0) {
+      return NextResponse.json({ error: 'No data found for this batch' }, { status: 404 });
     }
+
+    const totalStudents = batchData.length;
+    const session = batchData[0].session; // All records in a batch will have the same session
 
     // Count students by department
     const departmentCounts: { [key: string]: number } = {};
-    departmentData.forEach((student) => {
+    batchData.forEach((student) => {
       const dept = student.department;
       departmentCounts[dept] = (departmentCounts[dept] || 0) + 1;
     });
 
     // Prepare the response
     const response = {
-      totalStudents,
-      departmentWiseCount: departmentCounts,
+      batch: batchNumber,
+      session: session,
+      totalStudents: totalStudents,
+      departmentWiseStudents: departmentCounts,
     };
 
     return NextResponse.json(response);
