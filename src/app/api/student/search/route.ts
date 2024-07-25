@@ -2,11 +2,14 @@ import { NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabase';
 
 export async function GET(request: Request) {
-  const url = new URL(request.url);
-  const name = url.searchParams.get('name');
+  const { searchParams } = new URL(request.url);
+  const name = searchParams.get('name');
 
   if (!name || name.length < 4) {
-    return NextResponse.json({ error: 'Name must be at least 4 characters long' }, { status: 400 });
+    return NextResponse.json(
+      { error: 'Search term must be at least 4 characters long' },
+      { status: 400 }
+    );
   }
 
   try {
@@ -14,6 +17,7 @@ export async function GET(request: Request) {
       .from('apidata')
       .select('name, studentid, department')
       .ilike('name', `%${name}%`)
+      .order('name', { ascending: true })
       .limit(5);
 
     if (error) {
@@ -22,12 +26,12 @@ export async function GET(request: Request) {
     }
 
     if (!data || data.length === 0) {
-      return NextResponse.json({ error: 'No matching students found' }, { status: 404 });
+      return NextResponse.json({ error: 'No students found' }, { status: 404 });
     }
 
-    return NextResponse.json(data); 
+    return NextResponse.json(data);
   } catch (error) {
-    console.error('Error fetching student data:', error);
+    console.error('Error searching student data:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
