@@ -29,6 +29,7 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'No students found' }, { status: 404 });
     }
 
+    // Return the array of results directly
     return NextResponse.json(data);
   } catch (error) {
     console.error('Error searching student data:', error);
