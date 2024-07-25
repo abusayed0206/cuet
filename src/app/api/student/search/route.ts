@@ -16,13 +16,14 @@ export async function GET(request: Request) {
   }
 
   try {
+    // Await the Supabase query to resolve
     const { data, error } = await supabaseServer
       .from("apidata")
       .select("name, studentid, department, batch")
-      .textSearch("name", searchName.trim(), { // Using textSearch here
+      .textSearch("name", searchName.trim(), {
         type: "websearch",
         config: "english"
-      }) // Use 'websearch' type with 'english' config
+      })
       .order("batch", { ascending: false })
       .limit(10);
 
@@ -34,11 +35,12 @@ export async function GET(request: Request) {
       );
     }
 
-    return NextResponse.json({ results: data });
+    return NextResponse.json({ results: data }); // Return data directly
   } catch (error) {
     console.error("Error fetching student data:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
-      { status: 500 });
+      { status: 500 }
+    );
   }
 }
