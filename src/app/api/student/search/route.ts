@@ -13,12 +13,13 @@ export async function GET(request: Request) {
   }
 
   try {
-    let { data, error } = await supabaseServer
+    const { data, error } = await supabaseServer
       .from('apidata')
-      .select('name, studentid, department')
+      .select('name, studentid, department, batch')
       .ilike('name', `%${name}%`)
+      .order('batch', { ascending: false })
       .order('name', { ascending: true })
-      .limit(5);
+      .limit(10);
 
     if (error) {
       console.error('Supabase error:', error);
@@ -29,8 +30,8 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'No students found' }, { status: 404 });
     }
 
-    // Ensure data is an array
-    const results = Array.isArray(data) ? data : [data];
+    // Remove the 'batch' field from the results before sending
+    const results = data.map(({ batch, ...rest }) => rest);
 
     return NextResponse.json(results);
   } catch (error) {
