@@ -13,7 +13,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    const { data, error } = await supabaseServer
+    let { data, error } = await supabaseServer
       .from('apidata')
       .select('name, studentid, department')
       .ilike('name', `%${name}%`)
@@ -29,8 +29,10 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'No students found' }, { status: 404 });
     }
 
-    // Return the array of results directly
-    return NextResponse.json(data);
+    // Ensure data is an array
+    const results = Array.isArray(data) ? data : [data];
+
+    return NextResponse.json(results);
   } catch (error) {
     console.error('Error searching student data:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
