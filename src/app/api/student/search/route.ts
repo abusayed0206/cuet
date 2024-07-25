@@ -1,5 +1,3 @@
-// File: app/api/student/search/route.ts
-
 import { NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabase';
 
@@ -13,19 +11,22 @@ export async function GET(request: Request) {
   }
 
   try {
-    const { data, error } = await supabaseServer
+   await supabaseServer
       .from("apidata")
       .select("name, studentid, department, batch")  // Include 'batch' for sorting
       .ilike('name', `%${searchName}%`)
       .order("batch", { ascending: false })       // Sort by batch descending
-      .limit(10);                                // Limit to 10 results
-
-    if (error) {
+      .limit(10)
+      .then(({data,error})=>
+      {if (error) {
       console.error("Supabase error:", error);
       return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 
-    return NextResponse.json({ results: data });
+    return NextResponse.json({ results: data });}
+      );
+
+   
   } catch (error) {
     console.error('Error fetching student data:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
