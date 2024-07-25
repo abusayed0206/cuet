@@ -1,7 +1,7 @@
 // File: app/api/student/search/route.ts
 
 import { NextResponse } from "next/server";
-import { supabaseServer } from "@/lib/supabase"; // Use your existing configuration
+import { supabaseServer } from "@/lib/supabase";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -16,10 +16,13 @@ export async function GET(request: Request) {
   }
 
   try {
-    const { data, error } = await supabaseServer // Use supabaseServer from your lib
+    const { data, error } = await supabaseServer
       .from("apidata")
       .select("name, studentid, department, batch")
-      .ilike("name", `%${searchName.trim()}%`)
+      .textSearch("name", searchName.trim(), { // Using textSearch here
+        type: "websearch",
+        config: "english"
+      }) // Use 'websearch' type with 'english' config
       .order("batch", { ascending: false })
       .limit(10);
 
@@ -36,7 +39,6 @@ export async function GET(request: Request) {
     console.error("Error fetching student data:", error);
     return NextResponse.json(
       { error: "Internal Server Error" },
-      { status: 500 }
-    );
+      { status: 500 });
   }
 }
