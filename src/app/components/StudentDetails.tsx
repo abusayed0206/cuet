@@ -15,12 +15,25 @@ interface StudentDetailsProps {
     phonenumber: string;
     bloodgroup: string;
     linkedin: string;
+    dplink: string;
+    currentstatus: string;
   };
 }
 
 const StudentDetails: React.FC<StudentDetailsProps> = ({ data }) => {
   return (
     <div className="mt-6 p-6 bg-white rounded-lg shadow-lg">
+      {/* Profile Picture */}
+      {data.dplink && (
+        <div className="flex justify-center mb-4">
+          <img
+            src={data.dplink}
+            alt="Profile"
+            className="w-24 h-24 rounded-full border-2 border-gray-300"
+          />
+        </div>
+      )}
+      
       <div className="space-y-2">
         <div>
           <span className="text-gray-700">Name: </span>
@@ -90,6 +103,10 @@ const StudentDetails: React.FC<StudentDetailsProps> = ({ data }) => {
               </a>
             )}
           </span>
+        </div>
+        <div>
+          <span className="text-gray-700">Current Status: </span>
+          <span className="font-bold text-black">{data.currentstatus}</span>
         </div>
       </div>
     </div>
