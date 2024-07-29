@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 interface StudentDetailsProps {
   data: {
@@ -21,15 +21,22 @@ interface StudentDetailsProps {
 }
 
 const StudentDetails: React.FC<StudentDetailsProps> = ({ data }) => {
+  const [imageSrc, setImageSrc] = useState(data.dplink);
+
+  const handleError = () => {
+    setImageSrc('https://cdn.abusayed.dev/demo.png');
+  };
+
   return (
     <div className="mt-6 p-6 bg-white rounded-lg shadow-lg">
       {/* Profile Picture */}
-      {data.dplink && (
+      {imageSrc && (
         <div className="flex justify-center mb-4">
           <img
-            src={data.dplink}
-            alt="Profile"
+            src={imageSrc}
+            alt="{data.name}'s DP"
             className="w-24 h-24 rounded-full border-2 border-gray-300"
+            onError={handleError}
           />
         </div>
       )}
