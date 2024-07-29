@@ -12,7 +12,7 @@ export async function GET(
     const { data, error } = await supabaseServer
       .from('apidata')
       .select(
-        'name, studentid, uniqueid, batch, session, department, admissionroll, admissionmerit, hall, email, phonenumber, bloodgroup, linkedin'
+        'name, studentid, uniqueid, batch, session, department, admissionroll, admissionmerit, hall, email, phonenumber, bloodgroup, dplink, currentstatus, linkedin'
       ) 
       .eq('studentid', studentId)
       .single();
