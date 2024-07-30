@@ -5,8 +5,21 @@ import NameSearch from './components/NameSearch';
 import BatchwiseDepartment from './components/BatchwiseDepartment';
 
 interface Student {
-  studentid: string;
   name: string;
+  studentid: string;
+  uniqueid: string;
+  batch: string;
+  session: string;
+  department: string;
+  admissionroll: string;
+  admissionmerit: string;
+  hall: string;
+  email: string;
+  phonenumber: string;
+  bloodgroup: string;
+  linkedin: string;
+  dplink: string;
+  currentstatus: string;
 }
 
 interface DepartmentData {
