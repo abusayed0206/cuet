@@ -28,6 +28,11 @@ export default function Home() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!inputValue.trim()) {
+      setError('Please enter a value.');
+      return;
+    }
+
     if (searchType === 'Student ID') {
       if (!validateStudentId(inputValue)) {
         setError('Please enter a valid CUET ID.');
@@ -51,6 +56,11 @@ export default function Home() {
         setIsLoading(false);
       }
     } else if (searchType === 'Name') {
+      if (inputValue.length < 4) {
+        setError('Name must be at least 4 characters long.');
+        return;
+      }
+
       setIsLoading(true);
       setError('');
       setStudentData(null);
@@ -102,10 +112,14 @@ export default function Home() {
                 </div>
               </form>
             </div>
-            {isLoading && <p className="text-black text-center">Loading...</p>}
+            {isLoading && (
+              <div className="flex justify-center items-center">
+                <div className="w-16 h-16 border-4 border-t-4 border-gray-200 border-t-blue-500 rounded-full animate-spin"></div>
+              </div>
+            )}
             {error && <p className="text-center text-red-500">{error}</p>}
-            {studentData && <StudentDetails data={studentData} />}
-            {searchResults.length > 0 && <NameSearch results={searchResults} />}
+            {studentData && searchType === 'Student ID' && <StudentDetails data={studentData} />}
+            {searchResults.length > 0 && searchType === 'Name' && <NameSearch results={searchResults} />}
           </div>
         </div>
       </div>
