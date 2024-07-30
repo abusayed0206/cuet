@@ -8,7 +8,7 @@ export async function GET(request: Request) {
   const searchName = searchParams.get("name");
 
   // Enhanced Input Validation
-  if (!searchName || searchName.trim().length < 4) {
+  if (!searchName || searchName.length < 4) {
     return NextResponse.json(
       { error: "Search query must be at least 4 characters long" },
       { status: 400 }
@@ -19,13 +19,13 @@ export async function GET(request: Request) {
     // Await the Supabase query to resolve
     const { data, error } = await supabaseServer
       .from("apidata")
-      .select("name, studentid, department, batch")
-      .textSearch("name", searchName.trim(), {
+      .select("name, studentid, department, batch, dplink")
+      .textSearch("name", searchName, {
         type: "websearch",
         config: "english"
       })
       .order("batch", { ascending: false })
-      .limit(10);
+      .limit(30);
 
     if (error) {
       console.error("Supabase Error:", error);
