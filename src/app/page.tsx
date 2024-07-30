@@ -1,21 +1,33 @@
 'use client';
 import { useState } from 'react';
 import StudentDetails from './components/StudentDetails';
-import NameSearch from './components/NameSearch'; // Import NameSearch
-import BatchwiseDepartment from './components/BatchwiseDepartment'; // Import BatchwiseDepartment
+import NameSearch from './components/NameSearch';
+import BatchwiseDepartment from './components/BatchwiseDepartment';
+
+interface Student {
+  studentid: string;
+  name: string;
+}
+
+interface DepartmentData {
+  name: string;
+  batch: string;
+  students: number;
+  studentList: Student[];
+}
 
 export default function Home() {
-  const [inputValue, setInputValue] = useState('');
-  const [searchType, setSearchType] = useState('Student ID');
-  const [department, setDepartment] = useState('ce');
-  const [batch, setBatch] = useState('17');
-  const [studentData, setStudentData] = useState(null);
-  const [searchResults, setSearchResults] = useState([]);
-  const [departmentData, setDepartmentData] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [inputValue, setInputValue] = useState<string>('');
+  const [searchType, setSearchType] = useState<'Student ID' | 'Name' | 'Batch'>('Student ID');
+  const [department, setDepartment] = useState<string>('ce');
+  const [batch, setBatch] = useState<string>('17');
+  const [studentData, setStudentData] = useState<any | null>(null); // Adjust type as needed
+  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [departmentData, setDepartmentData] = useState<DepartmentData | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
 
-  const validateStudentId = (id: string) => {
+  const validateStudentId = (id: string): boolean => {
     const regex = /^[0-9]{7}$/;
     if (!regex.test(id)) return false;
 
@@ -23,11 +35,7 @@ export default function Home() {
     const departmentCode = parseInt(id.slice(2, 4), 10);
     const classRoll = parseInt(id.slice(4, 7), 10);
 
-    if (batchYear < 0 || batchYear > 99) return false;
-    if (departmentCode < 1 || departmentCode > 12) return false;
-    if (classRoll < 1 || classRoll > 200) return false;
-
-    return true;
+    return batchYear >= 0 && batchYear <= 99 && departmentCode >= 1 && departmentCode <= 12 && classRoll >= 1 && classRoll <= 200;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -37,66 +45,42 @@ export default function Home() {
       return;
     }
 
-    if (searchType === 'Student ID') {
-      if (!validateStudentId(inputValue)) {
-        setError('Please enter a valid CUET ID.');
-        return;
-      }
+    setIsLoading(true);
+    setError('');
+    setStudentData(null);
+    setSearchResults([]);
+    setDepartmentData(null);
 
-      setIsLoading(true);
-      setError('');
-      setStudentData(null);
-      setSearchResults([]);
-      try {
-        const response = await fetch(`/api/student/${inputValue}`);
-        if (!response.ok) {
-          throw new Error('No student found with this ID.');
+    try {
+      let response: Response;
+      if (searchType === 'Student ID') {
+        if (!validateStudentId(inputValue)) {
+          setError('Please enter a valid CUET ID.');
+          return;
         }
+        response = await fetch(`/api/student/${inputValue}`);
+        if (!response.ok) throw new Error('No student found with this ID.');
         const data = await response.json();
         setStudentData(data);
-      } catch (err) {
-        setError('There is no student by this ID');
-      } finally {
-        setIsLoading(false);
-      }
-    } else if (searchType === 'Name') {
-      if (inputValue.length < 4) {
-        setError('Name must be at least 4 characters long.');
-        return;
-      }
-
-      setIsLoading(true);
-      setError('');
-      setStudentData(null);
-      try {
-        const response = await fetch(`/api/student/search?name=${inputValue}`);
-        if (!response.ok) {
-          throw new Error('No student found with this name.');
+      } else if (searchType === 'Name') {
+        if (inputValue.length < 4) {
+          setError('Name must be at least 4 characters long.');
+          return;
         }
+        response = await fetch(`/api/student/search?name=${inputValue}`);
+        if (!response.ok) throw new Error('No student found with this name.');
         const data = await response.json();
         setSearchResults(data.results);
-      } catch (err) {
-        setError('No students found with this name');
-      } finally {
-        setIsLoading(false);
-      }
-    } else if (searchType === 'Batch') {
-      setIsLoading(true);
-      setError('');
-      setStudentData(null);
-      setSearchResults([]);
-      try {
-        const response = await fetch(`/api/department/${department}/${batch}`);
-        if (!response.ok) {
-          throw new Error('No students found for this batch and department.');
-        }
+      } else if (searchType === 'Batch') {
+        response = await fetch(`/api/department/${department}/${batch}`);
+        if (!response.ok) throw new Error('No students found for this batch and department.');
         const data = await response.json();
         setDepartmentData(data);
-      } catch (err) {
-        setError('No students found for this batch and department');
-      } finally {
-        setIsLoading(false);
       }
+    } catch (err) {
+      setError(err.message || 'An error occurred.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -113,7 +97,7 @@ export default function Home() {
                   <select
                     value={searchType}
                     onChange={(e) => {
-                      setSearchType(e.target.value);
+                      setSearchType(e.target.value as 'Student ID' | 'Name' | 'Batch');
                       setInputValue('');
                       setDepartmentData(null);
                     }}
@@ -188,8 +172,8 @@ export default function Home() {
             {searchResults.length > 0 && searchType === 'Name' && <NameSearch results={searchResults} />}
             {departmentData && searchType === 'Batch' && (
               <BatchwiseDepartment
-                departmentName={department}
-                batch={batch}
+                departmentName={departmentData.name}
+                batch={departmentData.batch}
                 students={departmentData.students}
                 studentList={departmentData.studentList}
               />
@@ -199,4 +183,4 @@ export default function Home() {
       </div>
     </div>
   );
-               }
+}
