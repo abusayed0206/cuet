@@ -16,13 +16,15 @@ interface DepartmentData {
   studentList: Student[];
 }
 
+type SearchType = 'Student ID' | 'Name' | 'Batch';
+
 export default function Home() {
   const [inputValue, setInputValue] = useState<string>('');
-  const [searchType, setSearchType] = useState<'Student ID' | 'Name' | 'Batch'>('Student ID');
+  const [searchType, setSearchType] = useState<SearchType>('Student ID');
   const [department, setDepartment] = useState<string>('ce');
   const [batch, setBatch] = useState<string>('17');
-  const [studentData, setStudentData] = useState<any | null>(null); // Adjust type as needed
-  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [studentData, setStudentData] = useState<Student | null>(null);
+  const [searchResults, setSearchResults] = useState<Student[]>([]);
   const [departmentData, setDepartmentData] = useState<DepartmentData | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
@@ -40,8 +42,16 @@ export default function Home() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!inputValue.trim()) {
+
+    // Skip inputValue check for Batch search type
+    if (searchType !== 'Batch' && !inputValue.trim()) {
       setError('Please enter a value.');
+      return;
+    }
+
+    // Skip validation for Batch search type
+    if (searchType === 'Student ID' && !validateStudentId(inputValue)) {
+      setError('Please enter a valid CUET ID.');
       return;
     }
 
@@ -53,29 +63,33 @@ export default function Home() {
 
     try {
       let response: Response;
-      if (searchType === 'Student ID') {
-        if (!validateStudentId(inputValue)) {
-          setError('Please enter a valid CUET ID.');
-          return;
-        }
-        response = await fetch(`/api/student/${inputValue}`);
-        if (!response.ok) throw new Error('No student found with this ID.');
-        const data = await response.json();
-        setStudentData(data);
-      } else if (searchType === 'Name') {
-        if (inputValue.length < 4) {
-          setError('Name must be at least 4 characters long.');
-          return;
-        }
-        response = await fetch(`/api/student/search?name=${inputValue}`);
-        if (!response.ok) throw new Error('No student found with this name.');
-        const data = await response.json();
-        setSearchResults(data.results);
-      } else if (searchType === 'Batch') {
-        response = await fetch(`/api/department/${department}/${batch}`);
-        if (!response.ok) throw new Error('No students found for this batch and department.');
-        const data = await response.json();
-        setDepartmentData(data);
+      let data: any;
+      
+      switch (searchType) {
+        case 'Student ID':
+          response = await fetch(`/api/student/${inputValue}`);
+          if (!response.ok) throw new Error('No student found with this ID.');
+          data = await response.json();
+          setStudentData(data);
+          break;
+          
+        case 'Name':
+          if (inputValue.length < 4) {
+            setError('Name must be at least 4 characters long.');
+            return;
+          }
+          response = await fetch(`/api/student/search?name=${inputValue}`);
+          if (!response.ok) throw new Error('No student found with this name.');
+          data = await response.json();
+          setSearchResults(data.results);
+          break;
+          
+        case 'Batch':
+          response = await fetch(`/api/department/${department}/${batch}`);
+          if (!response.ok) throw new Error('No students found for this batch and department.');
+          data = await response.json();
+          setDepartmentData(data);
+          break;
       }
     } catch (err) {
       if (err instanceof Error) {
@@ -101,7 +115,7 @@ export default function Home() {
                   <select
                     value={searchType}
                     onChange={(e) => {
-                      setSearchType(e.target.value as 'Student ID' | 'Name' | 'Batch');
+                      setSearchType(e.target.value as SearchType);
                       setInputValue('');
                       setDepartmentData(null);
                     }}
@@ -187,4 +201,4 @@ export default function Home() {
       </div>
     </div>
   );
-          }
+}
