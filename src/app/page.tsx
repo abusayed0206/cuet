@@ -137,11 +137,11 @@ export default function Home() {
                 </select>
 
                 {searchType === 'Batch' && (
-                  <div className="space-y-4 mb-4">
+                  <div className="space-y-2 mb-4">
                     <select
                       value={batch}
                       onChange={(e) => setBatch(e.target.value)}
-                      className="border-b-2 border-gray-300 py-2 px-4 rounded-md"
+                      className="border-b-2 border-gray-300 py-2 px-4 rounded-md space-x-2"
                     >
                       <option value="17">17</option>
                       <option value="18">18</option>
@@ -154,7 +154,7 @@ export default function Home() {
                     <select
                       value={department}
                       onChange={(e) => setDepartment(e.target.value.toLowerCase())}
-                      className="border-b-2 border-gray-300 py-2 px-4 rounded-md"
+                      className="border-b-2 border-gray-300 py-2 px-4 rounded-md space-x-2"
                     >
                       <option value="ce">CE</option>
                       <option value="me">ME</option>
