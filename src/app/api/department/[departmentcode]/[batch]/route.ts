@@ -12,7 +12,7 @@ const departmentMap: { [key: string]: string } = {
   "ete": "Department of Electronics & Telecommunication Engineering",
   "bme": "Department of Biomedical Engineering",
   "mie": "Department of Mechatronics & Industrial Engineering",
-  "wrp": "Department of Water Resources Engineering",
+  "wre": "Department of Water Resources Engineering",
   "mse": "Department of Materials Science & Engineering"
 };
 
