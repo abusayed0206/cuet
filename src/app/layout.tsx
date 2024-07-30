@@ -10,7 +10,7 @@ const inter = Hind_Siliguri({
 
 export const metadata: Metadata = {
   title: "CUET Students Details",
-  description: "Publicly available CUET | an API with many things | Sayed (1901049)",
+  description: "Publicly available CUET Students Details | an API with many things | Sayed (1901049)",
   metadataBase: new URL("https://cuet.sayed.page/"),
   icons: [
     {
@@ -43,6 +43,8 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     images: '/OG.png',
+    site_name: 'CUET Students Details',
+    url: 'https://cuet.sayed.page',
   },
 };
 
