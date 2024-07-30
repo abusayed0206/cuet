@@ -37,8 +37,8 @@ export async function generateMetadata(
     const studentData = await getStudentData(studentId)
     
     return {
-      title: `${studentData.name} | ${studentData.studentid}`,
-      description: `${studentData.name} is/was from ${studentData.department} and ${studentData.batch} batch`,
+      title: `${studentData.name} | ID: ${studentData.studentid}`,
+      description: `From ${studentData.department} and ${studentData.batch} batch`,
       openGraph: {
         siteName: 'CUET Student Directory',
         url: `https://cuet.sayed.page/${studentId}`,
