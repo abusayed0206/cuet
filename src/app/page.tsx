@@ -78,7 +78,11 @@ export default function Home() {
         setDepartmentData(data);
       }
     } catch (err) {
-      setError(err.message || 'An error occurred.');
+      if (err instanceof Error) {
+        setError(err.message || 'An error occurred.');
+      } else {
+        setError('An unknown error occurred.');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -183,4 +187,4 @@ export default function Home() {
       </div>
     </div>
   );
-}
+          }
