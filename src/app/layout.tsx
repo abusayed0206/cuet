@@ -43,8 +43,6 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     images: '/OG.png',
-    site_name: 'CUET Students Details',
-    url: 'https://cuet.sayed.page',
   },
 };
 
