@@ -56,13 +56,11 @@ export default function Home() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Skip inputValue check for Batch search type
     if (searchType !== 'Batch' && !inputValue.trim()) {
       setError('Please enter a value.');
       return;
     }
 
-    // Skip validation for Batch search type
     if (searchType === 'Student ID' && !validateStudentId(inputValue)) {
       setError('Please enter a valid CUET ID.');
       return;
@@ -77,7 +75,7 @@ export default function Home() {
     try {
       let response: Response;
       let data: any;
-      
+
       switch (searchType) {
         case 'Student ID':
           response = await fetch(`/api/student/${inputValue}`);
@@ -85,7 +83,7 @@ export default function Home() {
           data = await response.json();
           setStudentData(data);
           break;
-          
+
         case 'Name':
           if (inputValue.length < 4) {
             setError('Name must be at least 4 characters long.');
@@ -96,7 +94,7 @@ export default function Home() {
           data = await response.json();
           setSearchResults(data.results);
           break;
-          
+
         case 'Batch':
           response = await fetch(`/api/department/${department}/${batch}`);
           if (!response.ok) throw new Error('No students found for this batch and department.');
@@ -123,74 +121,72 @@ export default function Home() {
           <div className="max-w-md mx-auto">
             <h1 className="text-2xl font-semibold text-center text-black">CUET Student Information</h1>
             <div className="divide-y divide-gray-200">
-              <form onSubmit={handleSubmit} className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
-                <div className="flex items-center space-x-4">
-                  <select
-                    value={searchType}
-                    onChange={(e) => {
-                      setSearchType(e.target.value as SearchType);
-                      setInputValue('');
-                      setDepartmentData(null);
-                    }}
-                    className="border-b-2 border-gray-300 py-2 px-4 rounded-md"
-                  >
-                    <option value="Student ID">Student ID</option>
-                    <option value="Name">Name</option>
-                    <option value="Batch">Batch</option>
-                  </select>
+              <form onSubmit={handleSubmit} className="py-8 text-base leading-6 space-y-6 text-gray-700 sm:text-lg sm:leading-7 flex flex-col items-center">
+                <select
+                  value={searchType}
+                  onChange={(e) => {
+                    setSearchType(e.target.value as SearchType);
+                    setInputValue('');
+                    setDepartmentData(null);
+                  }}
+                  className="border-b-2 border-gray-300 py-2 px-4 rounded-md mb-4"
+                >
+                  <option value="Student ID">Student ID</option>
+                  <option value="Name">Name</option>
+                  <option value="Batch">Batch</option>
+                </select>
 
-                  {searchType === 'Batch' && (
-                    <>
-                      <select
-                        value={batch}
-                        onChange={(e) => setBatch(e.target.value)}
-                        className="border-b-2 border-gray-300 py-2 px-4 rounded-md"
-                      >
-                        <option value="17">17</option>
-                        <option value="18">18</option>
-                        <option value="19">19</option>
-                        <option value="20">20</option>
-                        <option value="21">21</option>
-                        <option value="22">22</option>
-                      </select>
+                {searchType === 'Batch' && (
+                  <div className="space-y-4 mb-4">
+                    <select
+                      value={batch}
+                      onChange={(e) => setBatch(e.target.value)}
+                      className="border-b-2 border-gray-300 py-2 px-4 rounded-md"
+                    >
+                      <option value="17">17</option>
+                      <option value="18">18</option>
+                      <option value="19">19</option>
+                      <option value="20">20</option>
+                      <option value="21">21</option>
+                      <option value="22">22</option>
+                    </select>
 
-                      <select
-                        value={department}
-                        onChange={(e) => setDepartment(e.target.value.toLowerCase())}
-                        className="border-b-2 border-gray-300 py-2 px-4 rounded-md"
-                      >
-                        <option value="ce">CE</option>
-                        <option value="me">ME</option>
-                        <option value="cse">CSE</option>
-                        <option value="eee">EEE</option>
-                        <option value="ete">ETE</option>
-                        <option value="bme">BME</option>
-                        <option value="arch">ARCH</option>
-                        <option value="pme">PME</option>
-                        <option value="urp">URP</option>
-                        <option value="mse">MSE</option>
-                        <option value="mie">MIE</option>
-                        <option value="wre">WRE</option>
-                      </select>
-                    </>
-                  )}
+                    <select
+                      value={department}
+                      onChange={(e) => setDepartment(e.target.value.toLowerCase())}
+                      className="border-b-2 border-gray-300 py-2 px-4 rounded-md"
+                    >
+                      <option value="ce">CE</option>
+                      <option value="me">ME</option>
+                      <option value="cse">CSE</option>
+                      <option value="eee">EEE</option>
+                      <option value="ete">ETE</option>
+                      <option value="bme">BME</option>
+                      <option value="arch">ARCH</option>
+                      <option value="pme">PME</option>
+                      <option value="urp">URP</option>
+                      <option value="mse">MSE</option>
+                      <option value="mie">MIE</option>
+                      <option value="wre">WRE</option>
+                    </select>
+                  </div>
+                )}
 
-                  {(searchType === 'Student ID' || searchType === 'Name') && (
-                    <input
-                      id="inputValue"
-                      name="inputValue"
-                      type="text"
-                      className="h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:border-rose-600 text-center"
-                      placeholder={searchType === 'Student ID' ? 'Enter Student ID' : 'Enter Name'}
-                      value={inputValue}
-                      onChange={(e) => setInputValue(e.target.value)}
-                    />
-                  )}
+                {(searchType === 'Student ID' || searchType === 'Name') && (
+                  <input
+                    id="inputValue"
+                    name="inputValue"
+                    type="text"
+                    className="h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:border-rose-600 text-center mb-4"
+                    placeholder={searchType === 'Student ID' ? 'Enter Student ID' : 'Enter Name'}
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                  />
+                )}
 
-                  <button className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-md px-4 py-2 hover:from-pink-500 hover:to-yellow-500 transition-all">
-                    Submit
-                  </button>
-                </div>
+                <button className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-md px-4 py-2 hover:from-pink-500 hover:to-yellow-500 transition-all">
+                  Submit
+                </button>
               </form>
             </div>
             {isLoading && (
@@ -214,4 +210,4 @@ export default function Home() {
       </div>
     </div>
   );
-}
+                    }
