@@ -1,3 +1,4 @@
+"use client"
 import React, { useState } from 'react';
 
 interface StudentDetailsProps {
@@ -34,7 +35,7 @@ const StudentDetails: React.FC<StudentDetailsProps> = ({ data }) => {
         <div className="flex justify-center mb-4">
           <img
             src={imageSrc}
-            alt="{data.name}'s DP"
+            alt={`${data.name}'s DP`}
             className="w-24 h-24 rounded-full border-2 border-gray-300"
             onError={handleError}
           />

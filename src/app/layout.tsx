@@ -9,41 +9,40 @@ const inter = Hind_Siliguri({
 });
 
 export const metadata: Metadata = {
-  title: "CUET STUDENTS API",
-  description: "Negative by Blood💖⭐, Just a Normie🙂.",
+  title: "CUET Students Details",
+  description: "Publicly available CUET Students Details | an API with many things | Sayed (1901049)",
   metadataBase: new URL("https://cuet.sayed.page/"),
   icons: [
     {
       rel: "icon",
       type: "image/png",
       sizes: "32x32",
-      url: "https://sayed.page/favicon-32x32.png",
+      url: "/favicon-32x32.png",
     },
     {
       rel: "icon",
       type: "image/png",
       sizes: "16x16",
-      url: "https://sayed.page/favicon-16x16.png",
+      url: "/favicon-16x16.png",
     },
     {
       rel: "apple-touch-icon",
       sizes: "180x180",
-      url: "https://sayed.page/apple-touch-icon.png",
+      url: "/apple-touch-icon.png",
     },
     {
       rel: "android-chrome",
       sizes: "192x192",
-      url: "https://sayed.page/android-chrome-192x192.png",
+      url: "/android-chrome-192x192.png",
     },
-
     {
       rel: "safari-pinned-tab",
       sizes: "180x180",
-      url: "https://sayed.page/safari-pinned-tab.svg",
+      url: "/safari-pinned-tab.svg",
     },
   ],
   openGraph: {
-    images: 'https://sayed.page/OG_Image.png',
+    images: '/OG.png',
   },
 };
 
