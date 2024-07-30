@@ -1,13 +1,17 @@
 'use client';
 import { useState } from 'react';
 import StudentDetails from './components/StudentDetails';
-import NameSearch from './components/NameSearch'; // Make sure to import NameSearch
+import NameSearch from './components/NameSearch'; // Import NameSearch
+import BatchwiseDepartment from './components/BatchwiseDepartment'; // Import BatchwiseDepartment
 
 export default function Home() {
   const [inputValue, setInputValue] = useState('');
   const [searchType, setSearchType] = useState('Student ID');
+  const [department, setDepartment] = useState('ce');
+  const [batch, setBatch] = useState('17');
   const [studentData, setStudentData] = useState(null);
   const [searchResults, setSearchResults] = useState([]);
+  const [departmentData, setDepartmentData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -76,6 +80,23 @@ export default function Home() {
       } finally {
         setIsLoading(false);
       }
+    } else if (searchType === 'Batch') {
+      setIsLoading(true);
+      setError('');
+      setStudentData(null);
+      setSearchResults([]);
+      try {
+        const response = await fetch(`/api/department/${department}/${batch}`);
+        if (!response.ok) {
+          throw new Error('No students found for this batch and department.');
+        }
+        const data = await response.json();
+        setDepartmentData(data);
+      } catch (err) {
+        setError('No students found for this batch and department');
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -91,21 +112,66 @@ export default function Home() {
                 <div className="flex items-center space-x-4">
                   <select
                     value={searchType}
-                    onChange={(e) => setSearchType(e.target.value)}
+                    onChange={(e) => {
+                      setSearchType(e.target.value);
+                      setInputValue('');
+                      setDepartmentData(null);
+                    }}
                     className="border-b-2 border-gray-300 py-2 px-4 rounded-md"
                   >
                     <option value="Student ID">Student ID</option>
                     <option value="Name">Name</option>
+                    <option value="Batch">Batch</option>
                   </select>
-                  <input
-                    id="inputValue"
-                    name="inputValue"
-                    type="text"
-                    className="h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:border-rose-600 text-center"
-                    placeholder={searchType === 'Student ID' ? 'Enter Student ID' : 'Enter Name'}
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                  />
+
+                  {searchType === 'Batch' && (
+                    <>
+                      <select
+                        value={batch}
+                        onChange={(e) => setBatch(e.target.value)}
+                        className="border-b-2 border-gray-300 py-2 px-4 rounded-md"
+                      >
+                        <option value="17">17</option>
+                        <option value="18">18</option>
+                        <option value="19">19</option>
+                        <option value="20">20</option>
+                        <option value="21">21</option>
+                        <option value="22">22</option>
+                      </select>
+
+                      <select
+                        value={department}
+                        onChange={(e) => setDepartment(e.target.value.toLowerCase())}
+                        className="border-b-2 border-gray-300 py-2 px-4 rounded-md"
+                      >
+                        <option value="ce">CE</option>
+                        <option value="me">ME</option>
+                        <option value="cse">CSE</option>
+                        <option value="eee">EEE</option>
+                        <option value="ete">ETE</option>
+                        <option value="bme">BME</option>
+                        <option value="arch">ARCH</option>
+                        <option value="pme">PME</option>
+                        <option value="urp">URP</option>
+                        <option value="mse">MSE</option>
+                        <option value="mie">MIE</option>
+                        <option value="wre">WRE</option>
+                      </select>
+                    </>
+                  )}
+
+                  {(searchType === 'Student ID' || searchType === 'Name') && (
+                    <input
+                      id="inputValue"
+                      name="inputValue"
+                      type="text"
+                      className="h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:border-rose-600 text-center"
+                      placeholder={searchType === 'Student ID' ? 'Enter Student ID' : 'Enter Name'}
+                      value={inputValue}
+                      onChange={(e) => setInputValue(e.target.value)}
+                    />
+                  )}
+
                   <button className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-md px-4 py-2 hover:from-pink-500 hover:to-yellow-500 transition-all">
                     Submit
                   </button>
@@ -120,9 +186,17 @@ export default function Home() {
             {error && <p className="text-center text-red-500">{error}</p>}
             {studentData && searchType === 'Student ID' && <StudentDetails data={studentData} />}
             {searchResults.length > 0 && searchType === 'Name' && <NameSearch results={searchResults} />}
+            {departmentData && searchType === 'Batch' && (
+              <BatchwiseDepartment
+                departmentName={department}
+                batch={batch}
+                students={departmentData.students}
+                studentList={departmentData.studentList}
+              />
+            )}
           </div>
         </div>
       </div>
     </div>
   );
-}
+               }
