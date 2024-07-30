@@ -1,12 +1,15 @@
-'use client'
-import { useState } from 'react'
-import StudentDetails from './components/StudentDetails'
+'use client';
+import { useState } from 'react';
+import StudentDetails from './components/StudentDetails';
+import NameSearch from './components/NameSearch'; // Make sure to import NameSearch
 
 export default function Home() {
-  const [studentId, setStudentId] = useState('')
-  const [studentData, setStudentData] = useState(null)
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState('')
+  const [inputValue, setInputValue] = useState('');
+  const [searchType, setSearchType] = useState('Student ID');
+  const [studentData, setStudentData] = useState(null);
+  const [searchResults, setSearchResults] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const validateStudentId = (id: string) => {
     const regex = /^[0-9]{7}$/;
@@ -21,31 +24,50 @@ export default function Home() {
     if (classRoll < 1 || classRoll > 200) return false;
 
     return true;
-  }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!validateStudentId(studentId)) {
-      setError('Please enter a CUET ID. Not just a random number!')
-      return
-    }
-
-    setIsLoading(true)
-    setError('')
-    setStudentData(null)
-    try {
-      const response = await fetch(`/api/student/${studentId}`)
-      if (!response.ok) {
-        throw new Error('He/She is not a CUET Student')
+    e.preventDefault();
+    if (searchType === 'Student ID') {
+      if (!validateStudentId(inputValue)) {
+        setError('Please enter a valid CUET ID.');
+        return;
       }
-      const data = await response.json()
-      setStudentData(data)
-    } catch (err) {
-      setError('There is no student by this ID')
-    } finally {
-      setIsLoading(false)
+
+      setIsLoading(true);
+      setError('');
+      setStudentData(null);
+      setSearchResults([]);
+      try {
+        const response = await fetch(`/api/student/${inputValue}`);
+        if (!response.ok) {
+          throw new Error('No student found with this ID.');
+        }
+        const data = await response.json();
+        setStudentData(data);
+      } catch (err) {
+        setError('There is no student by this ID');
+      } finally {
+        setIsLoading(false);
+      }
+    } else if (searchType === 'Name') {
+      setIsLoading(true);
+      setError('');
+      setStudentData(null);
+      try {
+        const response = await fetch(`/api/student/search?name=${inputValue}`);
+        if (!response.ok) {
+          throw new Error('No student found with this name.');
+        }
+        const data = await response.json();
+        setSearchResults(data.results);
+      } catch (err) {
+        setError('No students found with this name');
+      } finally {
+        setIsLoading(false);
+      }
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 py-6 flex flex-col justify-center items-center">
@@ -53,34 +75,40 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-r from-teal-400 to-cyan-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
         <div className="relative px-4 py-10 bg-slate-300 shadow-lg sm:rounded-3xl sm:p-20">
           <div className="max-w-md mx-auto">
-            <div>
-              <h1 className="text-2xl font-semibold text-center text-black">CUET Student Information</h1>
-            </div>
+            <h1 className="text-2xl font-semibold text-center text-black">CUET Student Information</h1>
             <div className="divide-y divide-gray-200">
               <form onSubmit={handleSubmit} className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
-                <div className="relative rounded-full">
-                  <input 
-                    id="studentId" 
-                    name="studentId" 
-                    type="number" 
-                    className="peer placeholder-transparent h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:border-rose-600 text-center" 
-                    placeholder="Student ID" 
-                    value={studentId}
-                    onChange={(e) => setStudentId(e.target.value)}
+                <div className="flex items-center space-x-4">
+                  <select
+                    value={searchType}
+                    onChange={(e) => setSearchType(e.target.value)}
+                    className="border-b-2 border-gray-300 py-2 px-4 rounded-md"
+                  >
+                    <option value="Student ID">Student ID</option>
+                    <option value="Name">Name</option>
+                  </select>
+                  <input
+                    id="inputValue"
+                    name="inputValue"
+                    type="text"
+                    className="h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:border-rose-600 text-center"
+                    placeholder={searchType === 'Student ID' ? 'Enter Student ID' : 'Enter Name'}
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
                   />
-                  <label htmlFor="studentId" className="absolute left-0 -top-3.5 text-gray-600 text-center text-sm peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-440 peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-sm w-full">Student ID</label>
-                </div>
-                <div className="relative flex justify-center">
-                  <button className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-md px-4 py-2 hover:from-pink-500 hover:to-yellow-500 transition-all">Submit</button>
+                  <button className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-md px-4 py-2 hover:from-pink-500 hover:to-yellow-500 transition-all">
+                    Submit
+                  </button>
                 </div>
               </form>
             </div>
-            {isLoading && <p className="text-black text-center">Loading CUETian information...</p>}
+            {isLoading && <p className="text-black text-center">Loading...</p>}
             {error && <p className="text-center text-red-500">{error}</p>}
             {studentData && <StudentDetails data={studentData} />}
+            {searchResults.length > 0 && <NameSearch results={searchResults} />}
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
