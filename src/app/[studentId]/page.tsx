@@ -42,7 +42,11 @@ export async function generateMetadata(
       openGraph: {
         siteName: 'CUET Student Directory',
         url: `https://cuet.sayed.page/${studentId}`,
-        image: '/CUETOG.png' // Add your image URL here
+        images: [
+          {
+            url: '/CUETOG.png', // Your image URL
+          },
+        ],
       },
     }
   } catch (error) {
@@ -52,7 +56,11 @@ export async function generateMetadata(
       openGraph: {
         siteName: 'CUET Student Directory',
         url: 'https://cuet.sayed.page',
-        image: '/CUETOG.png' // Use a default image here
+        images: [
+          {
+            url: '/CUETOG.png', // Default image URL
+          },
+        ],
       },
     }
   }
