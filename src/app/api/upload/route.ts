@@ -1,4 +1,4 @@
-// app/api/upload/route.ts
+// src/app/api/upload/route.ts
 
 import { NextResponse } from 'next/server';
 
@@ -38,8 +38,9 @@ export async function POST(request: Request) {
       console.error('Worker error:', result);
       return NextResponse.json({ error: result.error || 'Failed to upload file' }, { status: workerResponse.status });
     }
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Unexpected error in API route:', error);
-    return NextResponse.json({ error: 'Internal server error', details: error.message }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    return NextResponse.json({ error: 'Internal server error', details: errorMessage }, { status: 500 });
   }
 }
