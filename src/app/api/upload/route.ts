@@ -22,7 +22,7 @@ export async function POST(request: Request) {
 
   // Forward the request to the Cloudflare Worker
   try {
-    const workerResponse = await fetch('https://dplink.lrsayed.workers.dev/', {
+    const workerResponse = await fetch('https://dplink.lrsayed.workers.dev/upload', {
       method: 'POST',
       body: formData,
     });
