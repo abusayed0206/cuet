@@ -42,7 +42,9 @@ const BatchwiseDepartment: React.FC<BatchwiseDepartmentProps> = ({
                 className="w-16 h-16 rounded-full object-cover mr-4"
               />
               <div>
-                <p className="text-lg font-semibold text-black">{student.studentid}</p>
+                <a href={`https://cuet.sayed.page/${student.studentid}`} className="text-lg font-semibold text-black" target="_blank" rel="noopener noreferrer">
+                  {student.studentid}
+                </a>
                 <p className="text-lg text-black">{student.name}</p>
               </div>
             </li>
