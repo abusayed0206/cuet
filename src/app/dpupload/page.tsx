@@ -64,9 +64,13 @@ export default function UploadPage() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-blue-400 to-purple-500 p-4">
+    <div className="flex flex-col justify-center items-center min-h-screen bg-gradient-to-r from-blue-400 to-purple-500 p-4">
       <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-4 md:p-6 mx-2 mb-3">
-        <h2 className="text-2xl font-bold mb-4 text-center text-gray-900">Upload Image</h2>
+        <h2 className="text-2xl font-bold mb-4 text-center text-gray-900">DP UPLOAD</h2>
+        <p className="text-center mb-4 text-gray-700">
+          To resize image click <a href="https://ezgif.com/resize" className="text-blue-500 underline" target="_blank" rel="noopener noreferrer">here</a><br />
+          To convert image to webp click <a href="https://ezgif.com/png-to-webp" className="text-blue-500 underline" target="_blank" rel="noopener noreferrer">here(PNG)</a> or <a href="https://ezgif.com/jpg-to-webp" className="text-blue-500 underline" target="_blank" rel="noopener noreferrer">here(JPG)</a>
+        </p>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="flex flex-col">
             <label htmlFor="id" className="text-sm font-medium text-gray-700">
