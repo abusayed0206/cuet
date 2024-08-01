@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -64,12 +64,12 @@ export default function UploadPage() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-900">Upload Image</h2>
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-blue-400 to-purple-500 p-4">
+      <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-4 md:p-6 mx-2 mb-3">
+        <h2 className="text-2xl font-bold mb-4 text-center text-gray-900">Upload Image</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="id" className="block text-sm font-medium text-gray-700">
+          <div className="flex flex-col">
+            <label htmlFor="id" className="text-sm font-medium text-gray-700">
               CUET ID
             </label>
             <input
@@ -79,11 +79,11 @@ export default function UploadPage() {
               value={id}
               onChange={(e) => setId(e.target.value)}
               required
-              className="mt-1 text-black block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              className="mt-1 text-black block w-auto rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             />
           </div>
-          <div>
-            <label htmlFor="file" className="block text-sm font-medium text-gray-700">
+          <div className="flex flex-col">
+            <label htmlFor="file" className="text-sm font-medium text-gray-700">
               Photo (WebP format, max 200KB, square image)
             </label>
             <input
@@ -92,8 +92,8 @@ export default function UploadPage() {
               onChange={handleFileChange}
               accept="image/webp"
               required
-              className="mt-1 block w-full text-sm text-gray-500
-                file:mr-4 file:py-2 file:px-4
+              className="mt-1 block w-auto text-sm text-gray-500
+                file:mr-2 file:py-1 file:px-2
                 file:rounded-full file:border-0
                 file:text-sm file:font-semibold
                 file:bg-indigo-50 file:text-indigo-700
