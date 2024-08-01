@@ -3,6 +3,7 @@ import React from 'react';
 interface Student {
   studentid: string;
   name: string;
+  dplink: string; // Added dplink to the Student interface
 }
 
 interface BatchwiseDepartmentProps {
@@ -12,7 +13,16 @@ interface BatchwiseDepartmentProps {
   studentList: Student[];
 }
 
-const BatchwiseDepartment: React.FC<BatchwiseDepartmentProps> = ({ departmentName, batch, students, studentList }) => {
+const BatchwiseDepartment: React.FC<BatchwiseDepartmentProps> = ({
+  departmentName,
+  batch,
+  students,
+  studentList,
+}) => {
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    e.currentTarget.src = 'https://cdn.abusayed.dev/demo.png';
+  };
+
   return (
     <div className="p-6 flex flex-col items-center">
       <div className="bg-white rounded-lg shadow-lg p-4 mb-6 w-full max-w-md text-center">
@@ -21,18 +31,20 @@ const BatchwiseDepartment: React.FC<BatchwiseDepartmentProps> = ({ departmentNam
         <p className="text-lg mb-4 text-black">Total Students: {students}</p>
       </div>
       
-      <div className="bg-white rounded-lg shadow-lg overflow-hidden w-full max-w-md">
+      <div className="bg-white rounded-lg shadow-lg w-full max-w-md">
         <ul className="divide-y divide-gray-200">
-          {studentList.map(student => (
-            <li key={student.studentid} className="p-4 text-black">
-              <a
-                href={`https://cuet.sayed.page/${student.studentid}`}
-                className="block hover:underline"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                [{student.studentid}]➡️{student.name}
-              </a>
+          {studentList.map((student) => (
+            <li key={student.studentid} className="flex items-center p-4">
+              <img
+                src={student.dplink}
+                alt={student.name}
+                onError={handleImageError}
+                className="w-16 h-16 rounded-full object-cover mr-4"
+              />
+              <div>
+                <p className="text-lg font-semibold text-black">{student.studentid}</p>
+                <p className="text-lg text-black">{student.name}</p>
+              </div>
             </li>
           ))}
         </ul>
