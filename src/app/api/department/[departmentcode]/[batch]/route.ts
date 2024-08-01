@@ -32,7 +32,7 @@ export async function GET(
     // Get all students for the department and batch
     const { data: studentsData, error: studentsError } = await supabaseServer
       .from('apidata')
-      .select('studentid, name')
+      .select('studentid, name, dplink')
       .eq('department', departmentName)
       .eq('batch', batch)
       .order('studentid', { ascending: true });
