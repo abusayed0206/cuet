@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, ChangeEvent } from 'react';
-import { createBrowserClient } from '@/utils/supabase'; // Adjust the import path as needed
+import { createBrowserClient } from '@/lib/supabase'; // Adjust the import path as needed
 
 const InsertDataForm = () => {
   const supabase = createBrowserClient(); // Create a Supabase client for the browser context
