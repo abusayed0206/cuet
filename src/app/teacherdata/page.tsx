@@ -1,9 +1,9 @@
 "use client";
 import { useState, useEffect, ChangeEvent } from 'react';
-import { createBrowserClient } from '@/lib/supabase'; // Adjust the import path as needed
+import { supabaseClient } from '@/lib/supabase'; // Adjusted import statement
 
 const InsertDataForm = () => {
-  const supabase = createBrowserClient(); // Create a Supabase client for the browser context
+  const supabase = supabaseClient; // Use the imported Supabase client
 
   const [password, setPassword] = useState('');
   const [photo, setPhoto] = useState<File | null>(null);
@@ -244,6 +244,7 @@ const InsertDataForm = () => {
 
             {error && <p className="text-red-600 text-center text-lg">{error}</p>}
             {success && <p className="text-green-600 text-center text-lg">{success}</p>}
+            {uploading && <p className="text-center text-lg">Uploading information...</p>}
 
             <button
               type="submit"
