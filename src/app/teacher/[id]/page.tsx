@@ -14,9 +14,14 @@ async function getTeacherData(id: string) {
       throw new Error('Wrong ID!');
     }
     return data;
-  } catch (error) {
-    console.error('Fetch error:', error); // Debug log
-    throw new Error(error.message);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error('Fetch error:', error.message); // Debug log
+      throw new Error(error.message);
+    } else {
+      console.error('Fetch error:', 'An unknown error occurred'); // Debug log
+      throw new Error('An unknown error occurred');
+    }
   }
 }
 
