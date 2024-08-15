@@ -1,16 +1,28 @@
 import { Metadata } from 'next';
-import TeacherDetails from '../../components/TeacherDetails';
+import TeacherDetails from '../../components/TeacherDetails'; // Ensure the path is correct
 
 async function getTeacherData(id: string) {
-  const response = await fetch(`https://cuet.sayed.page/api/teacher/${id}`, { next: { revalidate: 3600 } });
-  if (!response.ok) {
+  try {
+    const response = await fetch(`https://cuet.sayed.page/api/teacher/${id}`, {
+      next: { revalidate: 3600 },
+      headers: { 'Content-Type': 'application/json' }
+    });
+
+    if (!response.ok) {
+      throw new Error(`Network response was not ok: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+
+    if (!data || !data.id) {
+      throw new Error('No data found for the given ID');
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Error fetching teacher data:', error);
     throw new Error('Failed to fetch teacher data');
   }
-  const data = await response.json();
-  if (!data || !data.id) {
-    throw new Error('Wrong ID!');
-  }
-  return data;
 }
 
 type Props = {
@@ -22,10 +34,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   
   try {
     const teacherData = await getTeacherData(id);
-    
+
     return {
-      title: `${teacherData.name} | ${teacherData.department}`,
-      description: `He/She is from ${teacherData.department}`,
+      title: `${teacherData.name} | ID: ${teacherData.id}`,
+      description: `Head of ${teacherData.department} department`,
       openGraph: {
         siteName: 'CUET Teacher Directory',
         url: `https://cuet.sayed.page/teacher/${id}`,
