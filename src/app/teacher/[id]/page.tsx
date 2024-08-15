@@ -1,16 +1,23 @@
 import { Metadata } from 'next';
-import TeacherDetails from '../../components/TeacherDetails'; // Correct import path
+import TeacherDetails from '../../components/TeacherDetails'; // Correct path
 
 async function getTeacherData(id: string) {
-  const response = await fetch(`/api/teacher/${id}`, { next: { revalidate: 3600 } });
-  if (!response.ok) {
-    throw new Error('Failed to fetch teacher data');
+  const url = `/api/teacher/${id}`;
+  console.log('Fetching URL:', url); // Debug log
+  try {
+    const response = await fetch(url, { next: { revalidate: 3600 } });
+    if (!response.ok) {
+      throw new Error('Failed to fetch teacher data');
+    }
+    const data = await response.json();
+    if (!data || !data.id) {
+      throw new Error('Wrong ID!');
+    }
+    return data;
+  } catch (error) {
+    console.error('Fetch error:', error); // Debug log
+    throw new Error(error.message);
   }
-  const data = await response.json();
-  if (!data || !data.id) {
-    throw new Error('Wrong ID!');
-  }
-  return data;
 }
 
 type Props = {
@@ -82,4 +89,4 @@ export default async function TeacherPage({ params }: Props) {
       </div>
     );
   }
-              }
+}
