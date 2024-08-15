@@ -13,7 +13,7 @@ export async function GET(
     const { data, error } = await supabaseServer
       .from('teachers')
       .select(
-        'id, name, department, role, email, phone, profilelink, facebook, linkedin, photo'
+        'id, name, department, role, email, phone, profilelink, researchgate, facebook, linkedin, photo'
       ) 
       .eq('id', teacherId)
       .single();
