@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import TeacherDetails from '../../components/TeacherDetails'
 
 async function getTeacherData(teacherId: string) {
-  const response = await fetch(`https://cuet.sayed.page/api/teacher/${teacherId}`, { next: { revalidate: 3600 } })
+  const response = await fetch(`/api/teacher/${teacherId}`, { next: { revalidate: 3600 } })
   if (!response.ok) {
     throw new Error('Failed to fetch teacher data')
   }
