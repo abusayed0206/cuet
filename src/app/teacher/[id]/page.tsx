@@ -1,97 +1,83 @@
-import { Metadata } from 'next';
-import TeacherDetails from '../../components/TeacherDetails'; // Ensure the path is correct
+import { Metadata } from 'next'
+import TeacherDetails from '../../components/TeacherDetails'
 
-async function getTeacherData(id: string) {
-  try {
-    const response = await fetch(`https://cuet.sayed.page/api/teacher/${id}`, {
-      next: { revalidate: 3600 },
-      headers: { 'Content-Type': 'application/json' }
-    });
-
-    if (!response.ok) {
-      throw new Error(`Network response was not ok: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-
-    if (!data || !data.id) {
-      throw new Error('No data found for the given ID');
-    }
-
-    return data;
-  } catch (error) {
-    console.error('Error fetching teacher data:', error);
-    throw new Error('Failed to fetch teacher data');
+async function getTeacherData(teacherId: string) {
+  const response = await fetch(`https://cuet.sayed.page/api/teacher/${teacherId}`, { next: { revalidate: 3600 } })
+  if (!response.ok) {
+    throw new Error('Failed to fetch teacher data')
   }
+  return response.json()
 }
 
 type Props = {
-  params: { id: string }
-};
+  params: { teacherId: string }
+}
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const id = params.id;
+export async function generateMetadata(
+  { params }: Props
+): Promise<Metadata> {
+  const teacherId = params.teacherId
   
   try {
-    const teacherData = await getTeacherData(id);
-
+    const teacherData = await getTeacherData(teacherId)
+    
     return {
       title: `${teacherData.name} | ID: ${teacherData.id}`,
-      description: `Head of ${teacherData.department} department`,
+      description: `${teacherData.role} at ${teacherData.department}`,
       openGraph: {
         siteName: 'CUET Teacher Directory',
-        url: `https://cuet.sayed.page/teacher/${id}`,
+        url: `https://cuet.sayed.page/teacher/${teacherId}`,
         images: [
           {
-            url: teacherData.photo || '/CUETOG.png',
+            url: '/CUETOG.png', // Your image URL
           },
         ],
       },
-    };
+    }
   } catch (error) {
     return {
       title: 'Teacher Not Found',
       description: 'The requested teacher information could not be found.',
       openGraph: {
         siteName: 'CUET Teacher Directory',
-        url: 'https://cuet.sayed.page',
+        url: 'https://cuet.sayed.page/teacher',
         images: [
           {
-            url: '/CUETOG.png',
+            url: '/CUETOG.png', // Default image URL
           },
         ],
       },
-    };
+    }
   }
 }
 
 export default async function TeacherPage({ params }: Props) {
-  const { id } = params;
+  const { teacherId } = params
 
   try {
-    const teacherData = await getTeacherData(id);
+    const teacherData = await getTeacherData(teacherId)
 
     return (
-      <div className="min-h-screen bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 py-6 flex flex-col justify-center items-center">
+      <div className="min-h-screen bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600 py-6 flex flex-col justify-center items-center">
         <div className="relative py-3 sm:max-w-xl sm:mx-auto">
-          <div className="absolute inset-0 bg-gradient-to-r from-teal-400 to-cyan-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
-          <div className="relative px-4 py-10 bg-slate-300 shadow-lg sm:rounded-3xl sm:p-20">
+          <div className="absolute inset-0 bg-gradient-to-r from-indigo-400 to-purple-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
+          <div className="relative px-4 py-10 bg-slate-100 shadow-lg sm:rounded-3xl sm:p-20">
             <div className="max-w-md mx-auto">
               <TeacherDetails data={teacherData} />
             </div>
           </div>
         </div>
       </div>
-    );
+    )
   } catch (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 py-6 flex flex-col justify-center items-center">
+      <div className="min-h-screen bg-gradient-to-r from-blue-400 via-indigo-500 to-purple-600 py-6 flex flex-col justify-center items-center">
         <div className="bg-white p-8 rounded-lg shadow-md">
           <p className="text-red-500 text-center">
             {error instanceof Error ? error.message : 'An error occurred'}
           </p>
         </div>
       </div>
-    );
+    )
   }
 }
