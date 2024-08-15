@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import TeacherDetails from '../../components/TeacherDetails'; // Correct path
 
 async function getTeacherData(id: string) {
-  const url = `/api/teacher/${id}`;
+  const url = `https://cuetapi-git-teachers-abusayed0206.vercel.app/api/teacher/${id}`;
   console.log('Fetching URL:', url); // Debug log
   try {
     const response = await fetch(url, { next: { revalidate: 3600 } });
