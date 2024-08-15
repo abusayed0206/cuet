@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import TeacherDetails from '@/components/TeacherDetails';
+import TeacherDetails from '../../components/TeacherDetails';
 
 async function getTeacherData(id: string) {
   const response = await fetch(`https://cuet.sayed.page/api/teacher/${id}`, { next: { revalidate: 3600 } });
