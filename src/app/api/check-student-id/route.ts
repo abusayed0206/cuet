@@ -20,6 +20,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ message: 'Student ID not found' }, { status: 404 });
   }
 
-  // If student ID exists, return the associated email
-  return NextResponse.json({ email: data.email }, { status: 200 });
+  // Prepare the response with CORS headers
+  const response = NextResponse.json({ email: data.email }, { status: 200 });
+
+  // Add CORS headers
+  response.headers.set('Access-Control-Allow-Origin', 'https://cuetprofile.vercel.app'); // Replace with your front-end origin
+  response.headers.set('Access-Control-Allow-Methods', 'POST');
+  response.headers.set('Access-Control-Allow-Headers', 'Content-Type');
+
+  return response;
 }
