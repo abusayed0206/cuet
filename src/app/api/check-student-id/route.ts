@@ -1,11 +1,9 @@
 // src/pages/api/check-student-id.ts
 
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { createSupabaseClient } from '@/lib/supabase';
+import { supabaseServer } from '@/lib/supabase';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const supabase = createSupabaseClient();
-
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
@@ -16,7 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ message: 'Student ID is required' });
   }
 
-  const { data, error } = await supabase
+  const { data, error } = await supabaseServer
     .from('apidata')
     .select('email')
     .eq('studentid', studentid)
