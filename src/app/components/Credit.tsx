@@ -2,7 +2,7 @@ import React from 'react';
 
 const Card: React.FC = () => {
   return (
-    <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2 p-4 rounded-t-lg rounded-b-none shadow-lg bg-white flex items-center">
+    <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-75 p-4 rounded-t-lg rounded-b-none shadow-lg bg-white flex items-center">
       <div className="flex">
         <div className="flex justify-center items-center pr-4">
           <img
