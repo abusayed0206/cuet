@@ -3,7 +3,7 @@ import { useState } from 'react';
 import StudentDetails from './components/StudentDetails';
 import NameSearch from './components/NameSearch';
 import BatchwiseDepartment from './components/BatchwiseDepartment';
-import Card from './components/Credit.tsx';
+import Card from './components/Credit';
 
 interface Student {
   name: string;
