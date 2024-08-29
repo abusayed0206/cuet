@@ -179,14 +179,14 @@ export default function Home() {
 
                 {(searchType === 'Student ID' || searchType === 'Name') && (
                   <input
-                    id="inputValue"
-                    name="inputValue"
-                    type="text"
-                    className="h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:border-rose-600 text-center rounded-md mb-4"
-                    placeholder={searchType === 'Student ID' ? 'Enter Student ID' : 'Enter Name'}
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                  />
+  id="inputValue"
+  name="inputValue"
+  type={searchType === 'Student ID' ? 'number' : 'text'}
+  className="h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:border-rose-600 text-center rounded-md mb-4"
+  placeholder={searchType === 'Student ID' ? 'Enter Student ID' : 'Enter Name'}
+  value={inputValue}
+  onChange={(e) => setInputValue(e.target.value)}
+/>
                 )}
 
                 <button className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-md px-4 py-2 hover:from-pink-500 hover:to-yellow-500 transition-all">
