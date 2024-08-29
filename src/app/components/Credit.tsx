@@ -6,12 +6,13 @@ const Card: React.FC = () => {
       <div className="flex w-full">
         <div className="w-1/4 flex justify-center items-center">
           <img
-            src="/dp.webp"
+            src="/sayed.webp"
             alt="সাঈদ"
             className="w-12 h-12 rounded-full"
           />
         </div>
         <div className="w-3/4 flex flex-col justify-center">
+          <p>
           <a
             href="https://sayed.page/"
             target="_blank"
@@ -19,7 +20,17 @@ const Card: React.FC = () => {
             className="text-sm font-semibold text-black text-center"
           >
             সাঈদ
+          </a> | 
+            <a
+            href="https://cuet.sayed.page/1901049"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm font-semibold text-black text-center"
+          >
+            ১৯০১০৪৯
           </a>
+
+          </p>
           <a
             href="https://cuet.sayed.page/privacy"
             target="_blank"
