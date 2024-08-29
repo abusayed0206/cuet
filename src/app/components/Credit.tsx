@@ -14,8 +14,8 @@ const Card: React.FC = () => {
         />
       </div>
       <div className="flex-1 flex items-center justify-center">
-        <div className="transform rotate-270 text-lg font-semibold text-black">
-          <p className="whitespace-nowrap">সাঈদ</p>
+        <div className="transform  text-lg font-semibold text-black">
+          <p className="whitespace-nowrap text-center">সাঈদ</p>
           <p className="whitespace-nowrap">❤️ দিয়ে বানানো। Made in Cumilla</p>
         </div>
       </div>
