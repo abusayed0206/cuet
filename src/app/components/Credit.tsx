@@ -3,7 +3,7 @@ import React from 'react';
 
 const Card: React.FC = () => {
   return (
-    <div className="fixed right-0 top-1/2 transform -translate-y-1/2 w-80 h-80 rounded-r-lg shadow-lg bg-white overflow-hidden flex flex-col">
+    <div className="fixed left-0 top-1/2 transform -translate-y-1/2 w-80 h-80 rounded-r-lg shadow-lg bg-white overflow-hidden flex flex-col">
       <div className="flex-1 relative">
         <Image
           src="/dp.webp"
@@ -14,7 +14,7 @@ const Card: React.FC = () => {
         />
       </div>
       <div className="flex-1 flex items-center justify-center">
-        <div className="transform rotate-180 text-lg font-semibold text-black">
+        <div className="transform rotate-270 text-lg font-semibold text-black">
           <p className="whitespace-nowrap">সাঈদ</p>
           <p className="whitespace-nowrap">❤️ দিয়ে বানানো। Made in Cumilla</p>
         </div>
