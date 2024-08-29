@@ -12,8 +12,24 @@ const Card: React.FC = () => {
           />
         </div>
         <div className="w-3/4 flex flex-col justify-center">
-          <p className="text-lg font-semibold text-black text-center">সাঈদ</p>
-          <p className="text-lg text-black text-center">❤ দিয়া বানানো হইছে!</p>
+          <a
+            href="https://sayed.page/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm font-semibold text-black text-center"
+          >
+            সাঈদ
+          </a>
+          <a
+            href="https://cuet.sayed.page/privacy"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm font-semibold text-black text-center"
+          >
+            গোপনীয়তা নীতি
+          </a>
+          <p className="text-sm font-semibold text-black text-center">Made with ❤️ in Cumilla🇧🇩</p>
+          
         </div>
       </div>
     </div>
