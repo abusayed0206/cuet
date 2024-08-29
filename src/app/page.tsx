@@ -3,6 +3,7 @@ import { useState } from 'react';
 import StudentDetails from './components/StudentDetails';
 import NameSearch from './components/NameSearch';
 import BatchwiseDepartment from './components/BatchwiseDepartment';
+import Card from './components/Credit.tsx';
 
 interface Student {
   name: string;
@@ -208,6 +209,7 @@ export default function Home() {
           </div>
         </div>
       </div>
+      <Card/>
     </div>
   );
                     }
