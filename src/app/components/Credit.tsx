@@ -6,7 +6,7 @@ const Card: React.FC = () => {
     <div className="fixed right-0 top-1/2 transform -translate-y-1/2 w-80 h-80 rounded-l-none rounded-r-lg shadow-lg bg-white overflow-hidden">
       <div className="relative w-full h-full">
         <Image
-          src="https://cdn.abusayed.dev/sayed.webp"
+          src="/dp.webp"
           alt="সাঈদ"
           width={100}
           height={100}
