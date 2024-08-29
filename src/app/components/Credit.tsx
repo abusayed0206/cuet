@@ -12,7 +12,7 @@ const Card: React.FC = () => {
           />
         </div>
         <div className="w-3/4 flex flex-col justify-center">
-          <p>
+          <p className="text-sm font-semibold text-black text-center>
           <a
             href="https://sayed.page/"
             target="_blank"
