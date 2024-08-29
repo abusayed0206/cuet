@@ -3,7 +3,7 @@ import React from 'react';
 
 const Card: React.FC = () => {
   return (
-    <div className="fixed right-0 top-1/2 transform -translate-y-1/2 w-80 h-80 rounded-l-lg shadow-lg bg-white overflow-hidden flex flex-col items-center">
+    <div className="fixed bottom-0 top-1/2 transform -translate-y-1/2 w-80 h-80 rounded-l-lg shadow-lg bg-white overflow-hidden flex flex-col items-center">
       <div className="w-full h-40 flex justify-center items-center">
         <Image
           src="https://sayed.page/dp.webp"
@@ -14,7 +14,7 @@ const Card: React.FC = () => {
         />
       </div>
       <div className="flex-1 flex items-center justify-center">
-        <div className="transform rotate-180 text-lg font-semibold text-black">
+        <div className="transform text-lg font-semibold text-black">
           <p className="whitespace-nowrap text-center">সাঈদ</p>
           <p className="whitespace-nowrap text-center">❤ দিয়া বানানো হইছে!</p>
         </div>
