@@ -3,20 +3,20 @@ import React from 'react';
 
 const Card: React.FC = () => {
   return (
-    <div className="fixed right-0 top-1/2 transform -translate-y-1/2 w-80 h-80 rounded-l-lg shadow-lg bg-white overflow-hidden flex flex-col">
-      <div className="flex-1 relative">
+    <div className="fixed right-0 top-1/2 transform -translate-y-1/2 w-80 h-80 rounded-l-lg shadow-lg bg-white overflow-hidden flex flex-col items-center">
+      <div className="w-full h-40 flex justify-center items-center">
         <Image
-          src="/dp.webp"
+          src="https://sayed.page/dp.webp"
           alt="সাঈদ"
           width={100}
           height={100}
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full"
+          className="rounded-full"
         />
       </div>
       <div className="flex-1 flex items-center justify-center">
-        <div className="transform rotate-90 text-lg font-semibold text-black">
+        <div className="transform rotate-180 text-lg font-semibold text-black">
           <p className="whitespace-nowrap text-center">সাঈদ</p>
-          <p className="whitespace-nowrap">❤️ দিয়ে বানানো। Made in Cumilla</p>
+          <p className="whitespace-nowrap text-center">❤ দিয়া বানানো হইছে!</p>
         </div>
       </div>
     </div>
