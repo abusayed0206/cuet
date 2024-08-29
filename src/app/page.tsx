@@ -138,39 +138,43 @@ export default function Home() {
                 </select>
 
                 {searchType === 'Batch' && (
-                  <div className="space-y-2 mb-4">
-                    <select
-                      value={batch}
-                      onChange={(e) => setBatch(e.target.value)}
-                      className="border-b-2 border-gray-300 py-2 px-4 rounded-md space-x-2"
-                    >
-                      <option value="17">17</option>
-                      <option value="18">18</option>
-                      <option value="19">19</option>
-                      <option value="20">20</option>
-                      <option value="21">21</option>
-                      <option value="22">22</option>
-                    </select>
+                <div className="flex space-x-4 mb-4">
+  <div>
+    <select
+      value={batch}
+      onChange={(e) => setBatch(e.target.value)}
+      className="border-b-2 border-gray-300 py-2 px-4 rounded-md"
+    >
+      <option value="17">17</option>
+      <option value="18">18</option>
+      <option value="19">19</option>
+      <option value="20">20</option>
+      <option value="21">21</option>
+      <option value="22">22</option>
+    </select>
+  </div>
 
-                    <select
-                      value={department}
-                      onChange={(e) => setDepartment(e.target.value.toLowerCase())}
-                      className="border-b-2 border-gray-300 py-2 px-4 rounded-md space-x-2"
-                    >
-                      <option value="ce">CE</option>
-                      <option value="me">ME</option>
-                      <option value="cse">CSE</option>
-                      <option value="eee">EEE</option>
-                      <option value="ete">ETE</option>
-                      <option value="bme">BME</option>
-                      <option value="arch">ARCH</option>
-                      <option value="pme">PME</option>
-                      <option value="urp">URP</option>
-                      <option value="mse">MSE</option>
-                      <option value="mie">MIE</option>
-                      <option value="wre">WRE</option>
-                    </select>
-                  </div>
+  <div>
+    <select
+      value={department}
+      onChange={(e) => setDepartment(e.target.value.toLowerCase())}
+      className="border-b-2 border-gray-300 py-2 px-4 rounded-md"
+    >
+      <option value="ce">CE</option>
+      <option value="me">ME</option>
+      <option value="cse">CSE</option>
+      <option value="eee">EEE</option>
+      <option value="ete">ETE</option>
+      <option value="bme">BME</option>
+      <option value="arch">ARCH</option>
+      <option value="pme">PME</option>
+      <option value="urp">URP</option>
+      <option value="mse">MSE</option>
+      <option value="mie">MIE</option>
+      <option value="wre">WRE</option>
+    </select>
+  </div>
+</div>
                 )}
 
                 {(searchType === 'Student ID' || searchType === 'Name') && (
