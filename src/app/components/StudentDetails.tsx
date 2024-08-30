@@ -13,7 +13,6 @@ interface StudentDetailsProps {
     admissionmerit: string;
     hall: string;
     email: string;
-    phonenumber: string;
     bloodgroup: string;
     linkedin: string;
     dplink: string;
@@ -88,10 +87,6 @@ const StudentDetails: React.FC<StudentDetailsProps> = ({ data }) => {
               </a>
             )}
           </span>
-        </div>
-        <div>
-          <span className="text-gray-700">Phone Number: </span>
-          <span className="font-bold text-black">{data.phonenumber}</span>
         </div>
         <div>
           <span className="text-gray-700">Blood Group: </span>
