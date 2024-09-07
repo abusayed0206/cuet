@@ -44,7 +44,7 @@ const StudentDetails: React.FC<StudentDetailsProps> = ({ data }) => {
         </div>
         <div>
           <span className="text-gray-700">Student ID: </span>
-          <span className="font-bold text-black">{data.studentid}</span>
+          <span className="font-bold text-black"><a href={`/${data.studentid}`}>{data.studentid}</a></span>
         </div>
 
         <div>
