@@ -74,7 +74,6 @@ const StudentDetails: React.FC<StudentDetailsProps> = ({ data }) => {
             )}
           </span>
         </div>
-       {data.public_email } 
         <div>
           <span className="text-gray-700">LinkedIn: </span>
           <span className="font-bold text-black">
