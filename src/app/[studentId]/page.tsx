@@ -15,7 +15,7 @@ const validateStudentId = (id: string) => {
 
 async function getStudentData(studentId: string) {
   if (!validateStudentId(studentId)) {
-    throw new Error('Invalid student ID')
+    throw new Error('Invalid student ID of CUET')
   }
   const response = await fetch(`https://cuet.sayed.page/api/student/${studentId}`, { next: { revalidate: 3600 } })
   if (!response.ok) {
