@@ -44,7 +44,7 @@ export async function generateMetadata(
         url: `https://cuet.sayed.page/${studentId}`,
         images: [
           {
-            url: '/CUETOG.png', // Your image URL
+            url: '/CUETOG.png', 
           },
         ],
       },
