@@ -8,16 +8,12 @@ import Card from './components/Credit';
 interface Student {
   name: string;
   studentid: string;
-  uniqueid: string;
   batch: string;
   session: string;
   department: string;
-  admissionroll: string;
-  admissionmerit: string;
   hall: string;
-  email: string;
+  public_email: string;
   phonenumber: string;
-  bloodgroup: string;
   linkedin: string;
   dplink: string;
   currentstatus: string;
