@@ -9,9 +9,9 @@ const inter = Hind_Siliguri({
 });
 
 export const metadata: Metadata = {
-  title: "Lutfor Rashid Sayed",
-  description: "Negative by Blood💖⭐, Just a Normie🙂.",
-  metadataBase: new URL("https://sayed.page/"),
+  title: "CUET Students Details",
+  description: "Publicly available CUET Students Details | an API with many things | Sayed (1901049)",
+  metadataBase: new URL("https://cuet.sayed.page/"),
   icons: [
     {
       rel: "icon",
@@ -35,7 +35,6 @@ export const metadata: Metadata = {
       sizes: "192x192",
       url: "/android-chrome-192x192.png",
     },
-
     {
       rel: "safari-pinned-tab",
       sizes: "180x180",
@@ -43,7 +42,7 @@ export const metadata: Metadata = {
     },
   ],
   openGraph: {
-    images: '/OG_Image.png',
+    images: '/OG.png',
   },
 };
 
