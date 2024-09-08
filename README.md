@@ -2,7 +2,7 @@
 
 Welcome to the **CUET Student Information** repository! This project provides a comprehensive API for accessing basic information about CUET students.
 
-🔍 **Note:** If you are looking for the profile editing repository, visit [CUET Profile Editing](https://github.com/abusayed0206/cuet).
+🔍 **Note:** If you are looking for the profile editing repository, visit [CUET Profile Editing](https://github.com/abusayed0206/cuetprofile).
 
 ## API Documentation 📜
 
@@ -89,7 +89,7 @@ Your contributions are welcome! Here’s how you can help:
 
 When adding new features, please create a new branch and submit a PR. This helps keep the project organized and manageable.
 
-## 💖 Support Us
+## 💖 Support
 
 If you appreciate this project and want to support its development, consider making a donation:
 
@@ -102,4 +102,4 @@ The code in this repository might contain errors, typos, or logical issues. As I
 
 ## 📫 Contact
 
-For any queries or issues, reach out at [sayed.page/contact](https://sayed.page/contact).
+For any queries, reach out at [sayed.page/contact](https://sayed.page/contact).
