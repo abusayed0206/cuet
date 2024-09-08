@@ -1,36 +1,105 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# CUET Student Information 📚
 
-## Getting Started
+Welcome to the **CUET Student Information** repository! This project provides a comprehensive API for accessing basic information about CUET students.
 
-First, run the development server:
+🔍 **Note:** If you are looking for the profile editing repository, visit [CUET Profile Editing](https://github.com/abusayed0206/cuet).
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## API Documentation 📜
+
+**Base URL:** [https://cuet.sayed.page/](https://cuet.sayed.page/)
+
+### Endpoints
+
+#### 1. `/api/student/[studentid]` 🧑‍🎓
+
+Retrieve basic details about a student.
+
+**Example Response:**
+```json
+{
+  "name": "লূৎফুর রশিদ সাঈদ",
+  "studentid": "1901049",
+  "batch": "19",
+  "session": "2019-20",
+  "department": "Department of Civil Engineering",
+  "hall": "Shaheed Mohammad Shah Hall",
+  "public_email": "hello@sayed.page",
+  "dplink": "https://cdn.abusayed.dev/sayed.webp",
+  "currentstatus": "A Loser | A Failure",
+  "linkedin": "https://sayed.page/linkedin"
+}
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+#### 2. `/api/department/[departmentcode]` 🏛️
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Get the total number of students by batch for each department.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+**Example Response:**
+```json
+{
+  "name": "Department of Civil Engineering",
+  "batchwiseStudents": {
+    "17": 130,
+    "18": 131,
+    "19": 132,
+    "20": 132,
+    "21": 132,
+    "22": 132
+  }
+}
+```
 
-## Learn More
+#### 3. `/api/department/[departmentcode]/[batch]` 📅
 
-To learn more about Next.js, take a look at the following resources:
+List students in a specific department and batch.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Example Response:**
+```json
+{
+  "name": "Department of Materials Science & Engineering",
+  "batch": "19",
+  "students": 30,
+  "studentList": [
+    {
+      "studentid": "1912001",
+      "name": "SADIK SALEH",
+      "dplink": "https://cdn.abusayed.dev/1912001.webp"
+    },
+    {
+      "studentid": "1912002",
+      "name": "TUFAYEL AHMED",
+      "dplink": "https://cdn.abusayed.dev/1912002.webp"
+    }
+  ]
+}
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## 🚀 Features
 
-## Deploy on Vercel
+- **Student Information:** Access detailed profiles including student ID, name, department, and more.
+- **Department Statistics:** Get total student counts by batch for each department.
+- **Batch Listings:** Retrieve lists of students for specific departments and batches.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🤝 Contribution
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Your contributions are welcome! Here’s how you can help:
+
+- **Beautify the Code:** Enhance the code's appearance and structure.
+- **Maintain the Project:** Contact me at [sayed.page/contact](https://sayed.page/contact) from your academic email, and I'll grant you direct write permissions. Alternatively, you can open a pull request (PR).
+
+When adding new features, please create a new branch and submit a PR. This helps keep the project organized and manageable.
+
+## 💖 Support Us
+
+If you appreciate this project and want to support its development, consider making a donation:
+
+- **Donate:** [sayed.page/donate](https://sayed.page/donate)
+- **Buy Me a Coffee:** [abusayed](https://www.buymeacoffee.com/abusayed)
+
+## ⚠️ Disclaimer
+
+The code in this repository might contain errors, typos, or logical issues. As I am not from a CS background and have utilized multiple AI assistants like GitHub Copilot, ClaudeAI, and ChatGPT for coding, please forgive any mistakes and contribute by submitting PRs to help improve the project.
+
+## 📫 Contact
+
+For any queries or issues, reach out at [sayed.page/contact](https://sayed.page/contact).

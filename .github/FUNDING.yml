@@ -1,0 +1,9 @@
+donate:
+  - type: "custom"
+    url: "https://sayed.page/donate"
+    description: "Support this project with a donation"
+
+buy_me_a_coffee:
+  - type: "custom"
+    url: "https://www.buymeacoffee.com/abusayed"
+    description: "Buy me a coffee"

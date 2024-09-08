@@ -3,7 +3,8 @@ import { useState } from 'react';
 import StudentDetails from './components/StudentDetails';
 import NameSearch from './components/NameSearch';
 import BatchwiseDepartment from './components/BatchwiseDepartment';
-import Card from './components/Credit';
+import { FaGithub, FaUserEdit } from 'react-icons/fa';
+import Link from 'next/link';
 
 interface Student {
   name: string;
@@ -111,14 +112,17 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 py-6 flex flex-col justify-center items-center">
+
+    <div className="min-h-screen bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 py-6 flex flex-col justify-center items-center relative">
+
       <div className="relative py-3 sm:max-w-xl sm:mx-auto">
         <div className="absolute inset-0 bg-gradient-to-r from-teal-400 to-cyan-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 rounded-3xl"></div>
+
         <div className="relative px-4 py-10 bg-slate-300 shadow-lg rounded-3xl sm:p-20">
           <div className="max-w-md mx-auto">
             <h1 className="text-2xl font-semibold text-center text-black">CUET Student Information</h1>
             <div className="divide-y divide-gray-200">
-<form onSubmit={handleSubmit} className="py-8 text-base leading-6 space-y-6 text-gray-700 sm:text-lg sm:leading-7 flex flex-col items-center">
+              <form onSubmit={handleSubmit} className="py-8 text-base leading-6 space-y-6 text-gray-700 sm:text-lg sm:leading-7 flex flex-col items-center">
                 <select
                   value={searchType}
                   onChange={(e) => {
@@ -134,55 +138,55 @@ export default function Home() {
                 </select>
 
                 {searchType === 'Batch' && (
-                <div className="flex space-x-4 mb-4">
-  <div>
-    <select
-      value={batch}
-      onChange={(e) => setBatch(e.target.value)}
-      className="border-b-2 border-gray-300 py-2 px-4 rounded-md"
-    >
-      <option value="17">17</option>
-      <option value="18">18</option>
-      <option value="19">19</option>
-      <option value="20">20</option>
-      <option value="21">21</option>
-      <option value="22">22</option>
-    </select>
-  </div>
+                  <div className="flex space-x-4 mb-4">
+                    <div>
+                      <select
+                        value={batch}
+                        onChange={(e) => setBatch(e.target.value)}
+                        className="border-b-2 border-gray-300 py-2 px-4 rounded-md"
+                      >
+                        <option value="17">17</option>
+                        <option value="18">18</option>
+                        <option value="19">19</option>
+                        <option value="20">20</option>
+                        <option value="21">21</option>
+                        <option value="22">22</option>
+                      </select>
+                    </div>
 
-  <div>
-    <select
-      value={department}
-      onChange={(e) => setDepartment(e.target.value.toLowerCase())}
-      className="border-b-2 border-gray-300 py-2 px-4 rounded-md"
-    >
-      <option value="ce">CE</option>
-      <option value="me">ME</option>
-      <option value="cse">CSE</option>
-      <option value="eee">EEE</option>
-      <option value="ete">ETE</option>
-      <option value="bme">BME</option>
-      <option value="arch">ARCH</option>
-      <option value="pme">PME</option>
-      <option value="urp">URP</option>
-      <option value="mse">MSE</option>
-      <option value="mie">MIE</option>
-      <option value="wre">WRE</option>
-    </select>
-  </div>
-</div>
+                    <div>
+                      <select
+                        value={department}
+                        onChange={(e) => setDepartment(e.target.value.toLowerCase())}
+                        className="border-b-2 border-gray-300 py-2 px-4 rounded-md"
+                      >
+                        <option value="ce">CE</option>
+                        <option value="me">ME</option>
+                        <option value="cse">CSE</option>
+                        <option value="eee">EEE</option>
+                        <option value="ete">ETE</option>
+                        <option value="bme">BME</option>
+                        <option value="arch">ARCH</option>
+                        <option value="pme">PME</option>
+                        <option value="urp">URP</option>
+                        <option value="mse">MSE</option>
+                        <option value="mie">MIE</option>
+                        <option value="wre">WRE</option>
+                      </select>
+                    </div>
+                  </div>
                 )}
 
                 {(searchType === 'Student ID' || searchType === 'Name') && (
                   <input
-  id="inputValue"
-  name="inputValue"
-  type={searchType === 'Student ID' ? 'number' : 'text'}
-  className="h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:border-rose-600 text-center rounded-md mb-4"
-  placeholder={searchType === 'Student ID' ? 'Enter Student ID' : 'Enter Name'}
-  value={inputValue}
-  onChange={(e) => setInputValue(e.target.value)}
-/>
+                    id="inputValue"
+                    name="inputValue"
+                    type={searchType === 'Student ID' ? 'number' : 'text'}
+                    className="h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:border-rose-600 text-center rounded-md mb-4"
+                    placeholder={searchType === 'Student ID' ? 'Enter Student ID' : 'Enter Name'}
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                  />
                 )}
 
                 <button className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-md px-4 py-2 hover:from-pink-500 hover:to-yellow-500 transition-all">
@@ -207,9 +211,75 @@ export default function Home() {
               />
             )}
           </div>
+
         </div>
       </div>
-      <Card/>
+      <div className="flex flex-col justify-end items-center z-10">
+        <div className="w-80 p-4 rounded-full flex space-x-4">
+          <Link
+            className="flex items-center text-xl font-bold text-blue-800 bg-blue-100 hover:bg-blue-200 px-4 py-2 rounded shadow-md transition duration-300"
+            target="_blank"
+            href="https://cuetprofile.sayed.page/"
+          >
+            <FaUserEdit className="mr-2 text-blue-600 text-2xl" />
+            Change Data
+          </Link>
+          <Link
+            className="flex items-center text-xl font-bold text-blue-800 bg-blue-100 hover:bg-blue-200 px-4 py-2 rounded shadow-md transition duration-300"
+            target="_blank"
+            href="https://github.com/abusayed0206/cuet/"
+          >
+            <FaGithub className="mr-2 text-blue-600 text-2xl" />
+            Github
+          </Link>
+        </div>
+
+
+        <div className="w-80 p-4 rounded-full shadow-lg bg-white flex items-center">
+
+          <div className="flex w-full">
+            <div className="w-1/4 flex justify-center items-center">
+              <img
+                src="/sayed.webp"
+                alt="সাঈদ"
+                className="w-12 h-12 rounded-full"
+              />
+            </div>
+            <div className="w-3/4 flex flex-col justify-center">
+              <p className="text-sm font-semibold text-black text-center">
+                <a
+                  href="https://sayed.page/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm font-semibold text-black text-center"
+                >
+                  সাঈদ
+                </a> |
+                <a
+                  href="https://cuet.sayed.page/1901049"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm font-semibold text-black text-center"
+                >
+                  ১৯০১০৪৯
+                </a>
+
+              </p>
+              <a
+                href="https://cuet.sayed.page/privacy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm font-semibold text-black text-center"
+              >
+                গোপনীয়তা নীতি
+              </a>
+              <p className="text-sm font-semibold text-black text-center">Made with ❤️ in Cumilla🇧🇩</p>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   );
-                    }
+}
