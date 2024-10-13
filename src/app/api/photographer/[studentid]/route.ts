@@ -12,7 +12,7 @@ export async function GET(
     const { data, error } = await supabaseServer
       .from("apidata")
       .select(
-        "name, studentid, batch, session, department, hall, public_email, dplink, currentstatus, linkedin, photographer, intro, portfolio, instagram, facebook, playbook, playboard" 
+        "name, studentid, batch, session, department, hall, public_email, dplink, currentstatus, linkedin, photographer, intro, portfolio, instagram, facebook, images"
       )
       .eq("studentid", studentId)
       .single();
@@ -28,6 +28,20 @@ export async function GET(
 
     // Check if the photographer value is 'yes'
     if (data.photographer === "yes") {
+      // Process the images field by splitting it using regex to handle commas, spaces, and new lines
+      const imagesArray = data.images
+        ? data.images.split(/[\s,]+/).filter(Boolean) // Split by comma, space, or newline
+        : [];
+
+      // Map the images into a numbered object
+      const numberedImages = imagesArray.reduce(
+        (acc: { [key: string]: string }, img: string, index: number) => {
+          acc[`image${index + 1}`] = img;
+          return acc;
+        },
+        {} as { [key: string]: string }
+      );
+
       const photographerData = {
         name: data.name,
         studentid: data.studentid,
@@ -37,9 +51,9 @@ export async function GET(
         portfolio: data.portfolio,
         instagram: data.instagram,
         facebook: data.facebook,
-        playbook: data.playbook,
-        playboard: data.playboard,
+        images: numberedImages,
       };
+
       return NextResponse.json(photographerData);
     } else {
       return NextResponse.json(
