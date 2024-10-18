@@ -127,4 +127,4 @@ export async function GET(request: Request) {
     return new NextResponse('Error fetching student data', { status: 500 });
   }
 }
-https://cuet.pages.dev/1901048
+export const runtime = 'edge';
