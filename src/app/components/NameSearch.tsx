@@ -17,12 +17,15 @@ const NameSearch: React.FC<NameSearchProps> = ({ results }) => {
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 p-6">
       {results.map((student) => (
         <div key={student.studentid} className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col items-center text-center relative">
-          <img
-            src={student.dplink}
-            alt={`${student.name}'s DP`}
-            className="w-24 h-24 object-cover rounded-full mt-4"
-            onError={(e) => (e.currentTarget.src = 'https://cdn.abusayed.dev/demo.png')}
-          />
+          <div className="w-24 h-24 rounded-full overflow-hidden mt-4">
+            <img
+              src={student.dplink}
+              alt={`${student.name}'s DP`}
+              className="w-full h-full object-contain"
+              onError={(e) => (e.currentTarget.src = 'https://cdn.abusayed.dev/demo.png')}
+            />
+          </div>
+
           <a
             href={`https://cuet.sayed.page/${student.studentid}`}
             className="absolute top-2 right-2 bg-gray-800 text-white px-2 py-1 rounded-full text-xs"

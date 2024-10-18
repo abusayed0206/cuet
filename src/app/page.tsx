@@ -5,6 +5,7 @@ import NameSearch from './components/NameSearch';
 import BatchwiseDepartment from './components/BatchwiseDepartment';
 import { FaGithub, FaUserEdit } from 'react-icons/fa';
 import Link from 'next/link';
+import Image from 'next/image'
 
 interface Student {
   name: string;
@@ -222,7 +223,7 @@ export default function Home() {
             href="https://cuetprofile.sayed.page/"
           >
             <FaUserEdit className="mr-2 text-blue-600 text-2xl" />
-            Change Data
+            Login/Signup
           </Link>
           <Link
             className="flex items-center text-xl font-bold text-blue-800 bg-blue-100 hover:bg-blue-200 px-4 py-2 rounded shadow-md transition duration-300"
@@ -238,13 +239,18 @@ export default function Home() {
         <div className="w-80 p-4 rounded-full shadow-lg bg-white flex items-center">
 
           <div className="flex w-full">
+
             <div className="w-1/4 flex justify-center items-center">
-              <img
+              <Image
                 src="/sayed.webp"
                 alt="সাঈদ"
-                className="w-12 h-12 rounded-full"
+                width={48}
+                height={48}
+                className="rounded-full object-contain"
               />
             </div>
+
+
             <div className="w-3/4 flex flex-col justify-center">
               <p className="text-sm font-semibold text-black text-center">
                 <a

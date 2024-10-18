@@ -30,17 +30,20 @@ const BatchwiseDepartment: React.FC<BatchwiseDepartmentProps> = ({
         <p className="text-lg mb-4 text-black">Batch: {batch}</p>
         <p className="text-lg mb-4 text-black">Total Students: {students}</p>
       </div>
-      
+
       <div className="bg-white rounded-lg shadow-lg w-full max-w-md">
         <ul className="divide-y divide-gray-200">
           {studentList.map((student) => (
             <li key={student.studentid} className="flex items-center p-4">
-              <img
-                src={student.dplink}
-                alt={student.name}
-                onError={handleImageError}
-                className="w-16 h-16 rounded-full object-cover mr-4"
-              />
+              <div className="w-16 h-16 rounded-full overflow-hidden mr-4">
+                <img
+                  src={student.dplink}
+                  alt={student.name}
+                  onError={handleImageError}
+                  className="w-full h-full object-contain" // Use object-contain to preserve aspect ratio
+                />
+              </div>
+
               <div>
                 <a href={`https://cuet.sayed.page/${student.studentid}`} className="text-lg font-semibold text-black" target="_blank" rel="noopener noreferrer">
                   {student.studentid}

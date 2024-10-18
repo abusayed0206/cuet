@@ -28,13 +28,16 @@ const StudentDetails: React.FC<StudentDetailsProps> = ({ data }) => {
       {/* Profile Picture */}
       {imageSrc && (
         <div className="flex justify-center mb-4">
-          <img
-            src={imageSrc}
-            alt={`${data.name}'s DP`}
-            className="w-24 h-24 rounded-full border-2 border-gray-300"
-            onError={handleError}
-          />
+          <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-gray-300">
+            <img
+              src={imageSrc}
+              alt={`${data.name}'s DP`}
+              className="w-full h-full object-contain"
+              onError={handleError}
+            />
+          </div>
         </div>
+
       )}
 
       <div className="space-y-2">
