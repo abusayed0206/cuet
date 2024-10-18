@@ -1,24 +1,8 @@
 /** @type {import('next').NextConfig} */
 
-const nextConfig = {
-  // Add the rewrites for sitemap.xml and paginated sitemaps
-  async rewrites() {
-    return [
-      {
-        source: '/sitemap.xml',
-        destination: '/api/sitemap-0.xml',  // Maps to the dynamic route for the sitemap index
-      },
-      {
-        source: '/sitemap-:id.xml',
-        destination: '/api/sitemap-:id.xml',  // Maps to the dynamic route for paginated sitemaps
-      },
-    ]
-  },
-};
-
-// Export environment variables and merged configuration
+const nextConfig = {};
+module.exports = nextConfig;
 module.exports = {
-  ...nextConfig,
   env: {
     R2_ACCOUNT_ID: process.env.R2_ACCOUNT_ID,
     R2_ACCESS_KEY_ID: process.env.R2_ACCESS_KEY_ID,
