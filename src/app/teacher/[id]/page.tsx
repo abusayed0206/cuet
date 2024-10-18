@@ -95,3 +95,4 @@ export default async function TeacherPage({ params }: Props) {
     );
   }
 }
+export const runtime = 'edge';

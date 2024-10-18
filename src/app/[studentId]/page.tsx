@@ -32,10 +32,10 @@ export async function generateMetadata(
   { params }: Props
 ): Promise<Metadata> {
   const studentId = params.studentId
-  
+
   try {
     const studentData = await getStudentData(studentId)
-    
+
     return {
       title: `${studentData.name} | ID: ${studentData.studentid}`,
       description: `From ${studentData.department} and ${studentData.batch} batch`,
@@ -44,7 +44,7 @@ export async function generateMetadata(
         url: `https://cuet.sayed.page/${studentId}`,
         images: [
           {
-            url: '/CUETOG.png', 
+            url: '/CUETOG.png',
           },
         ],
       },
@@ -96,3 +96,5 @@ export default async function StudentPage({ params }: Props) {
     )
   }
 }
+
+export const runtime = 'edge';
