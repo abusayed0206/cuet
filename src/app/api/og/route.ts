@@ -1,101 +1,33 @@
 import { NextResponse } from 'next/server';
-import { createCanvas, loadImage } from 'canvas';
 
 const validateStudentId = (id: string) => {
   const regex = /^[0-9]{7}$/;
   return regex.test(id);
 };
 
-// Function to generate the OG image
-const generateOgImage = async (studentData: { name: string; studentid: string; department: string; dplink: string; batch: string }) => {
-  const width = 1200;
-  const height = 630;
-  const canvas = createCanvas(width, height);
-  const ctx = canvas.getContext('2d');
+// Function to generate the OG image as SVG
+const generateOgSvg = (studentData: { name: string; studentid: string; department: string; dplink: string; batch: string }) => {
+  const escapedName = studentData.name.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const escapedDepartment = studentData.department.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-  // Create a gradient background
-  const gradient = ctx.createLinearGradient(0, 0, width, height);
-  gradient.addColorStop(0, '#4f46e5'); // Indigo
-  gradient.addColorStop(1, '#7c3aed'); // Purple
-  ctx.fillStyle = gradient;
-  ctx.fillRect(0, 0, width, height);
-
-  // Add a decorative pattern
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
-  for (let i = 0; i < width; i += 50) {
-    for (let j = 0; j < height; j += 50) {
-      ctx.beginPath();
-      ctx.arc(i, j, 2, 0, Math.PI * 2);
-      ctx.fill();
-    }
-  }
-
-  // Load the student's display picture or fallback image
-  const imageUrl = studentData.dplink || 'https://cdn.abusayed.dev/demo.png';
-  let profileImage;
-
-  try {
-    profileImage = await loadImage(imageUrl);
-  } catch (error) {
-    profileImage = await loadImage('https://cdn.abusayed.dev/demo.png');
-  }
-
-  // Set dimensions for the display picture
-  const maxImageSize = 180;
-  const imageAspectRatio = profileImage.width / profileImage.height;
-  let imageWidth, imageHeight;
-
-  if (imageAspectRatio > 1) {
-    imageWidth = maxImageSize;
-    imageHeight = maxImageSize / imageAspectRatio;
-  } else {
-    imageHeight = maxImageSize;
-    imageWidth = maxImageSize * imageAspectRatio;
-  }
-
-  const imageX = (width - imageWidth) / 2;
-  const imageY = height * 0.25 - imageHeight / 2;
-
-  // Create a rounded clipping region with a white border
-  ctx.save();
-  ctx.beginPath();
-  ctx.arc(width / 2, imageY + imageHeight / 2, Math.max(imageWidth, imageHeight) / 2 + 5, 0, Math.PI * 2, true);
-  ctx.fillStyle = 'white';
-  ctx.fill();
-  ctx.beginPath();
-  ctx.arc(width / 2, imageY + imageHeight / 2, Math.max(imageWidth, imageHeight) / 2, 0, Math.PI * 2, true);
-  ctx.closePath();
-  ctx.clip();
-
-  // Draw the profile image
-  ctx.drawImage(profileImage, imageX, imageY, imageWidth, imageHeight);
-  ctx.restore();
-
-  // Add the student's name
-  ctx.fillStyle = '#ffffff';
-  ctx.font = 'bold 64px Arial';
-  ctx.textAlign = 'center';
-  ctx.fillText(studentData.name, width / 2, imageY + maxImageSize + 80);
-
-  // Add student ID and batch
-  ctx.font = '36px Arial';
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-  ctx.fillText(`ID: ${studentData.studentid} | Batch: ${studentData.batch}`, width / 2, imageY + maxImageSize + 140);
-
-  // Add department
-  ctx.fillText(studentData.department, width / 2, imageY + maxImageSize + 190);
-
-  // Add a decorative underline
-  ctx.beginPath();
-  ctx.moveTo(width * 0.2, imageY + maxImageSize + 220);
-  ctx.lineTo(width * 0.8, imageY + maxImageSize + 220);
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
-  ctx.lineWidth = 3;
-  ctx.stroke();
-
-  return canvas.toBuffer('image/png');
+  return `
+    <svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#4f46e5;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
+        </linearGradient>
+      </defs>
+      <rect width="1200" height="630" fill="url(#grad)"/>
+      <circle cx="600" cy="200" r="100" fill="white"/>
+      <image href="${studentData.dplink || 'https://cdn.abusayed.dev/demo.png'}" x="500" y="100" height="200" width="200" clip-path="circle(100px at center)"/>
+      <text x="600" y="380" font-family="Arial, sans-serif" font-size="64" font-weight="bold" fill="white" text-anchor="middle">${escapedName}</text>
+      <text x="600" y="440" font-family="Arial, sans-serif" font-size="36" fill="rgba(255,255,255,0.9)" text-anchor="middle">ID: ${studentData.studentid} | Batch: ${studentData.batch}</text>
+      <text x="600" y="490" font-family="Arial, sans-serif" font-size="36" fill="rgba(255,255,255,0.9)" text-anchor="middle">${escapedDepartment}</text>
+      <line x1="240" y1="520" x2="960" y2="520" stroke="rgba(255,255,255,0.5)" stroke-width="3"/>
+    </svg>
+  `;
 };
-
 
 // API Route to handle Open Graph image generation
 export async function GET(request: Request) {
@@ -116,15 +48,17 @@ export async function GET(request: Request) {
     }
 
     const studentData = await response.json();
-    const imageBuffer = await generateOgImage(studentData); // Note the await here
+    const svgContent = generateOgSvg(studentData);
 
-    return new NextResponse(imageBuffer, {
+    return new NextResponse(svgContent, {
       headers: {
-        'Content-Type': 'image/png',
+        'Content-Type': 'image/svg+xml',
       },
     });
   } catch (error) {
-    return new NextResponse('Error fetching student data', { status: 500 });
+    console.error('Error generating OG image:', error);
+    return new NextResponse('Error generating OG image', { status: 500 });
   }
 }
+
 export const runtime = 'edge';
