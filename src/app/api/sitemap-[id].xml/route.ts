@@ -46,6 +46,7 @@ export async function GET(request: Request, { params }: { params: { id?: string 
     // If a specific sitemap is requested (e.g., /sitemap-1.xml)
     const sitemapId = parseInt(params.id, 10)
     
+    // Check if sitemapId is valid
     if (isNaN(sitemapId) || sitemapId < 1 || sitemapId > totalSitemaps) {
       return NextResponse.json({ error: 'Invalid sitemap ID' }, { status: 404 })
     }
