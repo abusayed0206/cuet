@@ -12,6 +12,7 @@
     "@aws-sdk/client-s3": " ^3.617.0",
     "@supabase/supabase-js": "^2.44.2",
     "axios": "^1.7.2",
+    "canvas": "^2.11.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "lucide-react": "^0.294.0",
