@@ -42,13 +42,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         url: `https://cuet.sayed.page/${studentId}`,
         images: [
           {
-            url: `/api/og/${studentId}/png`, // Primary image with .png extension for Facebook
+            url: `/api/og/${studentId}.png`, // Primary image with .png extension for Facebook
             width: 1200,
             height: 630,
             alt: `${studentData.name}'s profile card`,
           },
           {
-            url: `/api/og/${studentId}/svg`, // Secondary image with .svg extension for platforms that support it
+            url: `/api/og/${studentId}.svg`, // Secondary image with .svg extension for platforms that support it
             width: 1200,
             height: 630,
             alt: `${studentData.name}'s profile card`,
@@ -59,7 +59,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         card: 'summary_large_image',
         title: `${studentData.name} | ID: ${studentData.studentid}`,
         description: `${studentData.department} and ${studentData.batch} batch`,
-        images: [`/api/og/${studentId}/svg`], // Use SVG for Twitter as it supports it
+        images: [`/api/og/${studentId}.svg`], // Use SVG for Twitter as it supports it
       },
     };
   } catch (error) {
