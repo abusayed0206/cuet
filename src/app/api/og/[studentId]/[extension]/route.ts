@@ -5,7 +5,7 @@ const validateStudentId = (id: string) => {
   return regex.test(id);
 };
 
-// Function to generate the OG image as SVG
+// Function to generate the OG image as SVG (keeping your existing implementation)
 const generateOgSvg = (studentData: { name: string; studentid: string; department: string; dplink: string; batch: string }) => {
   const escapedName = studentData.name.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   const escapedDepartment = studentData.department.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -29,10 +29,17 @@ const generateOgSvg = (studentData: { name: string; studentid: string; departmen
   `;
 };
 
-// API Route to handle Open Graph image generation
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const studentId = searchParams.get('studentId');
+// Updated API Route to handle dynamic routes with extensions
+export async function GET(
+  request: Request,
+  { params }: { params: { studentId: string; extension: string } }
+) {
+  const { studentId, extension } = params;
+
+  // Validate the extension
+  if (!['svg', 'png'].includes(extension.toLowerCase())) {
+    return new NextResponse('Invalid file extension', { status: 400 });
+  }
 
   // Validate the student ID
   if (!studentId || !validateStudentId(studentId)) {
@@ -41,7 +48,9 @@ export async function GET(request: Request) {
 
   try {
     // Fetch student data from the existing API
-    const response = await fetch(`https://cuet.sayed.page/api/student/${studentId}`, { next: { revalidate: 3600 } });
+    const response = await fetch(`https://cuet.sayed.page/api/student/${studentId}`, { 
+      next: { revalidate: 3600 } 
+    });
 
     if (!response.ok) {
       return new NextResponse('Failed to fetch student data', { status: 404 });
@@ -50,9 +59,11 @@ export async function GET(request: Request) {
     const studentData = await response.json();
     const svgContent = generateOgSvg(studentData);
 
+    // Return the SVG content with appropriate headers
     return new NextResponse(svgContent, {
       headers: {
         'Content-Type': 'image/svg+xml',
+        'Cache-Control': 'public, max-age=31536000, immutable',
       },
     });
   } catch (error) {
