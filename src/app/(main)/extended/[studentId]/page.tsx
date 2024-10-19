@@ -240,3 +240,4 @@ export default async function StudentPage({ params }: Props) {
     )
   }
 }
+export const runtime = 'edge';
