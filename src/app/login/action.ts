@@ -1,46 +1,47 @@
-'use server'
+'use server';
 
-import { revalidatePath } from 'next/cache'
-import { redirect } from 'next/navigation'
-
-import { createClient } from '@/app/utils/supabase/server'
+import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
+import { createClient } from '@/app/utils/supabase/server';
 
 export async function login(formData: FormData) {
-  const supabase = createClient()
+  const supabase = createClient();
 
-  // type-casting here for convenience
-  // in practice, you should validate your inputs
-  const data = {
-    email: formData.get('email') as string,
-    password: formData.get('password') as string,
-  }
+  const email = formData.get('email') as string;
+  const password = formData.get('password') as string;
 
-  const { error } = await supabase.auth.signInWithPassword(data)
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
 
   if (error) {
-    redirect('/error')
+    console.error('Login error:', error.message); // Log the error for debugging
+    redirect('/error'); // Redirect to error page as per your existing setup
   }
 
-  revalidatePath('/', 'layout')
-  redirect('/')
+  // Revalidate the necessary paths and then redirect to /profile
+  await revalidatePath('/');
+  redirect('/profile');
 }
 
 export async function signup(formData: FormData) {
-  const supabase = createClient()
+  const supabase = createClient();
 
-  // type-casting here for convenience
-  // in practice, you should validate your inputs
-  const data = {
-    email: formData.get('email') as string,
-    password: formData.get('password') as string,
-  }
+  const email = formData.get('email') as string;
+  const password = formData.get('password') as string;
 
-  const { error } = await supabase.auth.signUp(data)
+  const { error } = await supabase.auth.signUp({
+    email,
+    password,
+  });
 
   if (error) {
-    redirect('/error')
+    console.error('Signup error:', error.message); // Log the error for debugging
+    redirect('/error'); // Redirect to error page as per your existing setup
   }
 
-  revalidatePath('/', 'layout')
-  redirect('/')
+  // Revalidate the necessary paths and then redirect to /profile
+  await revalidatePath('/');
+  redirect('/profile');
 }
