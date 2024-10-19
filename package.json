@@ -10,7 +10,8 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": " ^3.617.0",
-    "@supabase/supabase-js": "^2.44.2",
+    "@supabase/ssr": "^0.5.1",
+    "@supabase/supabase-js": "^2.45.5",
     "axios": "^1.7.2",
     "canvas": "^2.11.2",
     "class-variance-authority": "^0.7.0",
