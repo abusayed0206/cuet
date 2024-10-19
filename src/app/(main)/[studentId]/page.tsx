@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import StudentDetails from '../components/StudentDetails';
+import StudentDetails from '../../../components/StudentDetails';
 
 const validateStudentId = (id: string) => {
   const regex = /^[0-9]{7}$/;

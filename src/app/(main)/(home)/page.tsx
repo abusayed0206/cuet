@@ -1,8 +1,7 @@
 'use client';
 import { useState } from 'react';
-import StudentDetails from './components/StudentDetails';
-import NameSearch from './components/NameSearch';
-import BatchwiseDepartment from './components/BatchwiseDepartment';
+import NameSearch from '../../../components/NameSearch';
+import BatchwiseDepartment from '../../../components/BatchwiseDepartment';
 import { FaGithub, FaUserEdit } from 'react-icons/fa';
 import Link from 'next/link';
 import Image from 'next/image'
@@ -65,6 +64,12 @@ export default function Home() {
       return;
     }
 
+    // Use a new tab for Student ID search
+    if (searchType === 'Student ID') {
+      window.open(`/${inputValue}`, '_blank'); // Open in a new tab
+      return; // Exit the function after opening the new tab
+    }
+
     setIsLoading(true);
     setError('');
     setStudentData(null);
@@ -76,13 +81,6 @@ export default function Home() {
       let data: any;
 
       switch (searchType) {
-        case 'Student ID':
-          response = await fetch(`/api/student/${inputValue}`);
-          if (!response.ok) throw new Error('No student found with this ID.');
-          data = await response.json();
-          setStudentData(data);
-          break;
-
         case 'Name':
           if (inputValue.length < 4) {
             setError('Name must be at least 4 characters long.');
@@ -111,6 +109,7 @@ export default function Home() {
       setIsLoading(false);
     }
   };
+
 
   return (
 
@@ -201,7 +200,6 @@ export default function Home() {
               </div>
             )}
             {error && <p className="text-center text-red-500">{error}</p>}
-            {studentData && searchType === 'Student ID' && <StudentDetails data={studentData} />}
             {searchResults.length > 0 && searchType === 'Name' && <NameSearch results={searchResults} />}
             {departmentData && searchType === 'Batch' && (
               <BatchwiseDepartment
@@ -212,6 +210,9 @@ export default function Home() {
               />
             )}
           </div>
+          <div className="mt-4 text-center text-black">
+            For extended info, click <a href="/extended" className="text-blue-500 hover:underline">here</a>.
+          </div>
 
         </div>
       </div>
@@ -219,8 +220,7 @@ export default function Home() {
         <div className="w-80 p-4 rounded-full flex space-x-4">
           <Link
             className="flex items-center text-xl font-bold text-blue-800 bg-blue-100 hover:bg-blue-200 px-4 py-2 rounded shadow-md transition duration-300"
-            target="_blank"
-            href="https://cuetprofile.sayed.page/"
+            href="/login"
           >
             <FaUserEdit className="mr-2 text-blue-600 text-2xl" />
             Login/Signup

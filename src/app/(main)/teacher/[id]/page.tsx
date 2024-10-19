@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import TeacherDetails from '../../components/TeacherDetails'; // Correct path
+import TeacherDetails from '../../../../components/TeacherDetails'; // Correct path
 
 async function getTeacherData(id: string) {
   const url = `https://cuet.sayed.page/api/teacher/${id}`;

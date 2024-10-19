@@ -16,12 +16,6 @@ export const metadata: Metadata = {
     {
       rel: "icon",
       type: "image/png",
-      sizes: "32x32",
-      url: "/favicon-32x32.png",
-    },
-    {
-      rel: "icon",
-      type: "image/png",
       sizes: "16x16",
       url: "/favicon-16x16.png",
     },
@@ -53,7 +47,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        {children}
+      </body>
     </html>
   );
 }
