@@ -22,3 +22,5 @@ export default async function DpUploadPage() {
 
   return <UploadForm initialStudentId={studentId} />
 }
+
+export const runtime = 'edge';

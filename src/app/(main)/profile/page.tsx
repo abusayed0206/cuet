@@ -69,3 +69,4 @@ const InfoItem = ({ label, value }: { label: string; value: string }) => (
 );
 
 export default ProfilePage;
+export const runtime = 'edge';

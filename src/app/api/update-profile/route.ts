@@ -45,3 +45,4 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Failed to update profile', details: err.message }, { status: 500 });
   }
 }
+export const runtime = 'edge';
