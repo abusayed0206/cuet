@@ -12,6 +12,9 @@ export default function UploadForm({ initialStudentId }: UploadFormProps) {
   const [uploading, setUploading] = useState<boolean>(false);
   const [success, setSuccess] = useState<boolean>(false);
   const router = useRouter();
+  
+  // Debugging output to ensure `initialStudentId` is correctly passed
+  console.log('Initial Student ID:', initialStudentId);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
