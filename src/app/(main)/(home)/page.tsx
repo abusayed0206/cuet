@@ -1,120 +1,61 @@
 'use client';
 import { useState } from 'react';
-import NameSearch from '../../../components/NameSearch';
-import BatchwiseDepartment from '../../../components/BatchwiseDepartment';
-import { FaGithub, FaUserEdit } from 'react-icons/fa';
-import Link from 'next/link';
-import Image from 'next/image'
-
-interface Student {
-  name: string;
-  studentid: string;
-  batch: string;
-  session: string;
-  department: string;
-  hall: string;
-  public_email: string;
-  phonenumber: string;
-  linkedin: string;
-  dplink: string;
-  currentstatus: string;
-}
-
-interface DepartmentData {
-  name: string;
-  batch: string;
-  students: number;
-  studentList: Student[];
-}
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 type SearchType = 'Student ID' | 'Name' | 'Batch';
 
 export default function Home() {
+  const router = useRouter();
   const [inputValue, setInputValue] = useState<string>('');
   const [searchType, setSearchType] = useState<SearchType>('Student ID');
-  const [department, setDepartment] = useState<string>('ce');
-  const [batch, setBatch] = useState<string>('17');
-  const [studentData, setStudentData] = useState<Student | null>(null);
-  const [searchResults, setSearchResults] = useState<Student[]>([]);
-  const [departmentData, setDepartmentData] = useState<DepartmentData | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
 
+  // Validate CUET ID
   const validateStudentId = (id: string): boolean => {
     const regex = /^[0-9]{7}$/;
-    if (!regex.test(id)) return false;
-
-    const batchYear = parseInt(id.slice(0, 2), 10);
-    const departmentCode = parseInt(id.slice(2, 4), 10);
-    const classRoll = parseInt(id.slice(4, 7), 10);
-
-    return batchYear >= 0 && batchYear <= 99 && departmentCode >= 1 && departmentCode <= 12 && classRoll >= 1 && classRoll <= 200;
+    return regex.test(id);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Validate input based on search type
     if (searchType !== 'Batch' && !inputValue.trim()) {
       setError('Please enter a value.');
       return;
     }
 
-    if (searchType === 'Student ID' && !validateStudentId(inputValue)) {
-      setError('Please enter a valid CUET ID.');
+    // Handle Student ID search
+    if (searchType === 'Student ID') {
+      if (!validateStudentId(inputValue)) {
+        setError('Please enter a valid CUET ID.');
+        return;
+      }
+      window.open(`/${inputValue}`, '_blank');
       return;
     }
 
-    // Use a new tab for Student ID search
-    if (searchType === 'Student ID') {
-      window.open(`/${inputValue}`, '_blank'); // Open in a new tab
-      return; // Exit the function after opening the new tab
+    // Handle Batch search
+    if (searchType === 'Batch') {
+      router.push('/batch');
+      return;
     }
 
-    setIsLoading(true);
-    setError('');
-    setStudentData(null);
-    setSearchResults([]);
-    setDepartmentData(null);
-
-    try {
-      let response: Response;
-      let data: any;
-
-      switch (searchType) {
-        case 'Name':
-          if (inputValue.length < 4) {
-            setError('Name must be at least 4 characters long.');
-            return;
-          }
-          response = await fetch(`/api/student/search?name=${inputValue}`);
-          if (!response.ok) throw new Error('No student found with this name.');
-          data = await response.json();
-          setSearchResults(data.results);
-          break;
-
-        case 'Batch':
-          response = await fetch(`/api/department/${department}/${batch}`);
-          if (!response.ok) throw new Error('No students found for this batch and department.');
-          data = await response.json();
-          setDepartmentData(data);
-          break;
+    // Handle Name search
+    if (searchType === 'Name') {
+      if (inputValue.length < 4) {
+        setError('Name must be at least 4 characters long.');
+        return;
       }
-    } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message || 'An error occurred.');
-      } else {
-        setError('An unknown error occurred.');
-      }
-    } finally {
-      setIsLoading(false);
+
+      // Redirect to /search with the name query parameter
+      router.push(`/search?name=${encodeURIComponent(inputValue.trim())}`);
     }
   };
 
-
   return (
-
     <div className="min-h-screen bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 py-6 flex flex-col justify-center items-center relative">
-
       <div className="relative py-3 sm:max-w-xl sm:mx-auto">
         <div className="absolute inset-0 bg-gradient-to-r from-teal-400 to-cyan-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 rounded-3xl"></div>
 
@@ -122,13 +63,16 @@ export default function Home() {
           <div className="max-w-md mx-auto">
             <h1 className="text-2xl font-semibold text-center text-black">CUET Student Information</h1>
             <div className="divide-y divide-gray-200">
-              <form onSubmit={handleSubmit} className="py-8 text-base leading-6 space-y-6 text-gray-700 sm:text-lg sm:leading-7 flex flex-col items-center">
+              <form
+                onSubmit={handleSubmit}
+                className="py-8 text-base leading-6 space-y-6 text-gray-700 sm:text-lg sm:leading-7 flex flex-col items-center"
+              >
                 <select
                   value={searchType}
                   onChange={(e) => {
                     setSearchType(e.target.value as SearchType);
                     setInputValue('');
-                    setDepartmentData(null);
+                    setError('');
                   }}
                   className="border-b-2 border-gray-300 py-2 px-4 rounded-md mb-4"
                 >
@@ -136,46 +80,6 @@ export default function Home() {
                   <option value="Name">Name</option>
                   <option value="Batch">Batch</option>
                 </select>
-
-                {searchType === 'Batch' && (
-                  <div className="flex space-x-4 mb-4">
-                    <div>
-                      <select
-                        value={batch}
-                        onChange={(e) => setBatch(e.target.value)}
-                        className="border-b-2 border-gray-300 py-2 px-4 rounded-md"
-                      >
-                        <option value="17">17</option>
-                        <option value="18">18</option>
-                        <option value="19">19</option>
-                        <option value="20">20</option>
-                        <option value="21">21</option>
-                        <option value="22">22</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <select
-                        value={department}
-                        onChange={(e) => setDepartment(e.target.value.toLowerCase())}
-                        className="border-b-2 border-gray-300 py-2 px-4 rounded-md"
-                      >
-                        <option value="ce">CE</option>
-                        <option value="me">ME</option>
-                        <option value="cse">CSE</option>
-                        <option value="eee">EEE</option>
-                        <option value="ete">ETE</option>
-                        <option value="bme">BME</option>
-                        <option value="arch">ARCH</option>
-                        <option value="pme">PME</option>
-                        <option value="urp">URP</option>
-                        <option value="mse">MSE</option>
-                        <option value="mie">MIE</option>
-                        <option value="wre">WRE</option>
-                      </select>
-                    </div>
-                  </div>
-                )}
 
                 {(searchType === 'Student ID' || searchType === 'Name') && (
                   <input
@@ -189,57 +93,29 @@ export default function Home() {
                   />
                 )}
 
-                <button className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-md px-4 py-2 hover:from-pink-500 hover:to-yellow-500 transition-all">
+                {error && <p className="text-red-500 text-center">{error}</p>}
+
+                <button
+                  type="submit"
+                  className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-md px-4 py-2 hover:from-pink-500 hover:to-yellow-500 transition-all"
+                >
                   Submit
                 </button>
               </form>
             </div>
-            {isLoading && (
-              <div className="flex justify-center items-center">
-                <div className="w-16 h-16 border-4 border-t-4 border-gray-200 border-t-blue-500 rounded-full animate-spin"></div>
-              </div>
-            )}
-            {error && <p className="text-center text-red-500">{error}</p>}
-            {searchResults.length > 0 && searchType === 'Name' && <NameSearch results={searchResults} />}
-            {departmentData && searchType === 'Batch' && (
-              <BatchwiseDepartment
-                departmentName={departmentData.name}
-                batch={departmentData.batch}
-                students={departmentData.students}
-                studentList={departmentData.studentList}
-              />
-            )}
           </div>
           <div className="mt-4 text-center text-black">
-            For extended info, click <a href="/extended" className="text-blue-500 hover:underline">here</a>.
+            For extended student info, you must login and click{' '}
+            <a href="/extended" className="text-blue-500 hover:underline">
+              here
+            </a>.
           </div>
-
         </div>
       </div>
+
       <div className="flex flex-col justify-end items-center z-10">
-        <div className="w-80 p-4 rounded-full flex space-x-4">
-          <Link
-            className="flex items-center text-xl font-bold text-blue-800 bg-blue-100 hover:bg-blue-200 px-4 py-2 rounded shadow-md transition duration-300"
-            href="/login"
-          >
-            <FaUserEdit className="mr-2 text-blue-600 text-2xl" />
-            Login/Signup
-          </Link>
-          <Link
-            className="flex items-center text-xl font-bold text-blue-800 bg-blue-100 hover:bg-blue-200 px-4 py-2 rounded shadow-md transition duration-300"
-            target="_blank"
-            href="https://github.com/abusayed0206/cuet/"
-          >
-            <FaGithub className="mr-2 text-blue-600 text-2xl" />
-            Github
-          </Link>
-        </div>
-
-
-        <div className="w-80 p-4 rounded-full shadow-lg bg-white flex items-center">
-
+        <div className="w-80 p-4 rounded-lg shadow-lg bg-white flex items-center">
           <div className="flex w-full">
-
             <div className="w-1/4 flex justify-center items-center">
               <Image
                 src="/sayed.webp"
@@ -249,43 +125,24 @@ export default function Home() {
                 className="rounded-full object-contain"
               />
             </div>
-
-
             <div className="w-3/4 flex flex-col justify-center">
               <p className="text-sm font-semibold text-black text-center">
-                <a
-                  href="https://sayed.page/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm font-semibold text-black text-center"
-                >
+                <a href="https://sayed.page/" target="_blank" rel="noopener noreferrer">
                   সাঈদ
-                </a> |
-                <a
-                  href="https://cuet.sayed.page/1901049"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm font-semibold text-black text-center"
-                >
+                </a>{' '}
+                |{' '}
+                <a href="https://cuet.sayed.page/1901049" target="_blank" rel="noopener noreferrer">
                   ১৯০১০৪৯
                 </a>
-
               </p>
-              <a
-                href="https://cuet.sayed.page/privacy"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm font-semibold text-black text-center"
-              >
-                গোপনীয়তা নীতি
+              <a href="https://cuet.sayed.page/privacy" target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-black text-center">
+                গোপনীয়তা নীতি
               </a>
               <p className="text-sm font-semibold text-black text-center">Made with ❤️ in Cumilla🇧🇩</p>
-
             </div>
           </div>
         </div>
       </div>
-
     </div>
   );
 }

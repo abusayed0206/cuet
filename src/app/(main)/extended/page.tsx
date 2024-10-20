@@ -1,7 +1,6 @@
 'use client';
 import { useState } from 'react';
 import StudentDetails from '@/components/ExtendedStudentDetails';
-
 interface Student {
   name: string;
   studentid: string;
@@ -71,35 +70,39 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen py-6 flex flex-col justify-center items-center">
-      <div className="relative py-3 sm:max-w-xl sm:mx-auto">
-        <div className="absolute inset-0 bg-gradient-to-r from-teal-400 to-cyan-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 rounded-3xl"></div>
-        <div className="relative px-4 py-10 bg-slate-300 shadow-lg rounded-3xl sm:p-20">
-          <div className="max-w-md mx-auto">
-            <h1 className="text-2xl font-semibold text-center text-black">CUET Student Information</h1>
-            <div className="divide-y divide-gray-200">
-              <form onSubmit={handleSubmit} className="py-8 text-base leading-6 space-y-6 text-gray-700 sm:text-lg sm:leading-7 flex flex-col items-center">
-                <input
-                  id="inputValue"
-                  name="inputValue"
-                  type="number"
-                  className="h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:border-rose-600 text-center rounded-md mb-4"
-                  placeholder="Enter Student ID"
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                />
-                <button className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-md px-4 py-2 hover:from-pink-500 hover:to-yellow-500 transition-all">
-                  Submit
-                </button>
-              </form>
-            </div>
-            {isLoading && (
-              <div className="flex justify-center items-center">
-                <div className="w-16 h-16 border-4 border-t-4 border-gray-200 border-t-blue-500 rounded-full animate-spin"></div>
+    <div className="min-h-screen">
+      <div className="pt-16 py-6 flex flex-col justify-center items-center">
+        <div className="relative py-3 sm:max-w-xl sm:mx-auto">
+
+
+          <div className="absolute inset-0 bg-gradient-to-r from-teal-400 to-cyan-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 rounded-3xl"></div>
+          <div className="relative px-4 py-10 bg-slate-300 shadow-lg rounded-3xl sm:p-20">
+            <div className="max-w-md mx-auto">
+              <h1 className="text-2xl font-semibold text-center text-black">Extended Information</h1>
+              <div className="divide-y divide-gray-200">
+                <form onSubmit={handleSubmit} className="py-8 text-base leading-6 space-y-6 text-gray-700 sm:text-lg sm:leading-7 flex flex-col items-center">
+                  <input
+                    id="inputValue"
+                    name="inputValue"
+                    type="number"
+                    className="h-10 w-full border-b-2 border-gray-300 text-gray-900 focus:outline-none focus:border-rose-600 text-center rounded-md mb-4"
+                    placeholder="Enter Student ID"
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                  />
+                  <button className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-md px-4 py-2 hover:from-pink-500 hover:to-yellow-500 transition-all">
+                    Submit
+                  </button>
+                </form>
               </div>
-            )}
-            {error && <p className="text-center text-red-500">{error}</p>}
-            {studentData && <StudentDetails data={studentData} />}
+              {isLoading && (
+                <div className="flex justify-center items-center">
+                  <div className="w-16 h-16 border-4 border-t-4 border-gray-200 border-t-blue-500 rounded-full animate-spin"></div>
+                </div>
+              )}
+              {error && <p className="text-center text-red-500">{error}</p>}
+              {studentData && <StudentDetails data={studentData} />}
+            </div>
           </div>
         </div>
       </div>

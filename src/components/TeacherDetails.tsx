@@ -1,7 +1,6 @@
 "use client"
 import React from 'react';
 import { FaFacebook, FaLinkedin, FaResearchgate } from 'react-icons/fa';
-
 interface TeacherDetailsProps {
   data: {
     id: number;

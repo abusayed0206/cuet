@@ -2,7 +2,8 @@ import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 const nonAuthPath = ["/login", "/register", "/email-verify", "/reset-password"];
-const protectedRoutes = ["/profile", "/extend", "/api/student/extended"];
+// Added /bg and /api/bg to the protected routes
+const protectedRoutes = ["/profile", "/extend", "/api/student/extended", "/bg", "/api/bg"];
 
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({
@@ -84,6 +85,9 @@ export async function updateSession(request: NextRequest) {
 export const config = {
   matcher: [
     '/((?!_next/static|favicon.ico|images|public).*)',
-    '/api/student/extended/:path*'
+    '/api/student/extended/:path*',
+    // Added /bg and /api/bg to the matcher
+    '/bg',
+    '/api/bg/:path*',
   ]
 }

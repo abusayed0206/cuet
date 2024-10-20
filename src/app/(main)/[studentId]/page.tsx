@@ -24,6 +24,12 @@ async function getStudentData(studentId: string) {
   return response.json();
 }
 
+// Function to check if an image exists
+async function checkImageExists(url: string): Promise<boolean> {
+  const response = await fetch(url, { method: 'HEAD' });
+  return response.ok;
+}
+
 type Props = {
   params: { studentId: string };
 };
@@ -33,6 +39,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   try {
     const studentData = await getStudentData(studentId);
+    const primaryImageUrl = `/api/og/${studentId}.png`; // Primary image URL
+    const fallbackImageUrl = '/CUETOG.png'; // Fallback image URL
+
+    // Check if the primary image exists
+    const imageExists = await checkImageExists(primaryImageUrl);
 
     return {
       title: `${studentData.name} | ID: ${studentData.studentid}`,
@@ -42,7 +53,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         url: `https://cuet.sayed.page/${studentId}`,
         images: [
           {
-            url: `/api/og/${studentId}.png`, // Primary image with .png extension for Facebook
+            url: imageExists ? primaryImageUrl : fallbackImageUrl,
             width: 1200,
             height: 630,
             alt: `${studentData.name}'s profile card`,
@@ -59,7 +70,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         card: 'summary_large_image',
         title: `${studentData.name} | ID: ${studentData.studentid}`,
         description: `${studentData.department} and ${studentData.batch} batch`,
-        images: [`/api/og/${studentId}.svg`], // Use SVG for Twitter as it supports it
+        images: [imageExists ? primaryImageUrl : fallbackImageUrl], // Use primary image or fallback
       },
     };
   } catch (error) {

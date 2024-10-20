@@ -1,6 +1,5 @@
 "use client"
 import React, { useState } from 'react';
-
 interface StudentDetailsProps {
   data: {
     name: string;
@@ -82,7 +81,7 @@ const StudentDetails: React.FC<StudentDetailsProps> = ({ data }) => {
           <span className="font-bold text-black">
             {data.linkedin && (
               <a
-                href={data.linkedin}
+                href={`https://www.linkedin.com/in/${data.linkedin}`}
                 className="text-blue-500"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -92,6 +91,7 @@ const StudentDetails: React.FC<StudentDetailsProps> = ({ data }) => {
             )}
           </span>
         </div>
+
         <div>
           <span className="text-gray-700">Current Status: </span>
           <span className="font-bold text-black">{data.currentstatus}</span>

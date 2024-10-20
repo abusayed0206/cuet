@@ -153,7 +153,7 @@ const EditProfileClientComponent: React.FC<EditProfileClientComponentProps> = ({
       {/* LinkedIn */}
       <div className="flex flex-col items-center w-full">
         <label className="mb-2 text-black font-semibold text-center">
-          LinkedIn:
+          LinkedIn Username
           <input
             type="text"
             name="linkedin"

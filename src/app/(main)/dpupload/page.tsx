@@ -39,3 +39,4 @@ const DpUploadPage = async () => {
 };
 
 export default DpUploadPage;
+export const runtime = 'edge';

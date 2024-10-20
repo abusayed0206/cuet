@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Hind_Siliguri } from "next/font/google";
 import "./globals.css";
+import Navbar from "@/components/Navbar";
 
 const inter = Hind_Siliguri({
   weight: "400",
@@ -47,8 +48,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        {children}
+      <body>
+        {/* Navbar component included here */}
+        <Navbar />
+        {/* Main content */}
+        <main className="relative z-0">
+          {children}
+        </main>
       </body>
     </html>
   );

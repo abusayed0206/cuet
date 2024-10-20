@@ -1,5 +1,6 @@
 "use client"
 import React, { useState } from 'react';
+import Image from 'next/image';
 
 interface StudentDetailsProps {
   data: {
@@ -41,7 +42,7 @@ const StudentDetails: React.FC<StudentDetailsProps> = ({ data }) => {
           />
         </div>
       )}
-      
+
       <div className="space-y-2">
         <div>
           <span className="text-gray-700">Name: </span>
