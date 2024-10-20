@@ -113,7 +113,7 @@ const BatchPage: React.FC = () => {
             </div>
 
             {loading ? (
-                <div className="text-center text-black">Loading...</div>
+                <div className="text-center text-white">Loading...</div>
             ) : departmentData ? (
                 <>
                     <BatchwiseDepartment

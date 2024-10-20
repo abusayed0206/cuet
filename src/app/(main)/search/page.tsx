@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unescaped-entities */
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import NameSearch from "@/components/NameSearch";
 
@@ -77,14 +77,16 @@ const SearchPage: React.FC = () => {
                 </button>
             </form>
 
-            {loading && <div className="text-center text-black">Loading...</div>}
-            {error && <div className="text-center text-red-600">{error}</div>}
+            <Suspense fallback={<div className="text-center text-white">Loading...</div>}>
+                {loading && <div className="text-center text-white">Loading...</div>}
+                {error && <div className="text-center text-red-600">{error}</div>}
 
-            {!loading && !error && results.length > 0 ? (
-                <NameSearch results={results} />
-            ) : !loading && !error && results.length === 0 && nameQuery ? (
-                <div className="text-center text-black">No results found for "{nameQuery}".</div>
-            ) : null}
+                {!loading && !error && results.length > 0 ? (
+                    <NameSearch results={results} />
+                ) : !loading && !error && results.length === 0 && nameQuery ? (
+                    <div className="text-center text-white">No results found for "{nameQuery}".</div>
+                ) : null}
+            </Suspense>
         </div>
     );
 };
