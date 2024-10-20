@@ -1,4 +1,3 @@
-// app/bg/page.tsx
 "use client";
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
@@ -20,7 +19,9 @@ const BloodGroupPage: React.FC = () => {
     const pageSize = 20;
 
     const fetchStudents = async (bloodGroup: string, page: number) => {
-        const response = await fetch(`/api/bg/${bloodGroup}?page=${page}`);
+        // Encode the blood group to handle special characters
+        const encodedBloodGroup = encodeURIComponent(bloodGroup);
+        const response = await fetch(`/api/bg/${encodedBloodGroup}?page=${page}`);
         const data = await response.json();
 
         if (response.ok) {
@@ -56,7 +57,6 @@ const BloodGroupPage: React.FC = () => {
                     </button>
                 ))}
             </div>
-
 
             {/* Student List */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
