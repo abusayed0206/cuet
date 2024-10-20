@@ -82,7 +82,7 @@ const SearchComponent = () => {
             {!loading && !error && results.length > 0 ? (
                 <NameSearch results={results} />
             ) : !loading && !error && results.length === 0 && nameQuery ? (
-                <div className="text-center text-black">No results found for "{nameQuery}".</div>
+                <div className="text-center text-white">No results found for "{nameQuery}".</div>
             ) : null}
         </>
     );
@@ -91,9 +91,9 @@ const SearchComponent = () => {
 const SearchPage: React.FC = () => {
     return (
         <div className="container mx-auto p-6">
-            <h1 className="text-2xl font-bold text-center mb-6 text-black">Search for Students by Name</h1>
+            <h1 className="text-2xl font-bold text-center mb-6 text-white">Search for Students by Name</h1>
 
-            <Suspense fallback={<div className="text-center text-black">Loading search data...</div>}>
+            <Suspense fallback={<div className="text-center text-white">Loading search data...</div>}>
                 <SearchComponent />
             </Suspense>
         </div>

@@ -42,7 +42,7 @@ const BloodGroupPage: React.FC = () => {
             <h1 className="text-2xl font-bold text-center mb-4 text-black">Blood Group Directory</h1>
 
             {/* Blood Group Buttons */}
-            <div className="flex flex-wrap justify-center space-x-2 mb-4">
+            <div className="flex flex-wrap justify-center space-x-2 space-y-2 mb-4">
                 {bloodGroups.map((bg) => (
                     <button
                         key={bg}
@@ -56,6 +56,7 @@ const BloodGroupPage: React.FC = () => {
                     </button>
                 ))}
             </div>
+
 
             {/* Student List */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

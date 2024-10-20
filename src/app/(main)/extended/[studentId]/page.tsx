@@ -42,11 +42,74 @@ const StudentDetails: React.FC<StudentDetailsProps> = ({ data }) => {
           <span className="text-gray-700">Name: </span>
           <span className="font-bold text-black">{data.name}</span>
         </div>
-        {/* Render other student details */}
-        {/* Example */}
         <div>
           <span className="text-gray-700">Student ID: </span>
           <span className="font-bold text-black">{data.studentid}</span>
+        </div>
+        <div>
+          <span className="text-gray-700">Unique ID: </span>
+          <span className="font-bold text-black">{data.uniqueid}</span>
+        </div>
+        <div>
+          <span className="text-gray-700">Batch: </span>
+          <span className="font-bold text-black">{data.batch}</span>
+        </div>
+        <div>
+          <span className="text-gray-700">Session: </span>
+          <span className="font-bold text-black">{data.session}</span>
+        </div>
+        <div>
+          <span className="text-gray-700">Department: </span>
+          <span className="font-bold text-black">{data.department}</span>
+        </div>
+        <div>
+          <span className="text-gray-700">Admission Roll: </span>
+          <span className="font-bold text-black">{data.admissionroll}</span>
+        </div>
+        <div>
+          <span className="text-gray-700">Admission Merit: </span>
+          <span className="font-bold text-black">{data.admissionmerit}</span>
+        </div>
+        <div>
+          <span className="text-gray-700">Hall: </span>
+          <span className="font-bold text-black">{data.hall}</span>
+        </div>
+        <div>
+          <span className="text-gray-700">Phone Number: </span>
+          <span className="font-bold text-black">{data.phonenumber}</span>
+        </div>
+        <div>
+          <span className="text-gray-700">Public Email: </span>
+          <span className="font-bold text-black">
+            {data.public_email && (
+              <a href={`mailto:${data.public_email}`} className="text-blue-500">
+                {data.public_email}
+              </a>
+            )}
+          </span>
+        </div>
+        <div>
+          <span className="text-gray-700">Blood Group: </span>
+          <span className="font-bold text-black">{data.bloodgroup}</span>
+        </div>
+        <div>
+          <span className="text-gray-700">LinkedIn: </span>
+          <span className="font-bold text-black">
+            {data.linkedin && (
+              <a
+                href={data.linkedin}
+                className="text-blue-500"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Profile
+              </a>
+            )}
+          </span>
+        </div>
+        <div>
+          <span className="text-gray-700">Current Status: </span>
+          <span className="font-bold text-black">{data.currentstatus}</span>
         </div>
       </div>
     </div>
