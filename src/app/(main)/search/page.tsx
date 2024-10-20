@@ -13,7 +13,8 @@ interface Student {
     dplink: string;
 }
 
-const SearchPage: React.FC = () => {
+// Separate component to use useSearchParams within Suspense
+const SearchComponent = () => {
     const searchParams = useSearchParams();
     const router = useRouter();
     const nameQuery = searchParams.get("name") || ""; // Get the "name" query from URL
@@ -57,9 +58,7 @@ const SearchPage: React.FC = () => {
     };
 
     return (
-        <div className="container mx-auto p-6">
-            <h1 className="text-2xl font-bold text-center mb-6 text-black">Search for Students by Name</h1>
-
+        <>
             {/* Search Form */}
             <form onSubmit={handleSubmit} className="flex justify-center mb-6">
                 <input
@@ -77,15 +76,25 @@ const SearchPage: React.FC = () => {
                 </button>
             </form>
 
-            <Suspense fallback={<div className="text-center text-white">Loading...</div>}>
-                {loading && <div className="text-center text-white">Loading...</div>}
-                {error && <div className="text-center text-red-600">{error}</div>}
+            {loading && <div className="text-center text-white">Loading...</div>}
+            {error && <div className="text-center text-red-600">{error}</div>}
 
-                {!loading && !error && results.length > 0 ? (
-                    <NameSearch results={results} />
-                ) : !loading && !error && results.length === 0 && nameQuery ? (
-                    <div className="text-center text-white">No results found for "{nameQuery}".</div>
-                ) : null}
+            {!loading && !error && results.length > 0 ? (
+                <NameSearch results={results} />
+            ) : !loading && !error && results.length === 0 && nameQuery ? (
+                <div className="text-center text-black">No results found for "{nameQuery}".</div>
+            ) : null}
+        </>
+    );
+};
+
+const SearchPage: React.FC = () => {
+    return (
+        <div className="container mx-auto p-6">
+            <h1 className="text-2xl font-bold text-center mb-6 text-black">Search for Students by Name</h1>
+
+            <Suspense fallback={<div className="text-center text-black">Loading search data...</div>}>
+                <SearchComponent />
             </Suspense>
         </div>
     );
