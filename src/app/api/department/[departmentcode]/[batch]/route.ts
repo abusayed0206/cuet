@@ -14,6 +14,7 @@ const departmentMap: { [key: string]: string } = {
   mie: "Department of Mechatronics & Industrial Engineering",
   wre: "Department of Water Resources Engineering",
   mse: "Department of Materials Science & Engineering",
+  mme: "Department of Materials and Metallurgical Engineering",
 };
 
 export async function GET(
