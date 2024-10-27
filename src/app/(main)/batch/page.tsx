@@ -31,6 +31,8 @@ const departments = [
     { value: "mse", label: "MSE" },
     { value: "mie", label: "MIE" },
     { value: "wre", label: "WRE" },
+    { value: "mme", label: "MME" },
+    
 ];
 
 const batches = [
@@ -40,6 +42,7 @@ const batches = [
     { value: "20", label: "20" },
     { value: "21", label: "21" },
     { value: "22", label: "22" },
+    { value: "23", label: "23" },
 ];
 
 const BatchPage: React.FC = () => {
