@@ -13,7 +13,7 @@ export async function GET(
     "https://cuetps.sayed.page",
     "http://localhost:3000", // Temporary for localhost
   ];
-  
+
   const origin = request.headers.get("Origin");
   const responseHeaders: Record<string, string> = {};
 
@@ -36,15 +36,31 @@ export async function GET(
 
     if (error) {
       console.error("Supabase error:", error);
-      return NextResponse.json({ error: error.message }, { status: 500, headers: responseHeaders });
+      return NextResponse.json(
+        { error: error.message },
+        { status: 500, headers: responseHeaders }
+      );
     }
 
     if (!data) {
-      return NextResponse.json({ error: "Student not found" }, { status: 404, headers: responseHeaders });
+      return NextResponse.json(
+        { error: "Student not found" },
+        { status: 404, headers: responseHeaders }
+      );
     }
 
-    // Check if the cuetps value is 'yes'
-    if (data.cuetps === "yes") {
+    // Prepare designation data
+    let responseData: Record<string, any> = {};
+
+    if (data.cuetps === "No") {
+      // If cuetps is "No", do not include the designation in the response
+      responseData = { message: "You are not a member of CUETPS" };
+    } else {
+      // If cuetps contains "Yes" and designation, return the designation value
+      const designation = data.cuetps.includes("\n")
+        ? data.cuetps.split("\n")[1]
+        : data.cuetps;
+
       // Process the images field by splitting it using regex to handle commas, spaces, and new lines
       const imagesArray = data.images
         ? data.images.split(/[\s,]+/).filter(Boolean) // Split by comma, space, or newline
@@ -59,9 +75,11 @@ export async function GET(
         {} as { [key: string]: string }
       );
 
-      const cuetpsData = {
+      // Assign the designation value and other student data
+      responseData = {
         name: data.name,
         studentid: data.studentid,
+        designation, 
         dplink: data.dplink,
         linkedin: data.linkedin,
         intro: data.intro,
@@ -69,15 +87,11 @@ export async function GET(
         instagram: data.instagram,
         facebook: data.facebook,
         images: numberedImages,
+        
       };
-
-      return NextResponse.json(cuetpsData, { headers: responseHeaders });
-    } else {
-      return NextResponse.json(
-        { message: "You are not a member of CUETPS" },
-        { status: 403, headers: responseHeaders }
-      );
     }
+
+    return NextResponse.json(responseData, { headers: responseHeaders });
   } catch (error) {
     console.error("Error fetching student data:", error);
     return NextResponse.json(
@@ -87,4 +101,4 @@ export async function GET(
   }
 }
 
-export const runtime = 'edge';
+export const runtime = "edge";
