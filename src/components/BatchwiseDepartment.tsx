@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 
 interface Student {
   studentid: string;
@@ -45,15 +46,23 @@ const BatchwiseDepartment: React.FC<BatchwiseDepartmentProps> = ({
               </div>
 
               <div>
-                <a
-                  href={`https://cuet.sayed.page/${student.studentid}`}
+                <Link
+                  href={`/${student.studentid}`}
                   className="text-lg font-semibold text-black"
-                  target="_blank"
+
                   rel="noopener noreferrer"
                 >
                   {student.studentid}
-                </a>
-                <p className="text-lg text-black">{student.name}</p>
+                </Link>
+                <Link
+                  href={`/${student.studentid}`}
+                  className="text-lg font-semibold text-black"
+
+                  rel="noopener noreferrer"
+                >
+                  <p className="text-lg text-black">{student.name}</p>
+                </Link>
+
               </div>
             </div>
           ))}

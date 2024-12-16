@@ -42,13 +42,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         url: `https://cuet.sayed.page/${studentId}`,
         images: [
           {
-            url: `/api/og/${studentId}.png`, // Primary image with .png extension for Facebook
+            url: `/api/og/${studentId}.png`,
             width: 1200,
             height: 630,
             alt: `${studentData.name}'s profile card`,
           },
           {
-            url: `/api/og/${studentId}.svg`, // Secondary image with .svg extension for platforms that support it
+            url: `/api/og/${studentId}.svg`,
             width: 1200,
             height: 630,
             alt: `${studentData.name}'s profile card`,
@@ -59,7 +59,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         card: 'summary_large_image',
         title: `${studentData.name} | ID: ${studentData.studentid}`,
         description: `${studentData.department} and ${studentData.batch} batch`,
-        images: [`/api/og/${studentId}.svg`], // Use SVG for Twitter as it supports it
+        images: [`/api/og/${studentId}.svg`],
       },
     };
   } catch (error) {
@@ -71,7 +71,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         url: 'https://cuet.sayed.page',
         images: [
           {
-            url: '/CUETOG.png', // Default image URL
+            url: '/CUETOG.png',
           },
         ],
       },
@@ -86,22 +86,32 @@ export default async function StudentPage({ params }: Props) {
     const studentData = await getStudentData(studentId);
 
     return (
-      <div className="min-h-screen bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 py-6 flex flex-col justify-center items-center">
-        <div className="relative py-3 sm:max-w-xl sm:mx-auto">
-          <div className="absolute inset-0 bg-gradient-to-r from-teal-400 to-cyan-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
-          <div className="relative px-4 py-10 bg-slate-300 shadow-lg sm:rounded-3xl sm:p-20">
-            <div className="max-w-md mx-auto">
-              <StudentDetails data={studentData} />
-            </div>
-          </div>
+      <div className="min-h-screen bg-[#0f172a] flex flex-col items-center justify-between p-4">
+        {/* Background Gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-violet-600/20 via-transparent to-cyan-600/20"></div>
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.1)_0%,transparent_70%)]"></div>
         </div>
+
+        {/* Main Content */}
+
+
+        <StudentDetails data={studentData} />
+
+        {/* Footer */}
+
+        <p className="text-white/70 text-center">
+          Data fetched for <span className="text-cyan-400">{studentData.studentid}</span>
+        </p>
+
       </div>
     );
   } catch (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 py-6 flex flex-col justify-center items-center">
-        <div className="bg-white p-8 rounded-lg shadow-md">
-          <p className="text-red-500 text-center">
+      <div className="min-h-screen bg-[#0f172a] flex flex-col items-center justify-center p-4">
+        {/* Error Message */}
+        <div className="backdrop-blur-xl bg-white/10 rounded-2xl p-8 shadow-2xl border border-white/20">
+          <p className="text-red-400 text-center text-sm">
             {error instanceof Error ? error.message : 'An error occurred'}
           </p>
         </div>

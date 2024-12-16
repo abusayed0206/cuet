@@ -48,10 +48,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
-        {/* Navbar component included here */}
+      <body className={`${inter.className} bg-[#0f172a] min-h-screen`}>
         <Navbar />
-        {/* Main content */}
         <main className="relative z-0">
           {children}
         </main>

@@ -1,104 +1,112 @@
 "use client";
-import { useState } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
+import { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { useUser } from "@/utils/useUser";
 
 const Navbar: React.FC = () => {
-    // State to toggle mobile menu
     const [isOpen, setIsOpen] = useState(false);
+    const user = useUser(); // Use the custom hook to get user status
 
-    // Function to close the menu
-    const closeMenu = () => {
-        setIsOpen(false);
-    };
+    const closeMenu = () => setIsOpen(false);
 
     return (
-        <nav className="bg-gray-800 p-4">
-            <div className="container mx-auto flex justify-between items-center">
-                {/* Logo or Branding */}
-                <div className="text-white text-lg font-semibold">
-
-                    <Link href="/" className="text-white hover:text-white">
-                        <Image src="/CUET_Vector_ogo.svg" alt="CUET Logo" width={32} height={32} />
+        <div className="w-full px-4 py-6">
+            <nav className="max-w-6xl mx-auto backdrop-blur-xl bg-white/10 rounded-2xl border border-white/20 shadow-xl">
+                <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+                    {/* Logo */}
+                    <Link href="/" className="flex items-center space-x-2 group">
+                        <div className="relative p-1 rounded-lg bg-gradient-to-r from-violet-500/10 to-cyan-500/10 hover:from-violet-500/20 hover:to-cyan-500/20 transition-all duration-300">
+                            <Image
+                                src="/CUET_Vector_ogo.svg"
+                                alt="CUET Logo"
+                                width={28}
+                                height={28}
+                                className="transition-transform duration-300 group-hover:scale-105"
+                            />
+                        </div>
                     </Link>
+
+                    {/* Desktop Menu */}
+                    <div className="hidden md:flex items-center space-x-1">
+                        <NavLink href="/extended">Extended Info</NavLink>
+                        <NavLink href={user ? "/profile" : "/login"}>
+                            {user ? "Profile" : "Login"}
+                        </NavLink>
+                        <NavLink href="/bg">Blood Group</NavLink>
+                        <NavLink href="/privacy">Privacy Policy</NavLink>
+                    </div>
+
+                    {/* Mobile Menu Button */}
+                    <button
+                        onClick={() => setIsOpen(!isOpen)}
+                        className="md:hidden text-white/80 hover:text-white transition-colors"
+                    >
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d={isOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"}
+                            />
+                        </svg>
+                    </button>
                 </div>
+            </nav>
 
-                {/* Hamburger button for mobile */}
-                <button
-                    onClick={() => setIsOpen(!isOpen)}
-                    className="text-white md:hidden focus:outline-none"
-                >
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d={isOpen ? 'M6 18L18 6M6 6l12 12' : 'M4 6h16M4 12h16M4 18h16'}
-                        />
-                    </svg>
-                </button>
-
-                {/* Desktop Menu */}
-                <div className="hidden md:flex space-x-4">
-                    <Link href="/" className="text-gray-300 hover:text-white">
-                        Home
-                    </Link>
-                    <Link href="/extended" className="text-gray-300 hover:text-white">
-                        Extended Info
-                    </Link>
-                    <Link href="/profile" className="text-gray-300 hover:text-white">
-                        Profile
-                    </Link>
-                    <Link href="/bg" className="text-gray-300 hover:text-white">
-                        Blood Group
-                    </Link>
-                    <Link href="/privacy" className="text-gray-300 hover:text-white">
-                        Privacy Policy
-                    </Link>
-                </div>
-            </div>
-
-            {/* Full-screen Mobile Menu Popup */}
+            {/* Mobile Menu Overlay */}
             {isOpen && (
-                <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gray-900 bg-opacity-90">
-                    {/* Close the menu when clicking on the backdrop */}
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0f172a]/95 backdrop-blur-md">
                     <div className="absolute inset-0" onClick={closeMenu}></div>
 
-                    <div className="relative z-10 p-8 bg-gray-700 rounded-lg shadow-lg">
+                    <div className="relative z-10 w-11/12 max-w-sm p-6 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 shadow-2xl">
                         <button
                             onClick={closeMenu}
-                            className="absolute top-2 right-2 text-white"
+                            className="absolute top-4 right-4 text-white/80 hover:text-white transition-colors"
                         >
-                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </button>
 
-                        <div className="flex flex-col space-y-6 items-center">
-                            <Link href="/" className="text-gray-300 hover:text-white text-lg" onClick={closeMenu}>
-                                Home
-                            </Link>
-                            <Link href="/extended" className="text-gray-300 hover:text-white text-lg" onClick={closeMenu}>
-                                Extended Info
-                            </Link>
-                            <Link href="/profile" className="text-gray-300 hover:text-white text-lg" onClick={closeMenu}>
-                                Profile
-                            </Link>
-                            <Link href="/bg" className="text-gray-300 hover:text-white text-lg" onClick={closeMenu}>
-                                Blood Group
-                            </Link>
-                            <Link href="/privacy" className="text-gray-300 hover:text-white text-lg" onClick={closeMenu}>
-                                Privacy Policy
-                            </Link>
-                            <Link href="https://github.com/abusayed0206/cuet" className="text-gray-300 hover:text-white text-lg" onClick={closeMenu}>
-                                GitHub
-                            </Link>
+                        <div className="flex flex-col space-y-4">
+                            <MobileNavLink href="/extended" onClick={closeMenu}>Extended Info</MobileNavLink>
+                            <MobileNavLink href={user ? "/profile" : "/login"} onClick={closeMenu}>
+                                {user ? "Profile" : "Login"}
+                            </MobileNavLink>
+                            <MobileNavLink href="/bg" onClick={closeMenu}>Blood Group</MobileNavLink>
+                            <MobileNavLink href="/privacy" onClick={closeMenu}>Privacy Policy</MobileNavLink>
                         </div>
                     </div>
                 </div>
             )}
-        </nav>
+        </div>
     );
 };
+
+// Desktop NavLink Component
+const NavLink: React.FC<{ href: string; children: React.ReactNode }> = ({ href, children }) => (
+    <Link
+        href={href}
+        className="px-4 py-2 text-sm text-white/70 hover:text-white transition-colors rounded-lg hover:bg-white/5"
+    >
+        {children}
+    </Link>
+);
+
+// Mobile NavLink Component
+const MobileNavLink: React.FC<{ href: string; onClick?: () => void; children: React.ReactNode }> = ({
+    href,
+    onClick,
+    children,
+}) => (
+    <Link
+        href={href}
+        onClick={onClick}
+        className="block px-4 py-3 text-center text-white/70 hover:text-white transition-colors rounded-lg hover:bg-white/5"
+    >
+        {children}
+    </Link>
+);
 
 export default Navbar;

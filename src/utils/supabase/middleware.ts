@@ -2,7 +2,6 @@ import { createServerClient, type CookieOptions } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 const nonAuthPath = ["/login", "/register", "/email-verify", "/reset-password"];
-// Added /bg and /api/bg to the protected routes
 const protectedRoutes = ["/profile", "/extend", "/api/student/extended", "/bg", "/api/bg"];
 
 export async function updateSession(request: NextRequest) {

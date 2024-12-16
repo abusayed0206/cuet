@@ -11,6 +11,7 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { z } from "zod";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { ClipLoader } from "react-spinners";
 
 export const loginFormSchema = z.object({
   email: z.string().email(),
@@ -28,8 +29,8 @@ const defaultValues: LoginValuesType = {
 
 const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
-
   const supabase = createClient();
 
   const form = useForm<LoginValuesType>({
@@ -38,15 +39,17 @@ const LoginForm = () => {
   });
 
   async function handleLogin(values: LoginValuesType) {
+    setLoading(true);
     const { error } = await supabase.auth.signInWithPassword(values);
 
     if (error) {
-      return toast.error(error.message);
+      setLoading(false);
+      return toast.error("Login failed: " + error.message);
     }
 
     toast.success("Login successful");
+    setLoading(false);
 
-    // Redirect to the profile page after successful login
     router.push("/profile");
   }
 
@@ -54,7 +57,7 @@ const LoginForm = () => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(handleLogin)}
-        className="w-full flex flex-col gap-y-6 p-6 bg-white rounded-lg shadow-md"
+        className="w-full flex flex-col gap-y-6 p-6 bg-white/90 rounded-lg shadow-md"
       >
         <h2 className="text-2xl font-bold text-center text-gray-800">Login</h2>
 
@@ -85,8 +88,11 @@ const LoginForm = () => {
           </button>
         </div>
 
-        <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white rounded-md shadow-md transition duration-200">
-          Login
+        <Button
+          className="w-full bg-purple-600 hover:bg-purple-700 text-white rounded-md shadow-md transition duration-200"
+          disabled={loading}
+        >
+          {loading ? <ClipLoader color="#ffffff" size={24} /> : "Login"}
         </Button>
       </form>
     </Form>
