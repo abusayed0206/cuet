@@ -25,6 +25,7 @@ const EditProfileClientComponent: React.FC<EditProfileClientComponentProps> = ({
     linkedin: initialData.linkedin || '',
     uniqueId: initialData.uniqueid || '',
     public_email: initialData.public_email || '',
+    lastDonated: initialData.lastDonated || '',
   });
 
   const [loading, setLoading] = useState(false); // Loading state
