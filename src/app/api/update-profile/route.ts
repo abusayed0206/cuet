@@ -41,11 +41,8 @@ export async function POST(req: Request) {
         linkedin: formData.linkedin,
         uniqueid: formData.uniqueId,
         public_email: formData.public_email, 
-        intro: formData.intro, 
-        portfolio: formData.portfolio, 
-        instagram: formData.instagram, 
-        facebook: formData.facebook,
-        images: formData.images, 
+        lastdonated: formData.lastDonated,
+
       })
       .eq("email", user.email);
 

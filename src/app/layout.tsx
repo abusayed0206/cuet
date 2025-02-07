@@ -10,7 +10,7 @@ const inter = Hind_Siliguri({
 });
 
 export const metadata: Metadata = {
-  title: "CUET Students Details",
+  title: "CUET Student's Directory",
   description: "Publicly available CUET Students Details | an API with many things | Sayed (1901049)",
   metadataBase: new URL("https://cuet.sayed.page/"),
   icons: [

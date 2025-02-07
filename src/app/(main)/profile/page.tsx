@@ -18,7 +18,7 @@ const ProfilePage = async () => {
 
   const { data, error } = await supabase
     .from("apidata")
-    .select("name, studentid, uniqueid, email, public_email, dplink, linkedin, batch, session, department, admissionroll, admissionmerit, hall, bloodgroup, phonenumber, currentstatus, cuetps, intro, portfolio, instagram, facebook, images")
+    .select("name, studentid, uniqueid, email, public_email, dplink, linkedin, batch, session, department, admissionroll, admissionmerit, hall, bloodgroup, phonenumber, currentstatus")
     .eq("email", user.email)
     .single();
 

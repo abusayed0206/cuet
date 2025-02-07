@@ -14,7 +14,7 @@ const PrivacyPolicy: FC = () => {
           <section className="mb-8">
             <h2 className="text-2xl font-bold mb-2">1. Introduction</h2>
             <p className="mb-4">
-              Welcome to CUET Student Details. This privacy policy outlines how we collect, use, and protect your information. By using our website, you agree to the terms described below.
+              Welcome to CUET Student&apos;s Directory. This privacy policy outlines how we collect, use, and protect your information. By using our website, you agree to the terms described below.
             </p>
           </section>
 

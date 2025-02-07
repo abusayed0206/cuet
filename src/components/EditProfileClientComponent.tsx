@@ -12,11 +12,6 @@ interface EditProfileClientComponentProps {
     linkedin: string;
     uniqueid: string;
     public_email: string;
-    intro?: string;
-    portfolio?: string;
-    instagram?: string;
-    facebook?: string;
-    images?: string;
   };
 }
 
@@ -29,11 +24,6 @@ const EditProfileClientComponent: React.FC<EditProfileClientComponentProps> = ({
     linkedin: initialData.linkedin || '',
     uniqueId: initialData.uniqueid || '',
     public_email: initialData.public_email || '',
-    intro: initialData.intro || '',
-    portfolio: initialData.portfolio || '',
-    instagram: initialData.instagram || '',
-    facebook: initialData.facebook || '',
-    images: initialData.images || '',
   });
 
   const [loading, setLoading] = useState(false); // Loading state
@@ -69,7 +59,7 @@ const EditProfileClientComponent: React.FC<EditProfileClientComponentProps> = ({
     'Dr. Qudrat-E-Khuda Hall',
     'Bangabandhu Hall',
     'Shaheed Tareq Huda Hall',
-    'Sheikh Russel Hall',
+    'Abu Sayed Hall',
     'Sufia Kamal Hall',
     'Shamsunnahar Khan Hall',
     'Tapashi Rabeya Hall',
@@ -127,6 +117,20 @@ const EditProfileClientComponent: React.FC<EditProfileClientComponentProps> = ({
               </option>
             ))}
           </select>
+        </label>
+      </div>
+
+      {/*Last Donated*/}
+      <div className="flex flex-col items-center w-full">
+        <label className="mb-2 text-black font-semibold text-center">
+          Last Donated:
+          <input
+            type="date"
+            name="lastDonated"
+            value={formData.lastDonated}
+            onChange={handleChange}
+            className="mt-1 p-2 border border-gray-400 rounded-lg w-full bg-white text-black font-medium text-center"
+          />
         </label>
       </div>
 
@@ -192,77 +196,7 @@ const EditProfileClientComponent: React.FC<EditProfileClientComponentProps> = ({
         </label>
       </div>
 
-      {/* Intro */}
-      <div className="flex flex-col items-center w-full">
-        <label className="mb-2 text-black font-semibold text-center">
-          Intro:
-          <textarea
-            name="intro"
-            value={formData.intro}
-            onChange={handleChange}
-            rows={3}
-            className="mt-1 p-2 border border-gray-400 rounded-lg w-full bg-white text-black font-medium text-center"
-          />
-        </label>
-      </div>
-
-      {/* Portfolio */}
-      <div className="flex flex-col items-center w-full">
-        <label className="mb-2 text-black font-semibold text-center">
-          Portfolio Link:
-          <input
-            type="text"
-            name="portfolio"
-            value={formData.portfolio}
-            onChange={handleChange}
-            className="mt-1 p-2 border border-gray-400 rounded-lg w-full bg-white text-black font-medium text-center"
-          />
-        </label>
-      </div>
-
-      {/* Instagram */}
-      <div className="flex flex-col items-center w-full">
-        <label className="mb-2 text-black font-semibold text-center">
-          Instagram Username:
-          <input
-            type="text"
-            name="instagram"
-            value={formData.instagram}
-            onChange={handleChange}
-            className="mt-1 p-2 border border-gray-400 rounded-lg w-full bg-white text-black font-medium text-center"
-          />
-        </label>
-      </div>
-
-      {/* Facebook */}
-      <div className="flex flex-col items-center w-full">
-        <label className="mb-2 text-black font-semibold text-center">
-          Facebook Username:
-          <input
-            type="text"
-            name="facebook"
-            value={formData.facebook}
-            onChange={handleChange}
-            className="mt-1 p-2 border border-gray-400 rounded-lg w-full bg-white text-black font-medium text-center"
-          />
-        </label>
-      </div>
-
-
-      {/* Playbook Board Link */}
-      <div className="flex flex-col items-center w-full">
-        <label className="mb-2 text-black font-semibold text-center">
-          Images Link(Max 10, not more than 2 MB each, separated by comma,space or new line,):
-          <textarea
-            name="images"
-            value={formData.images}
-            onChange={handleChange}
-            rows={5}
-            placeholder='https://example.com/image1.jpg, https://example.com/image2.jpg'
-            className="mt-1 p-2 border border-gray-400 rounded-lg w-full bg-white text-black font-medium text-center"
-          />
-        </label>
-      </div>
+      {/* Submit Button */}
 
       {!loading ? (
         <button

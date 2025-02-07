@@ -7,6 +7,7 @@ interface Student {
     name: string;
     studentid: string;
     phonenumber: string;
+    lastdonated: string;
 }
 
 const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
@@ -40,7 +41,7 @@ const BloodGroupPage: React.FC = () => {
 
     return (
         <div className="container mx-auto p-6">
-            <h1 className="text-2xl font-bold text-center mb-4 text-black">Blood Group Directory</h1>
+            <h1 className="text-2xl font-bold text-center mb-4 text-white">Blood Group Directory</h1>
 
             {/* Blood Group Buttons */}
             <div className="flex flex-wrap justify-center space-x-2 space-y-2 mb-4">
@@ -59,35 +60,50 @@ const BloodGroupPage: React.FC = () => {
             </div>
 
             {/* Student List */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {students.map((student) => (
-                    <div key={student.studentid} className="bg-white p-4 rounded-lg shadow-md">
-                        <h2 className="text-lg font-semibold text-black">
-                            <Link href={`/extended/${student.studentid}`} className="hover:underline">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 place-items-center">
+                {students.map((student: Student) => (
+                    <div
+                        key={student.studentid}
+                        className="bg-white p-6 rounded-xl shadow-md w-full max-w-xs text-center border border-gray-200 transition-transform transform hover:scale-10 hover:shadow-lg"
+                    >
+                        <h2 className="text-xl font-semibold text-gray-800">
+                            <Link
+                                href={`/extended/${student.studentid}`}
+                                className="hover:text-blue-500 transition-colors"
+                            >
                                 {student.name}
                             </Link>
                         </h2>
-                        <p className="text-black">ID: {student.studentid}</p>
-                        <p className="text-black flex items-center">
-                            Phone: <a href={`tel:${student.phonenumber}`} className="ml-1 text-blue-500 hover:underline">{student.phonenumber}</a>
+                        <p className="text-gray-600">ID: {student.studentid}</p>
+                        <p className="text-gray-600 flex items-center justify-center gap-2">
+                            Phone:
                             <a
-                                href={`https://wa.me/${student.phonenumber.replace(/\D/g, '')}`}
+                                href={`tel:${student.phonenumber}`}
+                                className="text-blue-500 hover:underline"
+                            >
+                                {student.phonenumber}
+                            </a>
+                            <a
+                                href={`https://wa.me/${student.phonenumber.replace(/\D/g, "")}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="ml-2 text-green-600 hover:text-green-500"
+                                className="text-green-500 hover:text-green-600"
                                 title="Send WhatsApp Message"
                             >
-                                <FaWhatsapp />
+                                <FaWhatsapp className="w-5 h-5" />
                             </a>
                         </p>
+
+                        <p className="text-gray-600">Last Donated: {student.lastdonated}</p>
                     </div>
                 ))}
             </div>
 
+
             {/* Pagination */}
             <div className="flex justify-center mt-6">
                 <button
-                    onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+                    onClick={() => setPage((prev: number) => Math.max(prev - 1, 1))}
                     className="mx-2 px-4 py-2 bg-blue-600 text-white rounded-md disabled:opacity-50"
                     disabled={page === 1}
                 >
@@ -95,7 +111,7 @@ const BloodGroupPage: React.FC = () => {
                 </button>
                 <span className="flex items-center text-white">{`Page ${page} of ${Math.ceil(totalCount / pageSize)}`}</span>
                 <button
-                    onClick={() => setPage((prev) => Math.min(prev + 1, Math.ceil(totalCount / pageSize)))}
+                    onClick={() => setPage((prev: number) => Math.min(prev + 1, Math.ceil(totalCount / pageSize)))}
                     className="mx-2 px-4 py-2 bg-blue-600 text-white rounded-md disabled:opacity-50"
                     disabled={page >= Math.ceil(totalCount / pageSize)}
                 >

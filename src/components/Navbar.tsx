@@ -34,7 +34,7 @@ const Navbar: React.FC = () => {
                             {user ? "Profile" : "Login"}
                         </NavLink>
                         <NavLink href="/bg">Blood Group</NavLink>
-                        <NavLink href="/privacy">Privacy Policy</NavLink>
+                        <NavLink href="/halls">Halls</NavLink>
                     </div>
 
                     {/* Mobile Menu Button */}
@@ -75,7 +75,7 @@ const Navbar: React.FC = () => {
                                 {user ? "Profile" : "Login"}
                             </MobileNavLink>
                             <MobileNavLink href="/bg" onClick={closeMenu}>Blood Group</MobileNavLink>
-                            <MobileNavLink href="/privacy" onClick={closeMenu}>Privacy Policy</MobileNavLink>
+                            <MobileNavLink href="/halls" onClick={closeMenu}>Halls</MobileNavLink>
                         </div>
                     </div>
                 </div>

@@ -61,7 +61,7 @@ export default function Home() {
       <div className="w-full max-w-lg relative mt-20">
         <div className="backdrop-blur-xl bg-white/10 rounded-2xl p-8 shadow-2xl border border-white/20">
           <h1 className="text-3xl font-bold text-center bg-gradient-to-r from-cyan-300 to-violet-300 bg-clip-text text-transparent mb-8">
-            CUET Student Information
+            CUET Student&apos;s Directory
           </h1>
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -146,7 +146,7 @@ export default function Home() {
           <a href="https://cuet.sayed.page/privacy" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white transition-colors">
             গোপনীয়তা নীতি
           </a>
-          <p className="text-white/70">Made with ❤️ in Cumilla🇧🇩</p>
+          <p className="text-white/70">Made with ❤️ in Cumilla 🇧🇩</p>
         </div>
       </div>
     </div >

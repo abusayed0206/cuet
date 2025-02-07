@@ -78,7 +78,7 @@ const BatchPage: React.FC = () => {
 
     return (
         <div className="container mx-auto p-6">
-            <h1 className="text-2xl font-bold text-center mb-4 text-black">
+            <h1 className="text-2xl font-bold text-center mb-4 text-white">
                 Batch Wise Student Directory
             </h1>
 
@@ -146,7 +146,7 @@ const BatchPage: React.FC = () => {
                     </div>
                 </>
             ) : (
-                <div className="text-center text-black">
+                <div className="text-center text-white">
                     Select a department and batch, then click View Batch to see the student list.
                 </div>
             )}
