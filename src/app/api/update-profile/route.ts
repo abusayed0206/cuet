@@ -41,7 +41,7 @@ export async function POST(req: Request) {
         linkedin: formData.linkedin,
         uniqueid: formData.uniqueId,
         public_email: formData.public_email, 
-        lastdonated: formData.lastDonated,
+        lastdonated: formData.lastdonated,
 
       })
       .eq("email", user.email);

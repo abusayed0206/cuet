@@ -12,7 +12,7 @@ interface EditProfileClientComponentProps {
     linkedin: string;
     uniqueid: string;
     public_email: string;
-    lastDonated: string;
+    lastdonated: string;
   };
 }
 
@@ -25,7 +25,7 @@ const EditProfileClientComponent: React.FC<EditProfileClientComponentProps> = ({
     linkedin: initialData.linkedin || '',
     uniqueId: initialData.uniqueid || '',
     public_email: initialData.public_email || '',
-    lastDonated: initialData.lastDonated || '',
+    lastdonated: initialData.lastdonated || '',
   });
 
   const [loading, setLoading] = useState(false); // Loading state
@@ -128,8 +128,8 @@ const EditProfileClientComponent: React.FC<EditProfileClientComponentProps> = ({
           Last Donated:
           <input
             type="date"
-            name="lastDonated"
-            value={formData.lastDonated}
+            name="lastdonated"
+            value={formData.lastdonated}
             onChange={handleChange}
             className="mt-1 p-2 border border-gray-400 rounded-lg w-full bg-white text-black font-medium text-center"
           />
