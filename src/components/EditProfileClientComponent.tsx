@@ -12,6 +12,7 @@ interface EditProfileClientComponentProps {
     linkedin: string;
     uniqueid: string;
     public_email: string;
+    lastDonated: string;
   };
 }
 
@@ -31,7 +32,7 @@ const EditProfileClientComponent: React.FC<EditProfileClientComponentProps> = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev: typeof formData) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
