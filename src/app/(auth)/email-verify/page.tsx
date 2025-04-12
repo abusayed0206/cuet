@@ -130,7 +130,7 @@ const EmailSuccessPage = () => {
           >
             <div className="text-sm text-gray-500 p-4 bg-gray-50 rounded-lg border border-gray-200">
               <p>
-                <span className="font-semibold">Tip:</span> If you don't see the email in your inbox, check your spam or junk folder.
+                <span className="font-semibold">Tip:</span> If you don&apos;t see the email in your inbox, check your spam or junk folder.
               </p>
             </div>
             

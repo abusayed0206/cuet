@@ -132,7 +132,7 @@ const LoginPage = () => {
               <div className="w-full border-t border-gray-300"></div>
             </div>
             <div className="relative px-4 bg-white text-sm">
-              Don't have an account?
+              Don&apos;t have an account?
             </div>
           </div>
 

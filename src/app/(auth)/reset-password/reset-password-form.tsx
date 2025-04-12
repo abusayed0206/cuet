@@ -90,7 +90,7 @@ const ResetPasswordForm = () => {
         </div>
         <h3 className="text-xl font-semibold text-gray-800">Email Sent!</h3>
         <p className="text-gray-600 mb-2">
-          We've sent password reset instructions to your email address. Please check your inbox.
+          We&apos;ve sent password reset instructions to your email address. Please check your inbox.
         </p>
         <p className="text-sm text-gray-500">
           Redirecting to login page...

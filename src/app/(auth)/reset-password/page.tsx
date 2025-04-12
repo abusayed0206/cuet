@@ -110,7 +110,7 @@ const ResetPasswordPage = () => {
             Reset Password
           </h1>
           <p className="text-sm text-gray-600">
-            Enter your email address below and we'll send you a password reset link
+            Enter your email address below and we&apos;ll send you a password reset link
           </p>
         </div>
 
