@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/button";
 import { Form } from "@/components/form";
 import { InputForm } from "@/components/input/input-form";
@@ -11,10 +11,12 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { z } from "zod";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { ClipLoader } from "react-spinners";
+import { motion } from "framer-motion";
 
 export const loginFormSchema = z.object({
-  email: z.string().email(),
+  email: z.string().email({
+    message: "Please enter a valid email address",
+  }),
   password: z.string().min(8, {
     message: "Password must be at least 8 characters.",
   }),
@@ -30,44 +32,68 @@ const defaultValues: LoginValuesType = {
 const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const router = useRouter();
   const supabase = createClient();
+
+  // Ensure hydration is complete before rendering interactive elements
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const form = useForm<LoginValuesType>({
     resolver: zodResolver(loginFormSchema),
     defaultValues,
+    mode: "onChange", // Validate on input change for immediate feedback
   });
 
   async function handleLogin(values: LoginValuesType) {
+    if (loading) return;
+    
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword(values);
+    try {
+      const { error } = await supabase.auth.signInWithPassword(values);
 
-    if (error) {
+      if (error) {
+        toast.error("Login failed: " + error.message);
+        return;
+      }
+
+      toast.success("Login successful");
+      router.push("/profile");
+    } catch (error) {
+      console.error("Login error:", error);
+      toast.error("An unexpected error occurred. Please try again.");
+    } finally {
       setLoading(false);
-      return toast.error("Login failed: " + error.message);
     }
+  }
 
-    toast.success("Login successful");
-    setLoading(false);
-
-    router.push("/profile");
+  if (!mounted) {
+    return (
+      <div className="w-full h-[280px] flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-t-purple-600 border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin"></div>
+      </div>
+    );
   }
 
   return (
     <Form {...form}>
-      <form
+      <motion.form
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
         onSubmit={form.handleSubmit(handleLogin)}
-        className="w-full flex flex-col gap-y-6 p-6 bg-white/90 rounded-lg shadow-md"
+        className="w-full flex flex-col gap-y-5"
       >
-        <h2 className="text-2xl font-bold text-center text-gray-800">Login</h2>
-
         <InputForm
           label="Email"
           name="email"
-          placeholder="hello@sayed.page"
+          placeholder="hello@example.com"
           description=""
           required
-          className="border rounded-md focus:ring-2 focus:ring-purple-600"
+          className="border rounded-md bg-white/80 focus:ring-2 focus:ring-purple-600 transition-all duration-200"
+          disabled={loading}
         />
 
         <div className="relative">
@@ -77,24 +103,38 @@ const LoginForm = () => {
             name="password"
             description=""
             required
-            className="border rounded-md focus:ring-2 focus:ring-purple-600"
+            className="border rounded-md bg-white/80 focus:ring-2 focus:ring-purple-600 transition-all duration-200 pr-10"
+            disabled={loading}
           />
           <button
             type="button"
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-600 hover:text-purple-600 transition-colors duration-200"
+            className="absolute right-3 top-[38px] transform text-gray-600 hover:text-purple-600 transition-colors duration-200 focus:outline-none"
             onClick={() => setShowPassword(!showPassword)}
+            disabled={loading}
+            aria-label={showPassword ? "Hide password" : "Show password"}
           >
-            {showPassword ? <FaEyeSlash /> : <FaEye />}
+            {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
           </button>
         </div>
 
         <Button
-          className="w-full bg-purple-600 hover:bg-purple-700 text-white rounded-md shadow-md transition duration-200"
+          className={`w-full mt-2 ${
+            loading 
+              ? "bg-purple-500" 
+              : "bg-purple-600 hover:bg-purple-700 active:bg-purple-800"
+          } text-white rounded-md shadow-md transition-all duration-300 transform hover:scale-[1.02] focus:ring-2 focus:ring-purple-400 focus:ring-offset-2 h-11`}
           disabled={loading}
         >
-          {loading ? <ClipLoader color="#ffffff" size={24} /> : "Login"}
+          {loading ? (
+            <div className="flex items-center justify-center gap-2">
+              <div className="w-5 h-5 border-2 border-t-white border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin"></div>
+              <span>Logging in...</span>
+            </div>
+          ) : (
+            "Log In"
+          )}
         </Button>
-      </form>
+      </motion.form>
     </Form>
   );
 };
