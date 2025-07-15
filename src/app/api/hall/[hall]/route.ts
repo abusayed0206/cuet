@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { supabaseServer } from "@/lib/supabase";
+import { createClient } from "@/utils/supabase/server";
 
 const hallMap: { [key: string]: string } = {
   bbh: "Bangabandhu Hall",
@@ -16,6 +16,8 @@ export async function GET(
   request: Request,
   { params }: { params: { hall: string } }
 ) {
+  const supabase = createClient(); // ✅ Use SSR-safe client
+
   const hallShortForm = params.hall;
   const hallName = hallMap[hallShortForm];
 
@@ -24,13 +26,12 @@ export async function GET(
   }
 
   const url = new URL(request.url);
-  const page = Number(url.searchParams.get("page")) || 1; // Default to page 1
+  const page = Number(url.searchParams.get("page")) || 1;
   const pageSize = 100;
   const offset = (page - 1) * pageSize;
 
   try {
-    // Fetch students from the specified hall with pagination
-    const { data: studentsData, error: studentsError } = await supabaseServer
+    const { data: studentsData, error: studentsError } = await supabase
       .from("apidata")
       .select("studentid, dplink, name, batch, department")
       .eq("hall", hallName)
@@ -42,12 +43,11 @@ export async function GET(
       return NextResponse.json({ error: studentsError.message }, { status: 500 });
     }
 
-    if (studentsData.length === 0) {
+    if (!studentsData || studentsData.length === 0) {
       return NextResponse.json({ error: "No students found for this hall" }, { status: 404 });
     }
 
-    // Get the total count of students in the hall
-    const { count, error: countError } = await supabaseServer
+    const { count, error: countError } = await supabase
       .from("apidata")
       .select("studentid", { count: "exact" })
       .eq("hall", hallName);
@@ -57,7 +57,6 @@ export async function GET(
       return NextResponse.json({ error: countError.message }, { status: 500 });
     }
 
-    // Construct response
     const response = {
       hall: hallName,
       totalStudents: count,

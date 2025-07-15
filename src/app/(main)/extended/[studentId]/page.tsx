@@ -160,7 +160,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: `From ${studentData.department} and ${studentData.batch} batch`,
       openGraph: {
         siteName: 'CUET Student Directory',
-        url: `https://cuet.sayed.page/${studentId}`,
+        url: `https://cuet.sayed.app/${studentId}`,
         images: [
           { url: '/CUETOG.png' },
         ],
@@ -172,7 +172,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: 'The requested student information could not be found.',
       openGraph: {
         siteName: 'CUET Student Directory',
-        url: 'https://cuet.sayed.page',
+        url: 'https://cuet.sayed.app',
         images: [
           { url: '/CUETOG.png' },
         ],

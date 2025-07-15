@@ -1,20 +1,20 @@
-// src/app/api/teacher/[id]/route.ts
 import { NextResponse } from 'next/server';
-import { supabaseServer } from '@/lib/supabase';
-
+import { createClient } from '@/utils/supabase/server'; 
 export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
   const teacherId = params.id;
 
+  // Instantiate Supabase SSR client
+  const supabase = createClient();
+
   try {
-    // Explicitly List Columns (Best Practice)
-    const { data, error } = await supabaseServer
+    const { data, error } = await supabase
       .from('teachers')
       .select(
         'id, name, department, role, email, phone, profilelink, researchgate, facebook, linkedin, photo'
-      ) 
+      )
       .eq('id', teacherId)
       .single();
 
@@ -27,11 +27,11 @@ export async function GET(
       return NextResponse.json({ error: 'Teacher not found' }, { status: 404 });
     }
 
-    // No need for type assertion since we have explicit select
-    return NextResponse.json(data); 
+    return NextResponse.json(data);
   } catch (error) {
     console.error('Error fetching teacher data:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
+
 export const runtime = 'edge';

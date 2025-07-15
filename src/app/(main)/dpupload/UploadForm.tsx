@@ -54,7 +54,7 @@ export default function UploadForm({ initialStudentId }: UploadFormProps) {
         setFile(null);
         setPreview(null);
         setTimeout(() => {
-          router.push(`https://cuet.sayed.page/${initialStudentId}`);
+          router.push(`https://cuet.sayed.app/${initialStudentId}`);
         }, 3000);
       } else {
         const result = await response.json();

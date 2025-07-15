@@ -1,13 +1,12 @@
-// File: app/api/student/search/route.ts
-
 import { NextResponse } from "next/server";
-import { supabaseServer } from "@/lib/supabase";
+import { createClient } from "@/utils/supabase/client";
 
 export async function GET(request: Request) {
+  const supabaseClient = createClient();
+
   const { searchParams } = new URL(request.url);
   const searchName = searchParams.get("name");
 
-  // Enhanced Input Validation
   if (!searchName || searchName.length < 4) {
     return NextResponse.json(
       { error: "Search query must be at least 4 characters long" },
@@ -16,13 +15,12 @@ export async function GET(request: Request) {
   }
 
   try {
-    // Await the Supabase query to resolve
-    const { data, error } = await supabaseServer
+    const { data, error } = await supabaseClient
       .from("apidata")
       .select("name, studentid, department, batch, dplink")
       .textSearch("name", searchName, {
         type: "websearch",
-        config: "english"
+        config: "english",
       })
       .order("batch", { ascending: false })
       .limit(30);
@@ -35,7 +33,7 @@ export async function GET(request: Request) {
       );
     }
 
-    return NextResponse.json({ results: data }); // Return data directly
+    return NextResponse.json({ results: data });
   } catch (error) {
     console.error("Error fetching student data:", error);
     return NextResponse.json(
@@ -44,4 +42,3 @@ export async function GET(request: Request) {
     );
   }
 }
-export const runtime = 'edge';

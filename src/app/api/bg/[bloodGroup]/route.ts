@@ -1,29 +1,30 @@
 import { NextResponse } from "next/server";
-import { supabaseServer } from "@/lib/supabase";
-
+import { createClient } from "@/utils/supabase/server"; 
 export async function GET(
   request: Request,
   { params }: { params: { bloodGroup: string } }
 ) {
   const bloodGroup = params.bloodGroup;
   const { searchParams } = new URL(request.url);
-  const page = Number(searchParams.get("page")) || 1; // Default to page 1 if not provided
-  const pageSize = 20; // Maximum number of rows per page
+  const page = Number(searchParams.get("page")) || 1;
+  const pageSize = 20;
+
+  // Instantiate Supabase SSR client
+  const supabase = createClient();
 
   try {
-    // Query for students with the specified blood group
-    const { data, error, count } = await supabaseServer
+    const { data, error, count } = await supabase
       .from("apidata")
-      .select("name, studentid, phonenumber", { count: "exact" }) // Include phonenumber in the select
-      .eq("bloodgroup", bloodGroup) // Filter by bloodgroup
-      .range((page - 1) * pageSize, page * pageSize - 1); // Pagination logic
+      .select("name, studentid, phonenumber", { count: "exact" })
+      .eq("bloodgroup", bloodGroup)
+      .range((page - 1) * pageSize, page * pageSize - 1);
 
     if (error) {
       console.error("Supabase error:", error);
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    return NextResponse.json({ data, count }); // Return data and count for pagination
+    return NextResponse.json({ data, count });
   } catch (error) {
     console.error("Error fetching blood group data:", error);
     return NextResponse.json(

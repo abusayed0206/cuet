@@ -1,12 +1,12 @@
-# CUET Student Information 📚
+# CUET Students Directory 📚
 
-Welcome to the **CUET Student Information** repository! This project provides a comprehensive API for accessing basic information about CUET students.
+Welcome to the **CUET Students Directory** repository! This project provides a comprehensive API for accessing basic information about CUET students.
 
 🔍 **Note:** If you are looking for the profile editing repository, visit [CUET Profile Editing](https://github.com/abusayed0206/cuetprofile).
 
 ## API Documentation 📜
 
-**Base URL:** [https://cuet.sayed.page/](https://cuet.sayed.page/)
+**Base URL:** [https://cuet.sayed.app/](https://cuet.sayed.app/)
 
 ### Endpoints
 

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { supabaseServer } from "@/lib/supabase";
+import { createClient } from "@/utils/supabase/server"; 
 
 export async function GET(
   request: Request,
@@ -7,12 +7,14 @@ export async function GET(
 ) {
   const studentId = params.studentid;
 
+  // Create server-side Supabase client with cookie support
+  const supabase = createClient();
+
   try {
-    // Explicitly List Columns (Best Practice)
-    const { data, error } = await supabaseServer
+    const { data, error } = await supabase
       .from("apidata")
       .select(
-        "name, studentid,  batch, session, department,  hall, public_email, dplink, currentstatus, linkedin"
+        "name, studentid, batch, session, department, hall, public_email, dplink, currentstatus, linkedin"
       )
       .eq("studentid", studentId)
       .single();
@@ -26,7 +28,6 @@ export async function GET(
       return NextResponse.json({ error: "Student not found" }, { status: 404 });
     }
 
-    // No need for type assertion since we have explicit select
     return NextResponse.json(data);
   } catch (error) {
     console.error("Error fetching student data:", error);
@@ -36,4 +37,5 @@ export async function GET(
     );
   }
 }
-export const runtime = 'edge';
+
+export const runtime = "edge";

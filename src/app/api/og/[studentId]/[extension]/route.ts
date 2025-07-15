@@ -48,7 +48,7 @@ export async function GET(
 
   try {
     // Fetch student data from the existing API
-    const response = await fetch(`https://cuet.sayed.page/api/student/${studentId}`, { 
+    const response = await fetch(`https://cuet.sayed.app/api/student/${studentId}`, { 
       next: { revalidate: 3600 } 
     });
 

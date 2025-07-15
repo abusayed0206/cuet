@@ -17,7 +17,7 @@ async function getStudentData(studentId: string) {
   if (!validateStudentId(studentId)) {
     throw new Error('Invalid student ID of CUET');
   }
-  const response = await fetch(`https://cuet.sayed.page/api/student/${studentId}`, { next: { revalidate: 3600 } });
+  const response = await fetch(`https://cuet.sayed.app/api/student/${studentId}`, { next: { revalidate: 3600 } });
   if (!response.ok) {
     throw new Error('Failed to fetch student data');
   }
@@ -39,7 +39,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: ` ${studentData.department} and ${studentData.batch} batch`,
       openGraph: {
         siteName: `${studentData.name} | ID: ${studentData.studentid}`,
-        url: `https://cuet.sayed.page/${studentId}`,
+        url: `https://cuet.sayed.app/${studentId}`,
         images: [
           {
             url: `/api/og/${studentId}.png`,
@@ -68,7 +68,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: 'The requested student information could not be found.',
       openGraph: {
         siteName: 'CUET Student Directory',
-        url: 'https://cuet.sayed.page',
+        url: 'https://cuet.sayed.app',
         images: [
           {
             url: '/CUETOG.png',

@@ -10,9 +10,10 @@ const inter = Hind_Siliguri({
 });
 
 export const metadata: Metadata = {
-  title: "CUET Student's Directory",
-  description: "Publicly available CUET Students Details | an API with many things | Sayed (1901049)",
-  metadataBase: new URL("https://cuet.sayed.page/"),
+  title: "CUET Students Directory",
+  description:
+    "Publicly available CUET Students Details | an API with many things | Sayed (1901049)",
+  metadataBase: new URL("https://cuet.sayed.app/"),
   icons: [
     {
       rel: "icon",
@@ -37,7 +38,7 @@ export const metadata: Metadata = {
     },
   ],
   openGraph: {
-    images: '/OG.png',
+    images: "/OG.png",
   },
 };
 
@@ -50,9 +51,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} bg-[#0f172a] min-h-screen`}>
         <Navbar />
-        <main className="relative z-0">
-          {children}
-        </main>
+        <main className="relative z-0">{children}</main>
       </body>
     </html>
   );

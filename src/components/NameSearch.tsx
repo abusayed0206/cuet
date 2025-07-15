@@ -27,7 +27,7 @@ const NameSearch: React.FC<NameSearchProps> = ({ results }) => {
           </div>
 
           <a
-            href={`https://cuet.sayed.page/${student.studentid}`}
+            href={`https://cuet.sayed.app/${student.studentid}`}
             className="absolute top-2 right-2 bg-gray-800 text-white px-2 py-1 rounded-full text-xs"
             target="_blank"
             rel="noopener noreferrer"
@@ -36,7 +36,7 @@ const NameSearch: React.FC<NameSearchProps> = ({ results }) => {
           </a>
           <div className="p-4 flex flex-col items-center">
             <a
-              href={`https://cuet.sayed.page/${student.studentid}`}
+              href={`https://cuet.sayed.app/${student.studentid}`}
               className="text-xl font-bold text-black mb-2"
             >
               {student.name}
