@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Hind_Siliguri } from "next/font/google";
 import "./globals.css";
+import Navbar from "@/components/Navbar";
 
 const inter = Hind_Siliguri({
   weight: "400",
@@ -9,16 +10,10 @@ const inter = Hind_Siliguri({
 });
 
 export const metadata: Metadata = {
-  title: "CUET Students Details",
+  title: "CUET Student's Directory",
   description: "Publicly available CUET Students Details | an API with many things | Sayed (1901049)",
   metadataBase: new URL("https://cuet.sayed.page/"),
   icons: [
-    {
-      rel: "icon",
-      type: "image/png",
-      sizes: "32x32",
-      url: "/favicon-32x32.png",
-    },
     {
       rel: "icon",
       type: "image/png",
@@ -53,7 +48,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={`${inter.className} bg-[#0f172a] min-h-screen`}>
+        <Navbar />
+        <main className="relative z-0">
+          {children}
+        </main>
+      </body>
     </html>
   );
 }
