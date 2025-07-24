@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
@@ -13,7 +13,7 @@ interface Student {
   session: string;
 }
 
-export default function SearchPage() {
+function SearchContent() {
   const searchParams = useSearchParams();
   const [searchQuery, setSearchQuery] = useState(searchParams?.get('name') || '');
   const [students, setStudents] = useState<Student[]>([]);
@@ -50,7 +50,7 @@ export default function SearchPage() {
     if (searchParams?.get('name')) {
       searchStudents(searchParams.get('name')!);
     }
-  }, []);
+  }, [searchParams]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -203,5 +203,33 @@ export default function SearchPage() {
         </div>
       </footer>
     </div>
+  );
+}
+
+function SearchFallback() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex flex-col">
+      <div className="flex-1 flex items-center justify-center px-4 py-8">
+        <div className="w-full max-w-4xl">
+          <div className="text-center py-12">
+            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="animate-spin w-8 h-8 text-blue-600" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            </div>
+            <h3 className="text-lg font-medium text-slate-800 mb-2">Loading search...</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<SearchFallback />}>
+      <SearchContent />
+    </Suspense>
   );
 }

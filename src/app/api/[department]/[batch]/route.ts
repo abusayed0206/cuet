@@ -19,10 +19,11 @@ const departmentMap: { [key: string]: string } = {
 
 export async function GET(
   request: Request,
-  { params }: { params: { department: string; batch: string } }
+  { params }: { params: Promise<{ department: string; batch: string }> }
 ) {
-  const departmentCode = params.department.toLowerCase();
-  const batchNumber = params.batch;
+  const { department, batch } = await params;
+  const departmentCode = department.toLowerCase();
+  const batchNumber = batch;
   const departmentName = departmentMap[departmentCode];
 
   if (!departmentName) {

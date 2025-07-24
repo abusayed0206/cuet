@@ -3,9 +3,10 @@ import { supabase } from "@/utils/supabase";
 
 export async function GET(
   request: Request,
-  { params }: { params: { studentid: string } }
+  { params }: { params: Promise<{ studentid: string }> }
 ) {
-  const studentId = params.studentid;
+  const { studentid } = await params;
+  const studentId = studentid;
 
   // Create server-side Supabase client
 
