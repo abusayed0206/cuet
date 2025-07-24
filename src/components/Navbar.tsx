@@ -18,12 +18,6 @@ export default function Navbar() {
 
           <div className="hidden md:flex space-x-6">
             <Link
-              href="/"
-              className="text-slate-600 hover:text-slate-800 transition-colors"
-            >
-              Home
-            </Link>
-            <Link
               href="/search"
               className="text-slate-600 hover:text-slate-800 transition-colors"
             >
