@@ -12,7 +12,7 @@ const inter = Hind_Siliguri({
 export const metadata: Metadata = {
   title: "CUET Students Directory",
   description:
-    "Publicly available CUET Students Details | an API with many things | Sayed (1901049)",
+    "CUET Students Database - Search and find student information by ID, name, department and batch",
   metadataBase: new URL("https://cuet.sayed.app/"),
   icons: [
     {
@@ -25,16 +25,6 @@ export const metadata: Metadata = {
       rel: "apple-touch-icon",
       sizes: "180x180",
       url: "/apple-touch-icon.png",
-    },
-    {
-      rel: "android-chrome",
-      sizes: "192x192",
-      url: "/android-chrome-192x192.png",
-    },
-    {
-      rel: "safari-pinned-tab",
-      sizes: "180x180",
-      url: "/safari-pinned-tab.svg",
     },
   ],
   openGraph: {
@@ -49,9 +39,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-[#0f172a] min-h-screen`}>
+      <body className={`${inter.className} bg-slate-50 min-h-screen text-slate-800`}>
         <Navbar />
-        <main className="relative z-0">{children}</main>
+        <main className="relative">{children}</main>
       </body>
     </html>
   );

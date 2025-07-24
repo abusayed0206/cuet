@@ -1,29 +1,26 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/utils/supabase/client";
+import { supabase } from "@/utils/supabase";
 
 export async function GET(request: Request) {
-  const supabaseClient = createClient();
 
   const { searchParams } = new URL(request.url);
   const searchName = searchParams.get("name");
 
-  if (!searchName || searchName.length < 4) {
+  if (!searchName || searchName.length < 2) {
     return NextResponse.json(
-      { error: "Search query must be at least 4 characters long" },
+      { error: "Search query must be at least 2 characters long" },
       { status: 400 }
     );
   }
 
   try {
-    const { data, error } = await supabaseClient
-      .from("apidata")
-      .select("name, studentid, department, batch, dplink")
-      .textSearch("name", searchName, {
-        type: "websearch",
-        config: "english",
-      })
+    const { data, error } = await supabase
+      .from("cuet")
+      .select("name, studentid, department, admission_roll, admission_merit, batch, session")
+      .ilike("name", `%${searchName}%`)
       .order("batch", { ascending: false })
-      .limit(30);
+      .order("admission_merit", { ascending: true })
+      .limit(50);
 
     if (error) {
       console.error("Supabase Error:", error);
@@ -42,4 +39,5 @@ export async function GET(request: Request) {
     );
   }
 }
+
 export const runtime = "edge";

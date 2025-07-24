@@ -1,132 +1,122 @@
-"use client";
 import Link from 'next/link';
-import React, { useState, useEffect } from 'react';
 
 interface StudentDetailsProps {
-  data?: {
+  student: {
     name: string;
     studentid: string;
+    department: string;
+    admission_roll: string;
+    admission_merit: string;
     batch: string;
     session: string;
-    department: string;
-    hall: string;
-    public_email: string;
-    linkedin: string;
-    dplink: string;
-    currentstatus: string;
   };
 }
 
-const StudentDetails: React.FC<StudentDetailsProps> = ({ data }) => {
-  const [imageSrc, setImageSrc] = useState(data?.dplink || 'https://cdn.abusayed.dev/demo.png');
-
-  useEffect(() => {
-    if (data?.dplink) {
-      setImageSrc(data.dplink);
-    }
-  }, [data]);
-
-  const handleError = () => {
-    setImageSrc('https://cdn.abusayed.dev/demo.png');
-  };
-
-  if (!data) {
+export default function StudentDetails({ student }: StudentDetailsProps) {
+  if (!student) {
     return (
-      <div className="text-center p-4 bg-white/10 text-red-400 rounded-lg">
-        <p>Student data is unavailable.</p>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center px-4">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-slate-800 mb-4">Student Not Found</h1>
+          <Link href="/" className="text-blue-600 hover:text-blue-800">
+            Return to Home
+          </Link>
+        </div>
       </div>
     );
   }
 
+  // Clean up merit position display
+  const displayMerit = student.admission_merit === "A FAILURE" ? "Not Available" : student.admission_merit;
+
   return (
-    <div className="mt-6 p-6 bg-white/10 rounded-lg shadow-lg backdrop-blur-xl">
-      {/* Profile Picture */}
-      {imageSrc && (
-        <div className="flex justify-center mb-4">
-          <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-gradient-to-r from-violet-500 to-cyan-500 shadow-lg">
-            <img
-              src={imageSrc}
-              alt={`${data.name}'s DP`}
-              className="w-full h-full object-contain"
-              onError={handleError}
-            />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex flex-col">
+      {/* Content */}
+      <div className="flex-1 flex items-center justify-center px-4 py-8">
+        <div className="w-full max-w-2xl">
+          {/* Back button */}
+          <div className="mb-6 text-center">
+            <Link 
+              href="/"
+              className="inline-flex items-center text-slate-600 hover:text-slate-800 transition-colors"
+            >
+              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              Back to Home
+            </Link>
+          </div>
+
+          {/* Student Card */}
+          <div className="bg-white rounded-xl shadow-lg p-6 sm:p-8">
+            <div className="mb-8 text-center">
+              <h1 className="text-2xl sm:text-3xl font-bold text-slate-800 mb-2">{student.name}</h1>
+              <p className="text-slate-600 text-lg">Student ID: {student.studentid}</p>
+            </div>
+            
+            <div className="grid sm:grid-cols-2 gap-6 sm:gap-8">
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wide mb-2">Department</h3>
+                  <p className="text-slate-800 font-medium text-base sm:text-lg break-words">{student.department}</p>
+                </div>
+                
+                <div>
+                  <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wide mb-2">Admission Roll</h3>
+                  <p className="text-slate-800 font-medium text-base sm:text-lg">{student.admission_roll}</p>
+                </div>
+                
+                <div>
+                  <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wide mb-2">Merit Position</h3>
+                  <p className="text-slate-800 font-medium text-base sm:text-lg">{displayMerit}</p>
+                </div>
+              </div>
+              
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wide mb-2">Batch</h3>
+                  <p className="text-slate-800 font-medium text-base sm:text-lg">{student.batch}</p>
+                </div>
+                
+                <div>
+                  <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wide mb-2">Session</h3>
+                  <p className="text-slate-800 font-medium text-base sm:text-lg">{student.session}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Actions */}
+            <div className="mt-8 pt-8 border-t border-slate-200">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link 
+                  href="/search"
+                  className="bg-blue-100 text-blue-700 px-4 py-2 rounded-lg hover:bg-blue-200 transition-colors text-center"
+                >
+                  Search More Students
+                </Link>
+                <Link 
+                  href="/batch"
+                  className="bg-slate-100 text-slate-700 px-4 py-2 rounded-lg hover:bg-slate-200 transition-colors text-center"
+                >
+                  Browse by Batch
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
-      )}
-
-      <div className="space-y-2 text-white">
-        <div>
-          <span className="text-gray-300">Name: </span>
-          <span className="font-bold text-white">{data.name}</span>
-        </div>
-        <div>
-          <span className="text-gray-300">Student ID: </span>
-          <span className="font-bold text-white">
-            <a href={`/${data.studentid}`} className="text-cyan-400 hover:underline">
-              {data.studentid}
-            </a>
-          </span>
-        </div>
-        <div>
-          <span className="text-gray-300">Batch: </span>
-          <span className="font-bold text-white">{data.batch}</span>
-        </div>
-        <div>
-          <span className="text-gray-300">Session: </span>
-          <span className="font-bold text-white">{data.session}</span>
-        </div>
-        <div>
-          <span className="text-gray-300">Department: </span>
-          <span className="font-bold text-white">{data.department}</span>
-        </div>
-        <div>
-          <span className="text-gray-300">Hall: </span>
-          <span className="font-bold text-white">{data.hall}</span>
-        </div>
-        <div>
-          <span className="text-gray-300">Public Email: </span>
-          <span className="font-bold text-white">
-            {data.public_email ? (
-              <a href={`mailto:${data.public_email}`} className="text-cyan-400 hover:underline">
-                {data.public_email}
-              </a>
-            ) : (
-              'N/A'
-            )}
-          </span>
-        </div>
-        <div>
-          <span className="text-gray-300">LinkedIn: </span>
-          <span className="font-bold text-white">
-            {data.linkedin ? (
-              <a
-                href={`https://www.linkedin.com/in/${data.linkedin}`}
-                className="text-cyan-400 hover:underline"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Profile
-              </a>
-            ) : (
-              'N/A'
-            )}
-          </span>
-        </div>
-        <div>
-          <span className="text-gray-300">Current Status: </span>
-          <span className="font-bold text-white">{data.currentstatus}</span>
-        </div>
-      </div>
-      <div className="mt-4 text-center rounded-md">
-        <p className="mt-4 text-center text-white">
-          Note: For extended info of this student click <Link href={`/extended/${data.studentid}`} className="text-cyan-400 hover:underline">
-            here</Link> . You must be logged in with your CUET Email.
-        </p>
       </div>
 
+      {/* Footer */}
+      <footer className="bg-white border-t border-slate-200 py-4">
+        <div className="container mx-auto px-4 text-center">
+          <p className="text-slate-600 text-sm">
+            Developed by <span className="font-semibold text-slate-800">Sayed</span> • ID: <span className="font-semibold text-slate-800">1901049</span>
+          </p>
+          <p className="text-slate-500 text-xs mt-1">
+            Department of Civil Engineering • Batch 19 • Session 2019-20
+          </p>
+        </div>
+      </footer>
     </div>
-
   );
-};
-
-export default StudentDetails;
+}

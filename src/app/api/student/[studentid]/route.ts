@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@/utils/supabase/server"; 
+import { supabase } from "@/utils/supabase"; 
 
 export async function GET(
   request: Request,
@@ -7,15 +7,12 @@ export async function GET(
 ) {
   const studentId = params.studentid;
 
-  // Create server-side Supabase client with cookie support
-  const supabase = createClient();
+  // Create server-side Supabase client
 
   try {
     const { data, error } = await supabase
-      .from("apidata")
-      .select(
-        "name, studentid, batch, session, department, hall, public_email, dplink, currentstatus, linkedin"
-      )
+      .from("cuet")
+      .select("name, studentid, department, admission_roll, admission_merit, batch, session")
       .eq("studentid", studentId)
       .single();
 
