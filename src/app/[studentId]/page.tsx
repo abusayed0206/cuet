@@ -27,11 +27,11 @@ async function getStudentData(studentId: string) {
 }
 
 type Props = {
-  params: { studentId: string };
+  params: Promise<{ studentId: string }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const studentId = params.studentId;
+  const { studentId } = await params;
 
   try {
     const studentData = await getStudentData(studentId);
@@ -77,7 +77,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function StudentPage({ params }: Props) {
-  const { studentId } = params;
+  const { studentId } = await params;
 
   try {
     const studentData = await getStudentData(studentId);
