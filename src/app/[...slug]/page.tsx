@@ -3,6 +3,8 @@
 import { useEffect } from 'react';
 import { useParams } from 'next/navigation';
 
+export const runtime = 'edge';
+
 export default function CatchAllPage() {
   const params = useParams();
   const slug = params.slug as string[];
