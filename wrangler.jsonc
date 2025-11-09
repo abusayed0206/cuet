@@ -1,0 +1,27 @@
+{
+  "name": "cuet-student-directory",
+  "compatibility_date": "2025-11-09",
+  "compatibility_flags": ["nodejs_compat"],
+  
+  // Next.js App Configuration (OpenNext Cloudflare output)
+  "main": ".open-next/worker.js",
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application"
+  },
+
+  // D1 Database Binding
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "reformcuet",
+      "database_id": "b6037944-df55-411f-af1d-6e6cba6025b4"
+    }
+  ],
+
+  // Enable observability
+  "observability": {
+    "enabled": true
+  }
+}
