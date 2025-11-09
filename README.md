@@ -1,48 +1,93 @@
-# CUET Students Directory 📚
+# CUET Directory - Redirect Site 🔄# CUET Students Directory 📚
 
-Welcome to the **CUET Students Directory** - a comprehensive Next.js application for browsing and searching CUET student information with a modern, responsive interface.
 
-🔍 **Live Demo:** [https://cuet.sayed.app/](https://cuet.sayed.app/)
 
-## 🚀 Features
+This repository contains a simple redirect website for the CUET Students Directory.Welcome to the **CUET Students Directory** - a comprehensive Next.js application for browsing and searching CUET student information with a modern, responsive interface.
+
+
+
+## 🔗 New Location🔍 **Live Demo:** [https://cuet.sayed.app/](https://cuet.sayed.app/)
+
+
+
+**The CUET Students Directory has moved to:**## 🚀 Features
+
+### [https://cuet.sayed.app](https://cuet.sayed.app)
 
 - **🔍 Student Search**: Search students by name with intelligent filtering
-- **📊 Batch Browser**: Browse students by department and batch (12-24)
+
+## 📝 What This Does- **📊 Batch Browser**: Browse students by department and batch (12-24)
+
 - **👤 Student Profiles**: Detailed individual student pages with metadata
-- **🏛️ Department Listings**: Organized by departments with student counts
+
+This is a minimal Next.js site that redirects all traffic to the new domain:- **🏛️ Department Listings**: Organized by departments with student counts
+
 - **📱 Responsive Design**: Modern UI with Tailwind CSS
-- **⚡ Fast Performance**: Built with Next.js 14 and edge runtime
-- **🔗 SEO Optimized**: Complete sitemap with 7k+ student profiles
+
+- **Homepage (`/`)**: Shows a warning message and redirects to `https://cuet.sayed.app` after 3 seconds- **⚡ Fast Performance**: Built with Next.js 14 and edge runtime
+
+- **Any path** (e.g., `/1901049`, `/search`): Immediately redirects to the same path on the new domain- **🔗 SEO Optimized**: Complete sitemap with 7k+ student profiles
+
 - **🗃️ Database Integration**: Powered by Supabase
+
+## 🛠️ Tech Stack
 
 ## 🏗️ Tech Stack
 
-- **Framework**: Next.js 14.2.30 with App Router
-- **Database**: Supabase (PostgreSQL)
+- **Framework**: Next.js 15
+
+- **Styling**: Tailwind CSS- **Framework**: Next.js 14.2.30 with App Router
+
+- **Language**: TypeScript- **Database**: Supabase (PostgreSQL)
+
 - **Styling**: Tailwind CSS
-- **TypeScript**: Full type safety
+
+## 🚀 Quick Start- **TypeScript**: Full type safety
+
 - **Deployment**: Vercel (edge runtime)
-- **Icons**: React Icons
-- **Data**: 7,691+ student records
+
+```bash- **Icons**: React Icons
+
+# Install dependencies- **Data**: 7,691+ student records
+
+npm install
 
 ## 🔗 API Endpoints
 
-### Student Information
+# Run development server
 
-#### `GET /api/student/[studentid]`
+npm run dev### Student Information
+
+
+
+# Build for production#### `GET /api/student/[studentid]`
+
+npm run build
 
 Retrieve detailed student information.
 
-**Example Response:**
+# Start production server
+
+npm start**Example Response:**
+
+```
 
 ```json
-{
+
+## 📫 Contact{
+
   "name": "ASHIKUL ISLAM",
-  "studentid": "2304001",
+
+For any queries, reach out at [sayed.page](https://sayed.page).  "studentid": "2304001",
+
   "department": "Department of Computer Science & Engineering",
-  "admission_roll": "112120",
+
+---  "admission_roll": "112120",
+
   "admission_merit": "232",
-  "batch": "23",
+
+**Note:** This is just a redirect site. For the full CUET Students Directory with search, profiles, and all features, visit [https://cuet.sayed.app](https://cuet.sayed.app)  "batch": "23",
+
   "session": "2023-24"
 }
 ```

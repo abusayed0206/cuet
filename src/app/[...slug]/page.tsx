@@ -1,19 +1,23 @@
 'use client';
 
 import { useEffect } from 'react';
+import { useParams } from 'next/navigation';
 
-export default function Home() {
+export default function CatchAllPage() {
+  const params = useParams();
+  const slug = params.slug as string[];
+
   useEffect(() => {
-    // Redirect after 3 seconds
-    const timer = setTimeout(() => {
-      window.location.href = 'https://cuet.sayed.app';
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, []);
+    // Build the URL path from the slug
+    const path = slug ? slug.join('/') : '';
+    const targetUrl = `https://cuet.sayed.app/${path}`;
+    
+    // Redirect immediately
+    window.location.href = targetUrl;
+  }, [slug]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="flex min-h-screen items-center justify-center bg-linear-to-br from-blue-50 to-indigo-100">
       <div className="text-center p-8 bg-white rounded-lg shadow-xl max-w-md mx-4">
         <div className="mb-6">
           <svg
@@ -31,7 +35,7 @@ export default function Home() {
           </svg>
         </div>
         <h1 className="text-2xl font-bold text-gray-900 mb-4">
-          Website Moved
+          Redirecting...
         </h1>
         <p className="text-gray-700 mb-6">
           The website has moved to{' '}
@@ -45,13 +49,6 @@ export default function Home() {
         <p className="text-gray-600 text-sm">
           You will be redirected there in a moment!
         </p>
-        <div className="mt-6">
-          <div className="animate-pulse flex justify-center">
-            <div className="h-2 w-2 bg-blue-600 rounded-full mx-1"></div>
-            <div className="h-2 w-2 bg-blue-600 rounded-full mx-1 animation-delay-200"></div>
-            <div className="h-2 w-2 bg-blue-600 rounded-full mx-1 animation-delay-400"></div>
-          </div>
-        </div>
       </div>
     </div>
   );
