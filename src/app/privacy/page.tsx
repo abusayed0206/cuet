@@ -174,16 +174,19 @@ export default function PrivacyPage() {
           </div>
 
           {/* Footer */}
-          <footer className="border-t  py-4">
+          <footer className="border-t py-4">
             <div className="container mx-auto px-4 text-center">
               <p className="text-slate-600 text-sm">
                 Developed by{" "}
-                <span className="font-semibold text-slate-800">Sayed</span> •
-                ID:{" "}
-                <span className="font-semibold text-slate-800">1901049</span>
-              </p>
-              <p className="text-slate-500 text-xs mt-1">
-                Department of Civil Engineering • Batch 19 • Session 2019-20
+                <a 
+                  href="https://sayed.page/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="font-semibold text-slate-800 hover:text-slate-600 transition-colors"
+                >
+                  Sayed
+                </a>
+                {" "}• ID: <span className="font-semibold text-slate-800">1901049</span>
               </p>
             </div>
           </footer>
