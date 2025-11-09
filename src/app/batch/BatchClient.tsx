@@ -44,17 +44,19 @@ export default function BatchClient({ initialDepartment, initialBatch }: BatchCl
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6 mb-8">
-      <form onSubmit={handleSubmit} className="grid md:grid-cols-3 gap-4">
+    <div className="bg-white/90 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl border border-slate-200 p-6 sm:p-8 mb-8">
+      <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-5">
         <div>
-          <label htmlFor="department" className="block text-sm font-medium text-slate-700 mb-2">
+          <label htmlFor="department" className="block text-sm sm:text-base font-medium text-slate-800 mb-3">
             Department
           </label>
           <select
             id="department"
+            name="department"
             value={selectedDepartment}
             onChange={(e) => setSelectedDepartment(e.target.value)}
-            className="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white outline-none transition-all text-slate-800"
+            className="w-full px-4 py-3 sm:py-4 text-base bg-slate-50 border-2 border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:bg-white outline-none transition-all text-slate-900 cursor-pointer"
+            aria-label="Select department"
           >
             <option value="">Select Department</option>
             {departmentOptions.map((dept) => (
@@ -66,19 +68,21 @@ export default function BatchClient({ initialDepartment, initialBatch }: BatchCl
         </div>
 
         <div>
-          <label htmlFor="batch" className="block text-sm font-medium text-slate-700 mb-2">
+          <label htmlFor="batch" className="block text-sm sm:text-base font-medium text-slate-800 mb-3">
             Batch
           </label>
           <select
             id="batch"
+            name="batch"
             value={selectedBatch}
             onChange={(e) => setSelectedBatch(e.target.value)}
-            className="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:bg-white outline-none transition-all text-slate-800"
+            className="w-full px-4 py-3 sm:py-4 text-base bg-slate-50 border-2 border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:bg-white outline-none transition-all text-slate-900 cursor-pointer"
+            aria-label="Select batch"
           >
             <option value="">Select Batch</option>
             {Array.from({ length: 13 }, (_, i) => 24 - i).map((batch) => (
               <option key={batch} value={batch.toString().padStart(2, '0')}>
-                {batch.toString().padStart(2, '0')}
+                Batch {batch.toString().padStart(2, '0')}
               </option>
             ))}
           </select>
@@ -88,7 +92,8 @@ export default function BatchClient({ initialDepartment, initialBatch }: BatchCl
           <button
             type="submit"
             disabled={!selectedDepartment || !selectedBatch}
-            className="w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium rounded-lg transition-colors focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            className="w-full px-6 py-3 sm:py-4 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 disabled:bg-slate-400 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-all duration-200 focus:ring-4 focus:ring-blue-300 shadow-lg hover:shadow-xl text-base sm:text-lg"
+            aria-label="View students"
           >
             View Students
           </button>

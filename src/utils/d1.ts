@@ -48,7 +48,7 @@ export const departmentMap: { [key: string]: string } = {
   mie: "Department of Mechatronics & Industrial Engineering",
   wrp: "Department of Water Resources Engineering",
   mse: "Department of Materials Science & Engineering",
-  mme: "Department of Materials and Metallurgical Engineering",
+  mme: "Department of Materials & Metallurgical Engineering",
 };
 
 /**
@@ -71,14 +71,22 @@ export async function getStudentById(
  */
 export async function getStudentsByDepartmentAndBatch(
   db: D1Binding,
-  department: string,
+  departmentCode: string,
   batch: string
 ): Promise<Student[]> {
+  // Convert department code to full department name
+  const fullDepartmentName = departmentMap[departmentCode.toLowerCase()];
+  
+  if (!fullDepartmentName) {
+    console.error(`Invalid department code: ${departmentCode}`);
+    return [];
+  }
+
   const stmt = db.prepare(
     "SELECT name, studentid, department, admission_roll, admission_merit, batch, session FROM students WHERE department = ? AND batch = ? ORDER BY studentid ASC"
   );
 
-  const result = await stmt.bind(department, batch).all<Student>();
+  const result = await stmt.bind(fullDepartmentName, batch).all<Student>();
   return result.results;
 }
 

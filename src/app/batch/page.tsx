@@ -74,16 +74,17 @@ export default async function BatchPage({ searchParams }: PageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex flex-col">
-      <div className="flex-1 flex items-center justify-center px-4 py-8">
-        <div className="w-full max-w-6xl">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex flex-col">
+      <div className="flex-1 px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+        <div className="w-full max-w-7xl mx-auto">
           {/* Back button */}
           <div className="mb-6 text-center">
             <Link 
               href="/"
-              className="inline-flex items-center text-slate-600 hover:text-slate-800 transition-colors"
+              className="inline-flex items-center text-slate-700 hover:text-slate-900 transition-colors font-medium"
+              aria-label="Go back to home page"
             >
-              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
               Back to Home
@@ -92,10 +93,10 @@ export default async function BatchPage({ searchParams }: PageProps) {
 
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-800 mb-4">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-4">
               Browse by Department & Batch
             </h1>
-            <p className="text-slate-600 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-slate-700 max-w-3xl mx-auto leading-relaxed">
               Select a department and batch to view all students with their academic details.
             </p>
           </div>
@@ -108,12 +109,15 @@ export default async function BatchPage({ searchParams }: PageProps) {
 
           {/* Error Message */}
           {error && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+            <div className="bg-red-50 border-l-4 border-red-500 rounded-lg p-5 mb-6 shadow-md" role="alert" aria-live="polite">
               <div className="flex">
-                <svg className="w-5 h-5 text-red-400 mt-0.5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-6 h-6 text-red-500 mt-0.5 mr-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
                 </svg>
-                <p className="text-red-700">{error}</p>
+                <div>
+                  <h3 className="text-red-800 font-semibold mb-1">Error</h3>
+                  <p className="text-red-700">{error}</p>
+                </div>
               </div>
             </div>
           )}
@@ -122,27 +126,27 @@ export default async function BatchPage({ searchParams }: PageProps) {
           {batchData && (
             <div>
               {/* Batch Info */}
-              <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6 mb-6">
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+              <div className="bg-white/90 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl border border-slate-200 p-6 sm:p-8 mb-6">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                   <div>
-                    <h2 className="text-2xl font-bold text-slate-800 mb-2">
+                    <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">
                       {batchData.department}
                     </h2>
-                    <p className="text-slate-600">
-                      Batch {batchData.batch} • Session {batchData.session}
+                    <p className="text-base sm:text-lg text-slate-700">
+                      Batch <span className="font-semibold">{batchData.batch}</span> • Session <span className="font-semibold">{batchData.session}</span>
                     </p>
                   </div>
-                  <div className="mt-4 md:mt-0 text-right">
-                    <p className="text-3xl font-bold text-blue-600">{batchData.totalStudents}</p>
-                    <p className="text-slate-600 text-sm">Total Students</p>
+                  <div className="text-center md:text-right">
+                    <p className="text-4xl sm:text-5xl font-bold text-blue-600">{batchData.totalStudents}</p>
+                    <p className="text-slate-700 text-base sm:text-lg">Total Students</p>
                   </div>
                 </div>
               </div>
 
               {/* Students List */}
-              <div className="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
-                <div className="p-6 border-b border-slate-200">
-                  <h3 className="text-lg font-semibold text-slate-800">
+              <div className="bg-white/90 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
+                <div className="p-6 sm:p-8 border-b border-slate-200 bg-slate-50">
+                  <h3 className="text-xl sm:text-2xl font-semibold text-slate-900">
                     Students (Ordered by Student ID)
                   </h3>
                 </div>
@@ -152,25 +156,26 @@ export default async function BatchPage({ searchParams }: PageProps) {
                     <Link
                       key={student.studentid}
                       href={`/${student.studentid}`}
-                      className="block p-4 hover:bg-slate-50 transition-colors group"
+                      className="block p-5 sm:p-6 hover:bg-slate-50 transition-all duration-200 group"
+                      aria-label={`View details for ${student.name}, student ID ${student.studentid}`}
                     >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-4">
-                          <div className="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                            <span className="text-blue-600 font-medium text-sm">
+                      <div className="flex items-center justify-between gap-4">
+                        <div className="flex items-center gap-4 flex-1 min-w-0">
+                          <div className="shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-blue-100 rounded-full flex items-center justify-center group-hover:bg-blue-200 transition-colors">
+                            <span className="text-blue-700 font-semibold text-sm sm:text-base">
                               {index + 1}
                             </span>
                           </div>
-                          <div>
-                            <h4 className="font-medium text-slate-800 group-hover:text-blue-600 transition-colors">
+                          <div className="min-w-0">
+                            <h4 className="font-semibold text-slate-900 group-hover:text-blue-600 transition-colors text-base sm:text-lg truncate">
                               {student.name}
                             </h4>
-                            <p className="text-slate-600 text-sm">ID: {student.studentid}</p>
+                            <p className="text-slate-600 text-sm sm:text-base">ID: {student.studentid}</p>
                           </div>
                         </div>
-                        <div className="text-right">
-                          <p className="text-slate-800 font-medium">Merit #{student.admission_merit}</p>
-                          <p className="text-slate-600 text-sm">Roll: {student.admission_roll}</p>
+                        <div className="text-right shrink-0">
+                          <p className="text-slate-900 font-semibold text-base sm:text-lg">Merit #{student.admission_merit}</p>
+                          <p className="text-slate-600 text-sm sm:text-base">Roll: {student.admission_roll}</p>
                         </div>
                       </div>
                     </Link>
@@ -182,27 +187,35 @@ export default async function BatchPage({ searchParams }: PageProps) {
 
           {/* Initial State */}
           {!batchData && !error && (
-            <div className="text-center py-12">
-              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="text-center py-16 px-4">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg className="w-10 h-10 sm:w-12 sm:h-12 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
                 </svg>
               </div>
-              <h3 className="text-lg font-medium text-slate-800 mb-2">Select Department & Batch</h3>
-              <p className="text-slate-600">Choose a department and batch above to view students.</p>
+              <h3 className="text-xl sm:text-2xl font-semibold text-slate-900 mb-3">Select Department & Batch</h3>
+              <p className="text-base sm:text-lg text-slate-600 max-w-md mx-auto">
+                Choose a department and batch above to view students.
+              </p>
             </div>
           )}
         </div>
       </div>
 
       {/* Footer */}
-      <footer className="bg-white border-t border-slate-200 py-4">
+      <footer className="bg-white/80 backdrop-blur-sm border-t border-slate-200 py-6 mt-12">
         <div className="container mx-auto px-4 text-center">
-          <p className="text-slate-600 text-sm">
-            Developed by <span className="font-semibold text-slate-800">Sayed</span> • ID: <span className="font-semibold text-slate-800">1901049</span>
-          </p>
-          <p className="text-slate-500 text-xs mt-1">
-            Department of Civil Engineering • Batch 19 • Session 2019-20
+          <p className="text-slate-700 text-sm">
+            Developed by{" "}
+            <a 
+              href="https://sayed.page/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="font-semibold text-slate-900 hover:text-slate-600 transition-colors"
+            >
+              Sayed
+            </a>
+            {" "}• ID: <span className="font-semibold text-slate-900">1901049</span>
           </p>
         </div>
       </footer>
