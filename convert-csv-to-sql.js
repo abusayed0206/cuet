@@ -11,7 +11,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Configuration
-const CSV_FILE = path.join(__dirname, 'public', 'cuet.csv');
+const CSV_FILE = path.join(__dirname, 'src', 'db', 'cuet_rows.csv');
 const OUTPUT_DIR = path.join(__dirname, 'migrations');
 const BATCH_SIZE = 500; // Records per SQL file
 
