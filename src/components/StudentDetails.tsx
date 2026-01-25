@@ -100,7 +100,7 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
                 </Link>
                 <Link 
                   href="/batch"
-                  className="flex-1 bg-slate-600 hover:bg-slate-700 active:bg-slate-800 text-white px-5 py-3 rounded-xl transition-all duration-200 text-center font-semibold shadow-lg hover:shadow-xl focus:ring-4 focus:ring-slate-300"
+                  className="flex-1 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white px-5 py-3 rounded-xl transition-all duration-200 text-center font-semibold shadow-lg hover:shadow-xl focus:ring-4 focus:ring-indigo-300"
                   aria-label="Browse students by batch"
                 >
                   Browse by Batch
