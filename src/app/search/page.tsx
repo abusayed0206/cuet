@@ -2,12 +2,16 @@ import { getCloudflareContext } from '@opennextjs/cloudflare';
 import Link from 'next/link';
 import { searchStudentsByName, type Student } from '@/utils/d1';
 import SearchClient from './SearchClient';
+import { unstable_cache } from 'next/cache';
+
+export const revalidate = 31536000;
 
 interface PageProps {
   searchParams: Promise<{ name?: string }>;
 }
 
-async function getSearchResults(query: string): Promise<{ students: Student[]; error: string }> {
+const getSearchResults = unstable_cache(
+async (query: string): Promise<{ students: Student[]; error: string }> => {
   try {
     if (!query || query.length < 2) {
       return { students: [], error: 'Please enter at least 2 characters' };
@@ -21,7 +25,10 @@ async function getSearchResults(query: string): Promise<{ students: Student[]; e
     console.error('Error searching students:', error);
     return { students: [], error: 'Failed to search students' };
   }
-}
+},
+['search-by-name'],
+{ revalidate: 31536000 }
+);
 
 export default async function SearchPage({ searchParams }: PageProps) {
   const params = await searchParams;

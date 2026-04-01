@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Navbar() {
   return (
-    <nav className="bg-white shadow-sm border-b border-slate-200">
+    <nav className="bg-white/95 backdrop-blur shadow-sm border-b border-slate-200">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <Link href="/" className="flex items-center space-x-2">
@@ -28,6 +28,18 @@ export default function Navbar() {
               className="text-slate-600 hover:text-slate-800 transition-colors"
             >
               Browse
+            </Link>
+            <Link
+              href="/terms"
+              className="text-slate-600 hover:text-slate-800 transition-colors"
+            >
+              Terms
+            </Link>
+            <Link
+              href="/privacy"
+              className="text-slate-600 hover:text-slate-800 transition-colors"
+            >
+              Privacy
             </Link>
           </div>
         </div>
