@@ -1,11 +1,12 @@
 import Link from "next/link";
 
+export const revalidate = 31536000;
+
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex flex-col">
       <div className="flex-1 flex items-center justify-center px-4 py-8">
         <div className="w-full max-w-4xl">
-          {/* Back button */}
           <div className="mb-6 text-center">
             <Link
               href="/"
@@ -28,35 +29,44 @@ export default function PrivacyPage() {
             </Link>
           </div>
 
-          {/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-800 mb-4">
-              Privacy Policy
+              Privacy Policy (v2)
             </h1>
-            <p className="text-slate-600">Last Updated: 25 July 2025</p>
+            <p className="text-slate-600">Last Updated: April 1, 2026</p>
           </div>
 
-          {/* Content */}
           <div className="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
             <div className="p-8 space-y-8">
               <section>
                 <h2 className="text-2xl font-semibold text-slate-800 mb-4">
-                  1. Introduction
+                  1. Versioning & Previous Policy
                 </h2>
                 <p className="text-slate-600 leading-relaxed">
-                  Welcome to the CUET Student Directory. This privacy policy
-                  outlines how we collect, use, and protect student information.
-                  By using our website, you agree to the terms described below.
+                  This is Privacy Policy version 2. The previous policy is preserved and available here:{" "}
+                  <Link href="/privacy/v1" className="text-blue-600 hover:underline">
+                    Privacy Policy v1
+                  </Link>
+                  .
                 </p>
               </section>
 
               <section>
                 <h2 className="text-2xl font-semibold text-slate-800 mb-4">
-                  2. Data We Collect
+                  2. Scope of This Policy
+                </h2>
+                <p className="text-slate-600 leading-relaxed">
+                  This policy applies to this website and its student directory features. It explains what information is
+                  displayed, how it is used, how it is stored, and how to contact the maintainer.
+                </p>
+              </section>
+
+              <section>
+                <h2 className="text-2xl font-semibold text-slate-800 mb-4">
+                  3. Data We Display
                 </h2>
                 <p className="text-slate-600 leading-relaxed mb-4">
-                  We maintain a database of CUET student information that
-                  includes:
+                  We maintain limited directory data fields, including:
                 </p>
                 <ul className="list-disc list-inside text-slate-600 space-y-2 ml-4">
                   <li>Student Name</li>
@@ -71,125 +81,81 @@ export default function PrivacyPage() {
 
               <section>
                 <h2 className="text-2xl font-semibold text-slate-800 mb-4">
-                  3. Data Source
+                  4. Data Source
                 </h2>
                 <p className="text-slate-600 leading-relaxed">
-                  All student information is sourced from publicly available
-                  academic records and official university publications. We do
-                  not collect any private or personal information beyond what is
-                  already in the public domain.
+                  The data was collected from publicly available internet PDFs/data and gathered into one place for easier
+                  search and access.
                 </p>
               </section>
 
               <section>
                 <h2 className="text-2xl font-semibold text-slate-800 mb-4">
-                  4. How We Use Your Information
-                </h2>
-                <p className="text-slate-600 leading-relaxed mb-4">
-                  The information is used solely for:
-                </p>
-                <ul className="list-disc list-inside text-slate-600 space-y-2 ml-4">
-                  <li>Providing a searchable directory service</li>
-                  <li>
-                    Displaying academic information for identification purposes
-                  </li>
-                </ul>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-semibold text-slate-800 mb-4">
-                  5. Data Security
+                  5. Data Minimization
                 </h2>
                 <p className="text-slate-600 leading-relaxed">
-                  We implement appropriate security measures(RLS) to protect the
-                  information in our database.
+                  This site is intended as a directory and does not intentionally collect sensitive personal data beyond
+                  what is already publicly available in source materials used for compilation.
                 </p>
               </section>
 
               <section>
                 <h2 className="text-2xl font-semibold text-slate-800 mb-4">
-                  6. Third-Party Services
+                  6. Storage & Security
                 </h2>
                 <p className="text-slate-600 leading-relaxed">
-                  We may use third-party services for analytics and performance
-                  monitoring. These services do not have access to personal
-                  student information and only receive anonymized usage data.
+                  The site and directory database are hosted on Cloudflare D1. Appropriate security controls are used to
+                  protect stored records and application access.
                 </p>
               </section>
 
               <section>
                 <h2 className="text-2xl font-semibold text-slate-800 mb-4">
-                  7. Your Rights
-                </h2>
-                <p className="text-slate-600 leading-relaxed mb-4">
-                  As a student whose information appears in our directory, you
-                  have the right to:
-                </p>
-                <ul className="list-disc list-inside text-slate-600 space-y-2 ml-4">
-                  <li>Request correction of inaccurate information</li>
-                  <li>Inquire about how your data is being used</li>
-                </ul>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-semibold text-slate-800 mb-4">
-                  8. Updates to This Policy
+                  7. Analytics & Technical Logs
                 </h2>
                 <p className="text-slate-600 leading-relaxed">
-                  We may update this privacy policy from time to time. Any
-                  changes will be posted on this page with an updated revision
-                  date. We encourage you to review this policy periodically.
+                  Basic technical logs may be generated by hosting infrastructure for reliability and security monitoring.
+                  This policy does not claim collection of private profile data outside the directory context.
                 </p>
               </section>
 
               <section>
                 <h2 className="text-2xl font-semibold text-slate-800 mb-4">
-                  9. Contact Information
+                  8. Data Coverage Limitation
                 </h2>
                 <p className="text-slate-600 leading-relaxed">
-                  If you have any questions about this privacy policy or wish to
-                  exercise your rights regarding your personal information,
-                  please contact me at{" "}
+                  CSE 2022 batch students are not fully present in this directory. Only around 10-12 student records from
+                  that batch are currently available here.
+                </p>
+              </section>
+
+              <section>
+                <h2 className="text-2xl font-semibold text-slate-800 mb-4">
+                  9. Changes to This Policy
+                </h2>
+                <p className="text-slate-600 leading-relaxed">
+                  This policy may be updated over time. New revisions will be published on this page with an updated date,
+                  and previous policy versions may be retained for transparency.
+                </p>
+              </section>
+
+              <section>
+                <h2 className="text-2xl font-semibold text-slate-800 mb-4">
+                  10. Contact
+                </h2>
+                <p className="text-slate-600 leading-relaxed">
+                  If you have any questions, email{" "}
                   <a
                     href="mailto:hello@sayed.page"
                     className="text-blue-600 hover:underline"
                   >
                     hello@sayed.page
                   </a>
-                  . or signal at sayed.46
-                </p>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-semibold text-slate-800 mb-4">
-                  10. Disclaimer
-                </h2>
-                <p className="text-slate-600 leading-relaxed">
-                  This directory is maintained by a student and is not an
-                  official CUET service. We strive to keep information accurate
-                  but cannot guarantee the completeness or accuracy of all data.
+                  .
                 </p>
               </section>
             </div>
           </div>
-
-          {/* Footer */}
-          <footer className="border-t py-4">
-            <div className="container mx-auto px-4 text-center">
-              <p className="text-slate-600 text-sm">
-                Developed by{" "}
-                <a 
-                  href="https://sayed.page/" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="font-semibold text-slate-800 hover:text-slate-600 transition-colors"
-                >
-                  Sayed
-                </a>
-                {" "}• ID: <span className="font-semibold text-slate-800">1901049</span>
-              </p>
-            </div>
-          </footer>
         </div>
       </div>
     </div>
