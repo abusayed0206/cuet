@@ -2,6 +2,9 @@ import { getCloudflareContext } from '@opennextjs/cloudflare';
 import Link from 'next/link';
 import { getStudentsByDepartmentAndBatch, type Student } from '@/utils/d1';
 import BatchClient from './BatchClient';
+import { unstable_cache } from 'next/cache';
+
+export const revalidate = 31536000;
 
 const departmentOptions = [
   { code: 'ce', name: 'Civil Engineering' },
@@ -28,7 +31,8 @@ interface BatchData {
   students: Student[];
 }
 
-async function getBatchData(departmentCode: string, batch: string): Promise<BatchData | null> {
+const getBatchData = unstable_cache(
+async (departmentCode: string, batch: string): Promise<BatchData | null> => {
   try {
     const { env } = await getCloudflareContext();
     const students = await getStudentsByDepartmentAndBatch(env.DB, departmentCode, batch);
@@ -52,7 +56,10 @@ async function getBatchData(departmentCode: string, batch: string): Promise<Batc
     console.error('Error fetching batch data:', error);
     return null;
   }
-}
+},
+['batch-students'],
+{ revalidate: 31536000 }
+);
 
 interface PageProps {
   searchParams: Promise<{ department?: string; batch?: string }>;
