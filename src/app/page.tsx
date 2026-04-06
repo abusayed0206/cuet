@@ -120,7 +120,7 @@ export default function Home() {
 
           {/* Quick Actions - Compact Grid */}
           <div className="max-w-4xl mx-auto">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <Link
                 href="/search"
                 className="bg-white hover:bg-slate-50 rounded-xl shadow-md border border-slate-200 p-5 transition-all duration-200 hover:shadow-lg group"
@@ -214,7 +214,29 @@ export default function Home() {
                       Privacy Policy
                     </h3>
                     <p className="text-slate-600 text-sm">
-                      Data protection info
+                      Versioned policy
+                    </p>
+                  </div>
+                </div>
+              </Link>
+
+              <Link
+                href="/terms"
+                className="bg-white hover:bg-slate-50 rounded-xl shadow-md border border-slate-200 p-5 transition-all duration-200 hover:shadow-lg group"
+                aria-label="View terms of service"
+              >
+                <div className="flex items-center gap-3 sm:flex-col sm:text-center">
+                  <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center shrink-0 group-hover:bg-slate-200 transition-colors">
+                    <svg className="w-6 h-6 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6M7 4h10a2 2 0 012 2v12a2 2 0 01-2 2H7a2 2 0 01-2-2V6a2 2 0 012-2z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-slate-800 text-base mb-1">
+                      Terms of Service
+                    </h3>
+                    <p className="text-slate-600 text-sm">
+                      Usage rules and credits
                     </p>
                   </div>
                 </div>
