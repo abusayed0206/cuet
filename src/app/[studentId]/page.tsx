@@ -3,6 +3,9 @@ import Link from 'next/link';
 import StudentDetails from '../../components/StudentDetails';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { getStudentById } from '@/utils/d1';
+import { unstable_cache } from 'next/cache';
+
+export const revalidate = 31536000;
 
 const validateStudentId = (id: string) => {
   const regex = /^[0-9]{7}$/;
@@ -16,7 +19,8 @@ const validateStudentId = (id: string) => {
   return true;
 };
 
-async function getStudentData(studentId: string) {
+const getStudentData = unstable_cache(
+async (studentId: string) => {
   if (!validateStudentId(studentId)) {
     throw new Error('Invalid student ID of CUET');
   }
@@ -30,7 +34,10 @@ async function getStudentData(studentId: string) {
   }
 
   return student;
-}
+},
+['student-by-id'],
+{ revalidate: 31536000 }
+);
 
 type Props = {
   params: Promise<{ studentId: string }>;
