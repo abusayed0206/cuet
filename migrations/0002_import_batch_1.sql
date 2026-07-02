@@ -1,7 +1,7 @@
 -- Batch 1: 500 records
 -- Generated: 2026-07-02T15:40:40.068Z
 
-INSERT INTO students (name, studentid, department, admission_roll, admission_merit, batch, session)
+INSERT OR IGNORE INTO students (name, studentid, department, admission_roll, admission_merit, batch, session)
 VALUES
   ('SOUMYAJIT SEN GUPTA', '2501001', 'CE', '50663', '607', '25', '2025-26'),
   ('NUSHRA KHAN', '2501002', 'CE', '20698', '688', '25', '2025-26'),

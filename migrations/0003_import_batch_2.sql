@@ -1,7 +1,7 @@
 -- Batch 2: 431 records
 -- Generated: 2026-07-02T15:40:40.071Z
 
-INSERT INTO students (name, studentid, department, admission_roll, admission_merit, batch, session)
+INSERT OR IGNORE INTO students (name, studentid, department, admission_roll, admission_merit, batch, session)
 VALUES
   ('ANTU NANDY', '2504005', 'CSE', '23008', '242', '25', '2025-26'),
   ('PULOK BHATTA', '2504006', 'CSE', '22142', '279', '25', '2025-26'),
