@@ -8,9 +8,9 @@
     "start": "next start",
     "lint": "eslint .",
     "generate-sitemap": "node generate-sitemap.js",
-    "cf:build": "npm run build && wrangler deploy",
+    "cf:build": "npm run build && npx @opennextjs/cloudflare build && wrangler deploy",
     "cf:dev": "wrangler dev --port 8787",
-    "cf:preview": "npm run build && wrangler dev"
+    "cf:preview": "npm run build && npx @opennextjs/cloudflare build && wrangler dev"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.18.0",
