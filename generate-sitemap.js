@@ -48,7 +48,7 @@ async function getStudentIdsFromD1() {
 
 // Fallback: Read from CSV file
 function getStudentIdsFromCSV() {
-  const csvFilePath = path.join(__dirname, 'public', 'cuet.csv');
+  const csvFilePath = path.join(__dirname, 'src', 'db', 'cuet_rows.csv');
   
   if (!fs.existsSync(csvFilePath)) {
     console.error('CSV file not found!');

@@ -10,10 +10,25 @@ const inter = Hind_Siliguri({
 });
 
 export const metadata: Metadata = {
-  title: "CUET Students Directory",
+  title: "CUET Students Directory | Find Peers and Alumni",
   description:
-    "CUET Students Database - Search and find student information by ID, name, department and batch",
+    "The official unofficial CUET Students Database. Search, filter, and discover student information, including ID, name, department, and batch for Chittagong University of Engineering & Technology.",
+  keywords: [
+    "CUET", "CUET Students", "CUET Directory", "Chittagong University of Engineering & Technology",
+    "CUET Alumni", "CUET Batch", "Student Database", "Bangladesh Engineering University"
+  ],
+  authors: [{ name: "Sayed", url: "https://sayed.page/" }],
+  creator: "Sayed",
+  publisher: "Sayed",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
   metadataBase: new URL("https://cuet.sayed.app/"),
+  alternates: {
+    canonical: '/',
+  },
   icons: [
     {
       rel: "icon",
@@ -28,7 +43,38 @@ export const metadata: Metadata = {
     },
   ],
   openGraph: {
-    images: "/OG.png",
+    title: "CUET Students Directory",
+    description: "Search and discover CUET student information across all departments and batches.",
+    url: "https://cuet.sayed.app/",
+    siteName: "CUET Students Directory",
+    images: [
+      {
+        url: "/OG.png",
+        width: 1200,
+        height: 630,
+        alt: "CUET Students Directory",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "CUET Students Directory",
+    description: "Search and discover CUET student information across all departments and batches.",
+    creator: "@sayed",
+    images: ["/OG.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
 };
 
