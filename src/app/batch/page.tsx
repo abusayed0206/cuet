@@ -5,7 +5,7 @@ import BatchClient from './BatchClient';
 import { unstable_cache } from 'next/cache';
 
 export const revalidate = 31536000;
-
+export const runtime = 'edge';
 const departmentOptions = [
   { code: 'ce', name: 'Civil Engineering' },
   { code: 'eee', name: 'Electrical & Electronic Engineering' },
