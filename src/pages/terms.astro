@@ -1,0 +1,68 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Terms of Service | CUET Students Directory">
+  <div class="flex-1 flex items-center justify-center px-4 py-8">
+    <div class="w-full max-w-4xl">
+      <div class="mb-6 text-center">
+        <a
+          href="/"
+          class="inline-flex items-center text-slate-600 hover:text-slate-800 transition-colors"
+        >
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+          Back to Home
+        </a>
+      </div>
+
+      <div class="text-center mb-8">
+        <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-800 mb-4">
+          Terms of Service
+        </h1>
+        <p class="text-slate-600">Version 1.0 • Last Updated: April 1, 2026</p>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
+        <div class="p-8 space-y-7">
+          <section>
+            <h2 class="text-2xl font-semibold text-slate-800 mb-3">1. Individual Use</h2>
+            <p class="text-slate-600 leading-relaxed">
+              Individual users can search and use this website freely for personal and non-commercial purposes.
+              No acknowledgment is required for that kind of use.
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-semibold text-slate-800 mb-3">2. Commercial or System Integration Use</h2>
+            <p class="text-slate-600 leading-relaxed">
+              If anyone uses this database commercially, or integrates the data into any other system, acknowledgment
+              is required.
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-semibold text-slate-800 mb-3">3. Data Ownership Notice</h2>
+            <p class="text-slate-600 leading-relaxed">
+              I am not the data owner. I collected PDFs/data from publicly available internet sources and gathered
+              them in one place for easier search and access.
+            </p>
+          </section>
+
+          <section>
+            <h2 class="text-2xl font-semibold text-slate-800 mb-3">4. Data Request from CUET Email Domains</h2>
+            <p class="text-slate-600 leading-relaxed">
+              If you need dataset access from CUET, please email{" "}
+              <a href="mailto:hello@sayed.page" class="text-blue-600 hover:underline">
+                hello@sayed.page
+              </a>{" "}
+              using an official <span class="font-medium">@student.cuet.ac.bd</span> or{" "}
+              <span class="font-medium">@cuet.ac.bd</span> address. I am happy to provide CSV/SQL exports.
+            </p>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>

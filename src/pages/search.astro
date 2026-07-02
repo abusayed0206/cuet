@@ -1,0 +1,170 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SearchClient from '../components/SearchClient';
+import { searchStudentsByName, type Student } from '../utils/d1';
+
+const searchQuery = Astro.url.searchParams.get('name') || '';
+
+let students: Student[] = [];
+let error = '';
+
+if (searchQuery) {
+  try {
+    if (searchQuery.length < 2) {
+      error = 'Please enter at least 2 characters';
+    } else {
+      const { env } = Astro.locals.runtime;
+      const results = await searchStudentsByName(env.DB, searchQuery);
+      students = results || [];
+    }
+  } catch (err) {
+    console.error('Error searching students:', err);
+    error = 'Failed to search students';
+  }
+}
+---
+
+<Layout title="Search Students | CUET Students Directory">
+  <div class="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+    <div class="w-full max-w-5xl">
+      {/* Back button */}
+      <div class="mb-6 text-center">
+        <a 
+          href="/"
+          class="inline-flex items-center text-slate-700 hover:text-slate-900 transition-colors font-medium"
+          aria-label="Go back to home page"
+        >
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+          Back to Home
+        </a>
+      </div>
+
+      {/* Header */}
+      <div class="text-center mb-8">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-4">
+          Search Students
+        </h1>
+        <p class="text-base sm:text-lg text-slate-700 max-w-3xl mx-auto leading-relaxed">
+          Find CUET students by their name. Search is case-insensitive and matches partial names.
+        </p>
+      </div>
+
+      {/* Search Form - Client Component */}
+      <SearchClient initialQuery={searchQuery} client:load />
+
+      {/* Error Message */}
+      {error && (
+        <div class="bg-red-50 border-l-4 border-red-500 rounded-lg p-5 mb-6 shadow-md" role="alert" aria-live="polite">
+          <div class="flex">
+            <svg class="w-6 h-6 text-red-500 mt-0.5 mr-3 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+            </svg>
+            <div>
+              <h3 class="text-red-800 font-semibold mb-1">Error</h3>
+              <p class="text-red-700">{error}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Results */}
+      {students.length > 0 && (
+        <div>
+          <div class="flex items-center justify-between mb-6 px-2">
+            <h2 class="text-xl sm:text-2xl font-semibold text-slate-900">
+              Search Results 
+              <span class="ml-2 text-blue-600">({students.length} found)</span>
+            </h2>
+          </div>
+          
+          <div class="grid gap-4 sm:gap-5">
+            {students.map((student) => (
+              <a
+                href={`/${student.studentid}`}
+                class="bg-white/90 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-lg border border-slate-200 p-5 sm:p-6 hover:shadow-xl hover:scale-[1.02] transition-all duration-300 group"
+                aria-label={`View details for ${student.name}, student ID ${student.studentid}`}
+              >
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                  <div>
+                    <h3 class="text-lg sm:text-xl font-semibold text-slate-900 group-hover:text-blue-600 transition-colors mb-2">
+                      {student.name}
+                    </h3>
+                    <div class="space-y-1">
+                      <p class="text-slate-700 text-sm sm:text-base flex items-center">
+                        <span class="font-medium mr-2">ID:</span>
+                        {student.studentid}
+                      </p>
+                      <p class="text-slate-700 text-sm sm:text-base line-clamp-1">
+                        {student.department}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="flex sm:flex-col gap-3 sm:gap-2 sm:text-right">
+                    <div class="flex-1 sm:flex-none">
+                      <p class="text-sm text-slate-600">Batch</p>
+                      <p class="text-base sm:text-lg font-semibold text-slate-900">{student.batch}</p>
+                    </div>
+                    <div class="flex-1 sm:flex-none">
+                      <p class="text-sm text-slate-600">Merit</p>
+                      <p class="text-base sm:text-lg font-semibold text-blue-600">#{student.admission_merit}</p>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* No Results */}
+      {searchQuery && students.length === 0 && !error && (
+        <div class="text-center py-16 px-4">
+          <div class="w-20 h-20 sm:w-24 sm:h-24 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <svg class="w-10 h-10 sm:w-12 sm:h-12 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+          <h3 class="text-xl sm:text-2xl font-semibold text-slate-900 mb-3">No students found</h3>
+          <p class="text-base sm:text-lg text-slate-600 max-w-md mx-auto">
+            Try adjusting your search term or check the spelling.
+          </p>
+        </div>
+      )}
+
+      {/* Initial State */}
+      {!searchQuery && students.length === 0 && (
+        <div class="text-center py-16 px-4">
+          <div class="w-20 h-20 sm:w-24 sm:h-24 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <svg class="w-10 h-10 sm:w-12 sm:h-12 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+          <h3 class="text-xl sm:text-2xl font-semibold text-slate-900 mb-3">Start searching</h3>
+          <p class="text-base sm:text-lg text-slate-600 max-w-md mx-auto">
+            Enter a student name above to begin searching.
+          </p>
+        </div>
+      )}
+    </div>
+  </div>
+
+  {/* Footer */}
+  <footer class="bg-white/80 backdrop-blur-sm border-t border-slate-200 py-6 mt-12">
+    <div class="container mx-auto px-4 text-center">
+      <p class="text-slate-700 text-sm">
+        Developed by{" "}
+        <a 
+          href="https://sayed.page/" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          class="font-semibold text-slate-900 hover:text-slate-600 transition-colors"
+        >
+          Sayed
+        </a>
+        {" "}• ID: <span class="font-semibold text-slate-900">1901049</span>
+      </p>
+    </div>
+  </footer>
+</Layout>

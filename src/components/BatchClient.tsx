@@ -1,6 +1,3 @@
-'use client';
-
-import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 
 const departmentOptions = [
@@ -25,8 +22,6 @@ interface BatchClientProps {
 }
 
 export default function BatchClient({ initialDepartment, initialBatch }: BatchClientProps) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
   const [selectedDepartment, setSelectedDepartment] = useState(initialDepartment);
   const [selectedBatch, setSelectedBatch] = useState(initialBatch);
 
@@ -37,10 +32,10 @@ export default function BatchClient({ initialDepartment, initialBatch }: BatchCl
       return;
     }
 
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
     params.set('department', selectedDepartment);
     params.set('batch', selectedBatch);
-    router.push(`/batch?${params.toString()}`);
+    window.location.href = `/batch?${params.toString()}`;
   };
 
   return (
@@ -80,7 +75,7 @@ export default function BatchClient({ initialDepartment, initialBatch }: BatchCl
             aria-label="Select batch"
           >
             <option value="">Select Batch</option>
-            {Array.from({ length: 13 }, (_, i) => 24 - i).map((batch) => (
+            {Array.from({ length: 14 }, (_, i) => 25 - i).map((batch) => (
               <option key={batch} value={batch.toString().padStart(2, '0')}>
                 Batch {batch.toString().padStart(2, '0')}
               </option>
