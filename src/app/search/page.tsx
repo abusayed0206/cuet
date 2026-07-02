@@ -5,7 +5,7 @@ import SearchClient from './SearchClient';
 import { unstable_cache } from 'next/cache';
 
 export const revalidate = 31536000;
-
+export const runtime = 'edge';
 interface PageProps {
   searchParams: Promise<{ name?: string }>;
 }

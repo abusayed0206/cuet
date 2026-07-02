@@ -6,7 +6,7 @@ import { getStudentById } from '@/utils/d1';
 import { unstable_cache } from 'next/cache';
 
 export const revalidate = 31536000;
-
+export const runtime = 'edge';
 const validateStudentId = (id: string) => {
   const regex = /^[0-9]{7}$/;
   if (!regex.test(id)) return false;
