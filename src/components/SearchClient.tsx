@@ -1,6 +1,3 @@
-'use client';
-
-import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, useTransition } from 'react';
 
 interface SearchClientProps {
@@ -8,8 +5,6 @@ interface SearchClientProps {
 }
 
 export default function SearchClient({ initialQuery }: SearchClientProps) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
   const [searchQuery, setSearchQuery] = useState(initialQuery);
   const [isPending, startTransition] = useTransition();
 
@@ -20,11 +15,11 @@ export default function SearchClient({ initialQuery }: SearchClientProps) {
       return;
     }
 
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
     params.set('name', searchQuery);
     
     startTransition(() => {
-      router.push(`/search?${params.toString()}`);
+      window.location.href = `/search?${params.toString()}`;
     });
   };
 

@@ -1,4 +1,4 @@
-import Link from 'next/link';
+
 import type { Student } from '@/utils/d1';
 
 interface StudentDetailsProps {
@@ -11,9 +11,9 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center px-4">
         <div className="text-center bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-8">
           <h1 className="text-2xl font-bold text-slate-900 mb-4">Student Not Found</h1>
-          <Link href="/" className="text-blue-600 hover:text-blue-800 font-medium">
+          <a href="/" className="text-blue-600 hover:text-blue-800 font-medium">
             Return to Home
-          </Link>
+          </a>
         </div>
       </div>
     );
@@ -33,7 +33,7 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
         <div className="w-full max-w-3xl">
           {/* Back button */}
           <div className="mb-6 text-center">
-            <Link
+            <a
               href="/"
               className="inline-flex items-center text-slate-700 hover:text-slate-900 transition-colors font-medium"
               aria-label="Go back to home page"
@@ -42,7 +42,7 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
               Back to Home
-            </Link>
+            </a>
           </div>
 
           {/* Student Card */}
@@ -91,7 +91,7 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
             <div className="pt-8 border-t border-slate-300">
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 {/* Light button → dark text */}
-                <Link
+                <a
                   href="/search"
                   className="flex-1 bg-white text-blue-700
                  border border-blue-700
@@ -104,10 +104,10 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
                  focus:outline-none focus:ring-4 focus:ring-blue-400/60"
                 >
                   Search More Students
-                </Link>
+                </a>
 
                 {/* Dark button → light text */}
-                <Link
+                <a
                   href="/batch"
                   className="flex-1 bg-indigo-700 text-white
                  border border-indigo-700
@@ -120,7 +120,7 @@ export default function StudentDetails({ student }: StudentDetailsProps) {
                  focus:outline-none focus:ring-4 focus:ring-indigo-400/60"
                 >
                   Browse by Batch
-                </Link>
+                </a>
               </div>
             </div>
 

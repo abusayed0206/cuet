@@ -4,12 +4,11 @@
 	"compatibility_flags": [
 		"nodejs_compat"
 	],
-	// Next.js App Configuration (OpenNext Cloudflare output)
-	"main": ".open-next/worker.js",
+	// Astro App Configuration
+	"main": "dist/_worker.js/index.js",
 	"assets": {
-		"directory": ".open-next/assets",
-		"binding": "ASSETS",
-		"not_found_handling": "single-page-application"
+		"directory": "dist",
+		"binding": "ASSETS"
 	},
 	// D1 Database Binding
 	"d1_databases": [
