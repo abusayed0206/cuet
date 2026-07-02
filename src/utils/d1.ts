@@ -83,10 +83,10 @@ export async function getStudentsByDepartmentAndBatch(
   }
 
   const stmt = db.prepare(
-    "SELECT name, studentid, department, admission_roll, admission_merit, batch, session FROM students WHERE department = ? AND batch = ? ORDER BY studentid ASC"
+    "SELECT name, studentid, department, admission_roll, admission_merit, batch, session FROM students WHERE (department = ? OR department = ?) AND batch = ? ORDER BY studentid ASC"
   );
 
-  const result = await stmt.bind(fullDepartmentName, batch).all<Student>();
+  const result = await stmt.bind(fullDepartmentName, departmentCode.toUpperCase(), batch).all<Student>();
   return result.results;
 }
 
