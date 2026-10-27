@@ -215,7 +215,7 @@ export default async function BatchPage({ searchParams }: PageProps) {
           <p className="text-slate-700 text-sm">
             Developed by{" "}
             <a 
-              href="https://sayed.page/" 
+              href="https://sayed.dev/" 
               target="_blank" 
               rel="noopener noreferrer"
               className="font-semibold text-slate-900 hover:text-slate-600 transition-colors"

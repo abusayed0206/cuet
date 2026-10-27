@@ -150,7 +150,7 @@ export default function Home() {
         <p className="text-slate-500 text-sm">
           Designed & Developed by{" "}
           <a 
-            href="https://sayed.page/" 
+            href="https://sayed.dev/" 
             target="_blank" 
             rel="noopener noreferrer"
             className="font-medium text-slate-700 hover:text-blue-600 transition-colors"

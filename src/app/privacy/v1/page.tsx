@@ -179,7 +179,7 @@ export default function PrivacyPage() {
               <p className="text-slate-600 text-sm">
                 Developed by{" "}
                 <a 
-                  href="https://sayed.page/" 
+                  href="https://sayed.dev/" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="font-semibold text-slate-800 hover:text-slate-600 transition-colors"

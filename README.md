@@ -173,7 +173,7 @@ The main database table `cuet` contains:
 Your contributions are welcome! Here’s how you can help:
 
 - **Beautify the Code:** Enhance the code's appearance and structure.
-- **Maintain the Project:** Contact me at [sayed.page/contact](https://sayed.page/contact) from your academic email, and I'll grant you direct write permissions. Alternatively, you can open a pull request (PR).
+- **Maintain the Project:** Contact me at [sayed.dev/contact](https://sayed.dev/contact) from your academic email, and I'll grant you direct write permissions. Alternatively, you can open a pull request (PR).
 
 When adding new features, please create a new branch and submit a PR. This helps keep the project organized and manageable.
 
@@ -183,4 +183,4 @@ The code in this repository might contain errors, typos, or logical issues. As I
 
 ## 📫 Contact
 
-For any queries, reach out at [sayed.page](https://sayed.page).
+For any queries, reach out at [sayed.dev](https://sayed.dev).

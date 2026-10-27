@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     "CUET", "CUET Students", "CUET Directory", "Chittagong University of Engineering & Technology",
     "CUET Alumni", "CUET Batch", "Student Database", "Bangladesh Engineering University"
   ],
-  authors: [{ name: "Sayed", url: "https://sayed.page/" }],
+  authors: [{ name: "Sayed", url: "https://sayed.dev/" }],
   creator: "Sayed",
   publisher: "Sayed",
   formatDetection: {
