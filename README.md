@@ -85,12 +85,22 @@ Cloudflare Workers Builds watches this repo:
 
 `npm run deploy` deploys manually. Every deploy also clears the edge cache.
 
+## Search engines
+
+- `/sitemap.xml` is a sitemap index: `/sitemap-pages.xml` (home, listings, batch/class/department pages) plus one
+  `/sitemap-batch-YY.xml` per batch with every profile. All entries carry `<lastmod>` from D1's `updated_at`.
+- `robots.txt` allows everything except `/search?…` (search result pages are also `noindex`).
+- Pages have canonical URLs, Open Graph tags and JSON-LD (`WebSite` + search action, `Person`, `BreadcrumbList`).
+- **Google**: the sitemap is submitted in Search Console (property `cuet.sayed.app`).
+- **Bing, Yandex, Seznam, Naver**: `node scripts/indexnow.mjs` pushes every sitemap URL via IndexNow;
+  `--since YYYY-MM-DD` sends only changed pages. Key file: `public/1144afef155385c08e4aca5b16ec8642.txt`.
+
 ## Adding a new batch
 
 1. Prepare a CSV with headers `studentid,name,admission_roll,admission_merit`.
 2. `node scripts/csv-to-sql.mjs batch26.csv migrations/0005_import_batch_26.sql`
 3. `npm run db:migrate` (applies new migrations to production D1)
-4. Push to `main` so the edge cache refreshes.
+4. Push to `main` so the edge cache refreshes, then `node scripts/indexnow.mjs --since <today>`.
 
 Import migrations contain personal data and are gitignored; keep the CSV outside the repo.
 

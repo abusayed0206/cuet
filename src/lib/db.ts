@@ -187,7 +187,17 @@ export async function searchStudents(q: string, { batch, code, limit = 100 }: Se
 
 // ---------- sitemap ----------
 
-export async function getAllIds() {
-  const { results } = await env.DB.prepare('SELECT studentid FROM students ORDER BY studentid').all<{ studentid: string }>();
-  return results.map((r) => r.studentid);
+export interface SitemapRow {
+  studentid: string;
+  batch: string;
+  code: string;
+  updated: string; // YYYY-MM-DD
+}
+
+export async function getSitemapRows() {
+  const { results } = await env.DB.prepare(
+    `SELECT studentid, batch, substr(studentid, 3, 2) AS code, date(COALESCE(updated_at, created_at)) AS updated
+     FROM students ORDER BY studentid`,
+  ).all<SitemapRow>();
+  return results;
 }

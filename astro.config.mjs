@@ -5,7 +5,7 @@ import tailwindcss from '@tailwindcss/vite';
 
 // Old sitemap files that search engines may still request.
 const legacySitemaps = Object.fromEntries(
-  [1, 2, 3, 4, 5].map((n) => [`/sitemap_${n}.xml`, '/sitemap.xml']),
+  ['/sitemap_index.xml', ...[1, 2, 3, 4, 5].map((n) => `/sitemap_${n}.xml`)].map((p) => [p, '/sitemap.xml']),
 );
 
 export default defineConfig({

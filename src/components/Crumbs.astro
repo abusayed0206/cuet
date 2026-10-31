@@ -3,6 +3,19 @@ interface Props {
   items: { href?: string; label: string }[];
 }
 const { items } = Astro.props;
+
+// Same trail as schema.org BreadcrumbList, so search results can show it.
+const trail = [{ href: '/', label: 'Home' }, ...items];
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: trail.map((it, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: it.label,
+    item: new URL(it.href ?? Astro.url.pathname, Astro.site).href,
+  })),
+};
 ---
 
 <nav aria-label="Breadcrumb" class="mb-4 text-sm text-muted">
@@ -26,3 +39,4 @@ const { items } = Astro.props;
     }
   </ol>
 </nav>
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
