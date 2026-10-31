@@ -1,88 +1,117 @@
 # CUET Students Directory
 
-Search and browse students of Chittagong University of Engineering & Technology by name, ID, batch and department.
+An independent index of Chittagong University of Engineering & Technology students: search by name or ID, browse every
+batch and department, or use the public JSON API.
 
-**Live:** https://cuet.sayed.app
-
-- Search by name (words in any order) or by full/partial student ID
-- Browse batch → department → full class list, with filtering and sorting
-- Department pages across all batches; student profiles with classmates navigation
-- Light/dark theme, mobile-first, almost no client-side JavaScript
+**Site** https://cuet.sayed.app · **API docs** https://cuet.sayed.app/api
 
 ## Stack
 
-| | |
-|---|---|
-| Framework | [Astro 7](https://astro.build), server-rendered |
-| Hosting | Cloudflare Workers via `@astrojs/cloudflare` |
-| Database | Cloudflare D1 (`CUET_students`) |
-| Styling | Tailwind CSS 4 |
+- **Astro 7** (server-rendered) on **Cloudflare Workers** via `@astrojs/cloudflare`
+- **Cloudflare D1** (`CUET_students`): the single source of truth for student data; no data files live in this repo
+- **Tailwind CSS 4**, almost no client JavaScript
+- Edge cache per deploy (`src/middleware.ts`), API rate limit via the Workers rate-limiting binding
 
-Pages are cached at the edge for a day (`src/middleware.ts`); every deploy gets a fresh cache.
+## Project layout
+
+```
+src/
+  lib/departments.ts   department table, keyed by the ID's department digits
+  lib/db.ts            all D1 queries
+  lib/api.ts           JSON helpers, rate limiting, API response shapes
+  pages/               routes (pages + /api endpoints)
+  components/, layouts/
+migrations/            D1 schema and data fixes (data imports are gitignored)
+scripts/csv-to-sql.mjs CSV → D1 migration for importing a new batch
+```
+
+### Student IDs
+
+IDs are `YY DD RRR`: batch, department code, class roll. The site and API take the department from `DD`, not from the
+`department` text column. Code `12` shows as MSE for batches ≤ 22 and MME after that.
 
 ## Routes
 
-| URL | Page |
+| Page | URL |
 |---|---|
-| `/` | Search + batches + departments |
-| `/search?q=…&batch=25&dept=cse` | Search (a full ID jumps to the profile) |
-| `/batch`, `/batch/25`, `/batch/25/cse` | Batches, one batch, one class list |
-| `/department`, `/department/cse` | Departments, one department across batches |
-| `/2504001` | Student profile |
-| `/sitemap.xml` | Generated from D1 |
+| Home | `/` |
+| Search | `/search?q=…&batch=25&dept=cse` (a full ID redirects to the profile) |
+| Batches | `/batch`, `/batch/25`, `/batch/25/cse` |
+| Departments | `/department`, `/department/cse` |
+| Student | `/2504001` |
+| API docs | `/api` |
 
-Old URLs (`/batch?department=cse&batch=24`, `/search?name=…`, `sitemap_N.xml`) redirect to the new ones.
+Old URLs (`/batch?department=…&batch=…`, `/search?name=…`, `sitemap_N.xml`) redirect.
 
-## How departments are resolved
+## API
 
-A CUET ID is `YY DD RRR`: batch, department code, class roll. The site derives the department from
-`DD` (see `src/lib/departments.ts`) rather than the `department` text column, which has been
-imported inconsistently. Code `12` is shown as MSE for batches ≤ 22 and MME afterwards.
+Read-only, no key, CORS `*`, 60 requests/minute per IP, responses cached up to 24 h.
 
-## Develop
+| Endpoint | Returns |
+|---|---|
+| `GET /api/v1/students/{id}` | one student |
+| `GET /api/v1/search?q=&batch=&dept=&limit=` | name search, or ID prefix if `q` is digits |
+| `GET /api/v1/batches` | batches with per-department counts |
+| `GET /api/v1/batches/{batch}/{dept}` | full class list |
+| `GET /api/v1/departments` | departments with their batches |
 
-Requires Node 22.12+ (see `.nvmrc`).
+The legacy `/api/student/{id}` and `/api/student/search?query=` endpoints still answer in the old flat format. Full
+reference with a live console: [/api](https://cuet.sayed.app/api).
+
+## Development
+
+Node 22.12+ (`.nvmrc` pins 24).
 
 ```sh
 npm install
-npm run dev          # http://localhost:4321, uses a local D1 copy
-npm run check        # type-check
-npm run build
-npm run preview      # run the built Worker locally
-npm run deploy       # build + wrangler deploy (manual; normally not needed)
+npm run dev       # http://localhost:4321 with a local D1
+npm run check     # wrangler types + astro check
+npm run preview   # build and run the real Worker locally
 ```
 
-## Deploys
-
-Cloudflare Workers Builds is connected to this repo:
-
-- Push to `main` → `npm run build` + `npx wrangler deploy` (production, cuet.sayed.app)
-- Push to any other branch (except `redirect`) → `npx wrangler versions upload` (preview version, not live)
-
-Build status and logs: Cloudflare dashboard → Workers & Pages → `cuet` → Deployments.
-
-Local D1 starts empty. To copy production data locally:
+The local D1 starts empty. Copy production into it:
 
 ```sh
 npx wrangler d1 export CUET_students --remote --output prod.sql
 npx wrangler d1 execute CUET_students --local --file prod.sql
 ```
 
+## Deployment
+
+Cloudflare Workers Builds watches this repo:
+
+- push to **`main`** → `npm run build` → `npx wrangler deploy` (production)
+- push to any other branch (except `redirect`) → preview version only
+
+`npm run deploy` deploys manually. Every deploy also clears the edge cache.
+
 ## Adding a new batch
 
-1. Put the rows in a SQL migration (`migrations/000N_*.sql`) using the full department name, e.g.
-   `Department of Computer Science & Engineering`. `scripts/convert-csv-to-sql.js` converts a CSV.
-2. `npm run db:migrate` to apply it to production D1.
-3. Push to `main` (or `npm run deploy`); a new deploy also clears the edge cache.
+1. Prepare a CSV with headers `studentid,name,admission_roll,admission_merit`.
+2. `node scripts/csv-to-sql.mjs batch26.csv migrations/0005_import_batch_26.sql`
+3. `npm run db:migrate` (applies new migrations to production D1)
+4. Push to `main` so the edge cache refreshes.
+
+Import migrations contain personal data and are gitignored; keep the CSV outside the repo.
+
+## Backups
+
+D1 keeps 30 days of point-in-time history (Time Travel). For an offline copy:
+
+```sh
+npx wrangler d1 export CUET_students --remote --output cuet-backup.sql
+```
 
 ## Branches
 
-- `main`: this site, deployed to the `cuet` Worker (cuet.sayed.app).
-- `redirect`: tiny site for the `cuet` Cloudflare Pages project (cuet.pages.dev) that redirects to cuet.sayed.app.
+- `main`: this site
+- `redirect`: the `cuet.pages.dev` Pages project, which redirects to cuet.sayed.app
+- `archive/*` tags: the old Next.js versions
 
-## Data & license
+## Data and terms
 
-Data was compiled from publicly available sources; see [/privacy](https://cuet.sayed.app/privacy) and
-[/terms](https://cuet.sayed.app/terms). Code is under the license in `LICENSE.md`.
+Data was compiled from publicly available sources and may contain errors. Personal use is free; commercial use or
+integration into another system requires acknowledgment. See [privacy](https://cuet.sayed.app/privacy) and
+[terms](https://cuet.sayed.app/terms). Contact: hello@sayed.page.
 
 Built by [Sayed](https://sayed.dev/).

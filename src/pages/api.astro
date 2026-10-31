@@ -1,0 +1,274 @@
+---
+import Base from '../layouts/Base.astro';
+import Crumbs from '../components/Crumbs.astro';
+import { getStudent } from '../lib/db';
+import { apiStudent } from '../lib/api';
+import { cachePage } from '../lib/http';
+
+cachePage(Astro);
+const BASE = 'https://cuet.sayed.app';
+const sample = await getStudent('2504001');
+const sampleJson = JSON.stringify({ data: sample ? apiStudent(sample) : null }, null, 2);
+
+interface Param {
+  name: string;
+  in: 'path' | 'query';
+  desc: string;
+  required?: boolean;
+}
+const endpoints: { id: string; path: string; summary: string; params: Param[]; example: string; returns: string }[] = [
+  {
+    id: 'student',
+    path: '/api/v1/students/{id}',
+    summary: 'One student by their 7-digit ID.',
+    params: [{ name: 'id', in: 'path', required: true, desc: 'Student ID, e.g. 2504001' }],
+    example: '/api/v1/students/2504001',
+    returns: '{ data: Student }',
+  },
+  {
+    id: 'search',
+    path: '/api/v1/search',
+    summary: 'Search by name (all words must match, any order) or by ID prefix.',
+    params: [
+      { name: 'q', in: 'query', required: true, desc: 'Name words, or digits for an ID prefix ("25" = batch 25, "2504" = CSE ’25)' },
+      { name: 'batch', in: 'query', desc: 'Two-digit batch, e.g. 24' },
+      { name: 'dept', in: 'query', desc: 'Department slug, e.g. cse' },
+      { name: 'limit', in: 'query', desc: '1–100, default 20' },
+    ],
+    example: '/api/v1/search?q=rahman&batch=24&limit=5',
+    returns: '{ data: Student[], meta: { count, limit, has_more, … } }',
+  },
+  {
+    id: 'batches',
+    path: '/api/v1/batches',
+    summary: 'Every batch with its session and per-department student counts.',
+    params: [],
+    example: '/api/v1/batches',
+    returns: '{ data: Batch[], meta: { students, batches } }',
+  },
+  {
+    id: 'class',
+    path: '/api/v1/batches/{batch}/{dept}',
+    summary: 'Full class list for one department in one batch, ordered by ID.',
+    params: [
+      { name: 'batch', in: 'path', required: true, desc: 'Two-digit batch, e.g. 25' },
+      { name: 'dept', in: 'path', required: true, desc: 'Department slug, e.g. cse' },
+    ],
+    example: '/api/v1/batches/25/cse',
+    returns: '{ data: Student[], meta: { batch, session, department, count } }',
+  },
+  {
+    id: 'departments',
+    path: '/api/v1/departments',
+    summary: 'Departments with codes, slugs and the batches they have.',
+    params: [],
+    example: '/api/v1/departments',
+    returns: '{ data: Department[] }',
+  },
+];
+
+const fields = [
+  ['id', 'string', '7-digit student ID'],
+  ['name', 'string', 'Name as published'],
+  ['department', 'object', '{ code, slug, short, name }, from the ID; code 12 is MSE up to batch 22'],
+  ['batch', 'string', 'Two-digit batch, e.g. "25"'],
+  ['session', 'string', 'Academic session, e.g. "2025-26"'],
+  ['class_roll', 'number', 'Last three digits of the ID'],
+  ['admission_roll', 'string | null', 'Admission test roll'],
+  ['admission_merit', 'string | null', 'Merit position as published; may contain quota notes like "T-5"'],
+  ['url', 'string', 'Profile page on this site'],
+];
+
+const errors = [
+  ['400', 'invalid_id · invalid_query · invalid_batch · invalid_dept', 'A parameter is missing or malformed'],
+  ['404', 'not_found', 'No such student, class or endpoint'],
+  ['429', 'rate_limited', 'Over 60 requests per minute from one IP'],
+];
+
+const toc = [
+  ['overview', 'Overview'],
+  ...endpoints.map((e) => [e.id, e.path.replace('/api/v1', '')] as [string, string]),
+  ['student-object', 'Student object'],
+  ['errors', 'Errors'],
+  ['usage', 'Usage terms'],
+];
+---
+
+<Base title="API" description="Free read-only JSON API for the CUET Students Directory: students, search, batches and departments.">
+  <section class="bg-grid border-b border-line">
+    <div class="wrap py-12 sm:py-16">
+      <Crumbs items={[{ label: 'API' }]} />
+      <p class="label">Developers / REST / v1</p>
+      <h1 class="mt-4 text-4xl font-semibold tracking-[-0.03em] sm:text-5xl">Directory API</h1>
+      <p class="mt-4 max-w-2xl text-muted sm:text-lg">
+        Read-only JSON over HTTPS. No key, no sign-up, CORS enabled, so you can call it from a browser, a bot or a script.
+      </p>
+
+      <form id="try" class="mt-8 flex max-w-2xl gap-2" autocomplete="off">
+        <label for="try-path" class="sr-only">Endpoint path</label>
+        <div class="input flex h-12 items-center gap-2 px-3 font-mono text-sm">
+          <span class="text-accent">GET</span>
+          <span class="hidden text-faint sm:inline">/api/v1/</span>
+          <input id="try-path" value="students/2504001" class="min-w-0 flex-1 bg-transparent outline-none" spellcheck="false" />
+        </div>
+        <button class="btn h-12 shrink-0">Send</button>
+      </form>
+      <pre id="try-out" hidden class="mt-3 max-h-96 max-w-2xl overflow-auto rounded-[3px] bg-fg p-4 font-mono text-[12.5px] leading-relaxed text-bg"></pre>
+    </div>
+  </section>
+
+  <div class="wrap grid gap-12 pt-12 lg:grid-cols-[200px_1fr]">
+    <nav class="hidden lg:block" aria-label="On this page">
+      <div class="sticky top-20">
+        <p class="label mb-3">On this page</p>
+        <ul class="space-y-1.5 border-l border-line font-mono text-[13px]">
+          {
+            toc.map(([id, label]) => (
+              <li>
+                <a href={`#${id}`} class="-ml-px block border-l border-transparent pl-3 text-muted hover:border-fg hover:text-fg">
+                  {label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </nav>
+
+    <div class="min-w-0 space-y-14">
+      <section id="overview" class="scroll-mt-20">
+        <h2 class="label mb-4 text-fg">Overview</h2>
+        <dl class="ruled sm:grid-cols-2">
+          {
+            [
+              ['Base URL', BASE + '/api/v1'],
+              ['Format', 'JSON, UTF-8'],
+              ['Auth', 'None'],
+              ['CORS', 'Access-Control-Allow-Origin: *'],
+              ['Rate limit', '60 requests / minute / IP'],
+              ['Caching', 'Responses are cached up to 24 h'],
+            ].map(([k, v]) => (
+              <div class="bg-surface px-5 py-4">
+                <dt class="label">{k}</dt>
+                <dd class="mt-1 font-mono text-sm break-all">{v}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </section>
+
+      {
+        endpoints.map((e) => (
+          <section id={e.id} class="scroll-mt-20">
+            <div class="border-t border-fg pt-4">
+              <h2 class="flex flex-wrap items-baseline gap-3 font-mono text-lg">
+                <span class="badge">GET</span>
+                <span class="break-all">{e.path}</span>
+              </h2>
+              <p class="mt-2 text-muted">{e.summary}</p>
+            </div>
+
+            {e.params.length > 0 && (
+              <div class="ruled mt-5">
+                {e.params.map((p) => (
+                  <div class="grid gap-1 bg-surface px-4 py-3 sm:grid-cols-[140px_80px_1fr] sm:gap-4">
+                    <span class="font-mono text-sm font-medium">
+                      {p.name}
+                      {p.required && <span class="text-accent">*</span>}
+                    </span>
+                    <span class="label">{p.in}</span>
+                    <span class="text-sm text-muted">{p.desc}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-[13px]">
+              <span class="label">Example</span>
+              <a href={e.example} class="break-all text-accent hover:underline" target="_blank" rel="noopener">
+                {e.example}
+              </a>
+              <span class="text-faint">→ {e.returns}</span>
+            </div>
+          </section>
+        ))
+      }
+
+      <section id="student-object" class="scroll-mt-20">
+        <h2 class="label mb-4 text-fg">Student object</h2>
+        <div class="ruled lg:grid-cols-2">
+          <div class="bg-surface">
+            {
+              fields.map(([name, type, desc]) => (
+                <div class="grid grid-cols-[130px_1fr] gap-3 border-b border-line px-4 py-2.5 last:border-b-0">
+                  <span class="font-mono text-[13px] font-medium">{name}</span>
+                  <span class="text-sm text-muted">
+                    <span class="font-mono text-xs text-faint">{type}</span> {desc}
+                  </span>
+                </div>
+              ))
+            }
+          </div>
+          <pre class="overflow-x-auto bg-fg p-5 font-mono text-[12.5px] leading-relaxed text-bg">{sampleJson}</pre>
+        </div>
+      </section>
+
+      <section id="errors" class="scroll-mt-20">
+        <h2 class="label mb-4 text-fg">Errors</h2>
+        <p class="mb-4 text-sm text-muted">
+          Errors use HTTP status codes and a body like <code class="font-mono text-fg">{'{"error":{"code":"not_found","message":"…"}}'}</code>.
+        </p>
+        <div class="ruled">
+          {
+            errors.map(([status, code, desc]) => (
+              <div class="grid gap-1 bg-surface px-4 py-3 sm:grid-cols-[70px_1fr_1fr] sm:gap-4">
+                <span class="font-mono text-sm font-semibold">{status}</span>
+                <span class="font-mono text-[13px] text-muted">{code}</span>
+                <span class="text-sm text-muted">{desc}</span>
+              </div>
+            ))
+          }
+        </div>
+      </section>
+
+      <section id="usage" class="scroll-mt-20">
+        <h2 class="label mb-4 text-fg">Usage terms</h2>
+        <div class="card space-y-3 p-6 text-sm leading-relaxed text-muted">
+          <p>
+            <strong class="text-fg">Personal and non-commercial use is free</strong>, no acknowledgment needed.
+          </p>
+          <p>
+            <strong class="text-fg">Commercial use or integrating the data into another system requires acknowledgment</strong>, e.g. a
+            visible credit with a link to cuet.sayed.app. See the <a href="/terms" class="text-accent hover:underline">terms</a>.
+          </p>
+          <p>
+            Please cache responses rather than re-fetching the same data. For a full export, email
+            <a href="mailto:hello@sayed.page" class="text-accent hover:underline">hello@sayed.page</a> from an
+            <span class="font-mono text-fg">@cuet.ac.bd</span> or <span class="font-mono text-fg">@student.cuet.ac.bd</span> address
+            instead of crawling the API.
+          </p>
+          <p>The data is compiled from public sources and may contain mistakes; it is not an official CUET record.</p>
+        </div>
+      </section>
+    </div>
+  </div>
+</Base>
+
+<script>
+  const form = document.getElementById('try') as HTMLFormElement;
+  const input = document.getElementById('try-path') as HTMLInputElement;
+  const out = document.getElementById('try-out') as HTMLPreElement;
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const path = input.value.trim().replace(/^\/?(api\/v1\/)?/, '');
+    out.hidden = false;
+    out.textContent = `GET /api/v1/${path} …`;
+    try {
+      const res = await fetch(`/api/v1/${path}`);
+      const body = await res.json();
+      out.textContent = `HTTP ${res.status}\n\n${JSON.stringify(body, null, 2)}`;
+    } catch (err) {
+      out.textContent = `Request failed: ${err}`;
+    }
+  });
+</script>

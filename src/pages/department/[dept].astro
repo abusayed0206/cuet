@@ -23,7 +23,7 @@ const renamed = info.classes.some((c) => deptLabel(dept, c.batch).short !== dept
     <Crumbs items={[{ href: '/department', label: 'Departments' }, { label: dept.short }]} />
 
     <div class="flex items-center gap-4">
-      <span class="grid h-14 w-16 shrink-0 place-items-center rounded-2xl bg-accent-soft text-lg font-bold text-accent">{dept.short}</span>
+      <span class="grid h-14 w-16 shrink-0 place-items-center rounded-[3px] bg-accent-soft font-mono text-lg font-semibold text-accent">{dept.short}</span>
       <div>
         <h1 class="text-2xl font-bold tracking-tight sm:text-3xl">{dept.name}</h1>
         <p class="mt-1 text-muted">
@@ -33,7 +33,7 @@ const renamed = info.classes.some((c) => deptLabel(dept, c.batch).short !== dept
     </div>
     {
       renamed && (
-        <p class="mt-4 rounded-xl border border-line bg-surface-2 px-4 py-3 text-sm text-muted">
+        <p class="mt-4 rounded-[3px] border border-line bg-surface-2 px-4 py-3 text-sm text-muted">
           Batches up to 22 were admitted as <strong class="text-fg">Materials Science &amp; Engineering (MSE)</strong>; the
           department was later renamed.
         </p>

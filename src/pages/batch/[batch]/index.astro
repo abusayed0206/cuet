@@ -39,7 +39,7 @@ const older = batches[idx + 1];
           const label = deptLabel(c.dept, b.batch);
           return (
             <a href={`/batch/${b.batch}/${c.dept.slug}`} class="card-link flex items-center gap-4 p-4">
-              <span class="grid h-11 w-14 shrink-0 place-items-center rounded-xl bg-accent-soft text-sm font-bold text-accent">
+              <span class="grid h-11 w-14 shrink-0 place-items-center rounded-[3px] bg-accent-soft font-mono text-sm font-semibold text-accent">
                 {label.short}
               </span>
               <span class="min-w-0 flex-1">

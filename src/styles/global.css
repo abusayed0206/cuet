@@ -1,60 +1,70 @@
 @import 'tailwindcss';
 
-/* Design tokens. Components use the Tailwind names below (bg-surface, text-muted …). */
+/*
+ * Design tokens: paper + ink neutrals, one blueprint accent, hairline rules,
+ * square corners. Components use the Tailwind names in @theme below.
+ */
 :root {
-  --bg: #f7f8fa;
-  --surface: #ffffff;
-  --surface-2: #f1f3f6;
-  --border: #e3e7ed;
-  --text: #0f172a;
-  --muted: #5b6577;
-  --faint: #8a93a3;
-  --accent: #1d4ed8;
-  --accent-soft: #e8eefc;
+  --bg: #f5f4f0;
+  --surface: #fcfbf8;
+  --surface-2: #eeece6;
+  --border: #dcd9d1;
+  --border-strong: #b9b5ab;
+  --text: #121212;
+  --muted: #55524b;
+  --faint: #8b877d;
+  --accent: #2340d9;
+  --accent-soft: #e4e8fb;
   --accent-text: #ffffff;
-  --ring: #93b0f5;
+  --ring: #8d9cf0;
+  --grid: rgb(18 18 18 / 0.045);
   color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --bg: #0b0e14;
-    --surface: #121722;
-    --surface-2: #1a2030;
-    --border: #252d3d;
-    --text: #e6e9ef;
-    --muted: #9aa3b4;
-    --faint: #6b7487;
-    --accent: #7aa2ff;
-    --accent-soft: #1a2647;
-    --accent-text: #0b0e14;
-    --ring: #3d5fb8;
+    --bg: #0e1013;
+    --surface: #14171c;
+    --surface-2: #1b1f26;
+    --border: #272c35;
+    --border-strong: #3a414d;
+    --text: #ecebe7;
+    --muted: #a3a29c;
+    --faint: #6f7079;
+    --accent: #8fa2ff;
+    --accent-soft: #1b2347;
+    --accent-text: #0e1013;
+    --ring: #4a5dbf;
+    --grid: rgb(236 235 231 / 0.04);
     color-scheme: dark;
   }
 }
 
 :root[data-theme='dark'] {
-  --bg: #0b0e14;
-  --surface: #121722;
-  --surface-2: #1a2030;
-  --border: #252d3d;
-  --text: #e6e9ef;
-  --muted: #9aa3b4;
-  --faint: #6b7487;
-  --accent: #7aa2ff;
-  --accent-soft: #1a2647;
-  --accent-text: #0b0e14;
-  --ring: #3d5fb8;
+  --bg: #0e1013;
+  --surface: #14171c;
+  --surface-2: #1b1f26;
+  --border: #272c35;
+  --border-strong: #3a414d;
+  --text: #ecebe7;
+  --muted: #a3a29c;
+  --faint: #6f7079;
+  --accent: #8fa2ff;
+  --accent-soft: #1b2347;
+  --accent-text: #0e1013;
+  --ring: #4a5dbf;
+  --grid: rgb(236 235 231 / 0.04);
   color-scheme: dark;
 }
 
 @theme inline {
   --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
-  --font-mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, monospace;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'Cascadia Mono', Menlo, monospace;
   --color-bg: var(--bg);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
   --color-line: var(--border);
+  --color-line-strong: var(--border-strong);
   --color-fg: var(--text);
   --color-muted: var(--muted);
   --color-faint: var(--faint);
@@ -84,32 +94,47 @@
 @utility wrap {
   @apply mx-auto w-full max-w-6xl px-4 sm:px-6;
 }
+/* Faint drafting grid, used behind hero areas. */
+@utility bg-grid {
+  background-image:
+    linear-gradient(to right, var(--grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
 @utility card {
-  @apply rounded-2xl border border-line bg-surface;
+  @apply rounded-[3px] border border-line bg-surface;
 }
 @utility card-link {
-  @apply card block transition hover:border-accent/50 hover:shadow-[0_4px_20px_-8px_rgb(0_0_0/0.15)];
+  @apply card block transition hover:border-line-strong hover:bg-surface-2/40;
+}
+/* Cells that share hairline borders: put on the container, children get bg-surface. */
+@utility ruled {
+  @apply grid gap-px overflow-hidden rounded-[3px] border border-line bg-line;
+}
+@utility label {
+  @apply font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-faint;
 }
 @utility chip {
-  @apply inline-flex items-center gap-1.5 rounded-full border border-line bg-surface px-3 py-1 text-sm text-muted transition hover:border-accent/50 hover:text-fg;
+  @apply inline-flex items-center gap-1.5 rounded-[3px] border border-line bg-surface px-2.5 py-1 font-mono text-[13px] text-muted transition hover:border-line-strong hover:text-fg;
   &[aria-current='page'] {
-    @apply border-accent bg-accent text-on-accent;
+    @apply border-fg bg-fg text-bg;
   }
 }
 @utility badge {
-  @apply inline-flex items-center rounded-md bg-accent-soft px-1.5 py-0.5 text-xs font-semibold text-accent;
+  @apply inline-flex items-center rounded-[3px] bg-accent-soft px-1.5 py-0.5 font-mono text-[11px] font-semibold uppercase tracking-wider text-accent;
 }
 @utility input {
-  @apply w-full rounded-xl border border-line bg-surface px-4 text-fg placeholder:text-faint outline-none transition focus:border-accent focus:ring-4 focus:ring-ring/30;
+  @apply w-full rounded-[3px] border border-line-strong bg-surface px-4 text-fg placeholder:text-faint outline-none transition focus:border-accent focus:ring-4 focus:ring-ring/25;
 }
 @utility btn {
-  @apply inline-flex items-center justify-center gap-2 rounded-xl bg-accent px-4 font-semibold text-on-accent transition hover:opacity-90;
+  @apply inline-flex items-center justify-center gap-2 rounded-[3px] bg-fg px-4 font-medium text-bg transition hover:bg-accent hover:text-on-accent;
 }
 @utility btn-ghost {
-  @apply inline-flex items-center justify-center gap-2 rounded-xl border border-line bg-surface px-4 font-medium text-fg transition hover:border-accent/50;
+  @apply inline-flex items-center justify-center gap-2 rounded-[3px] border border-line bg-surface px-4 font-medium text-fg transition hover:border-line-strong;
 }
+/* Kept for existing pages. */
 @utility eyebrow {
-  @apply text-xs font-semibold uppercase tracking-wider text-faint;
+  @apply label;
 }
 
 @layer components {

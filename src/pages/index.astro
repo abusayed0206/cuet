@@ -6,7 +6,22 @@ import { cachePage, fmt, plural, sessionLabel } from '../lib/http';
 
 cachePage(Astro);
 const { total, batches, departments } = await getOverview();
-const latest = batches[0];
+const latest = batches[0]!;
+const maxBatch = Math.max(...batches.map((b) => b.count));
+const years = [...batches].reverse().map((b) => b.batch); // oldest -> newest
+
+const stats = [
+  { k: 'Students', v: fmt(total) },
+  { k: 'Batches', v: `${batches.at(-1)!.batch}–${latest.batch}` },
+  { k: 'Departments', v: String(departments.length) },
+  { k: 'Latest session', v: sessionLabel(latest.session) },
+];
+
+const apiSample = `
+{"data":{"id":"2504001","name":"TASNIM FARIHA",
+  "department":{"code":"04","short":"CSE", …},
+  "batch":"25","session":"2025-26", …}}`;
+
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
@@ -21,106 +36,188 @@ const jsonLd = {
 ---
 
 <Base hideHeaderSearch jsonLd={jsonLd}>
-  <section class="border-b border-line bg-surface">
-    <div class="wrap py-14 sm:py-20">
-      <div class="mx-auto max-w-2xl text-center">
-        <p class="badge mb-4">Batch {latest?.batch} ({sessionLabel(latest?.session ?? '')}) now included</p>
-        <h1 class="text-3xl font-bold tracking-tight text-balance sm:text-5xl">Find any CUET student</h1>
-        <p class="mt-4 text-base text-pretty text-muted sm:text-lg">
-          {fmt(total)} students across {batches.length} batches and {departments.length} departments of Chittagong University of
-          Engineering &amp; Technology.
+  <!-- Hero -->
+  <section class="bg-grid border-b border-line">
+    <div class="wrap grid gap-10 py-14 sm:py-20 lg:grid-cols-[1fr_300px] lg:gap-16">
+      <div>
+        <p class="label flex flex-wrap items-center gap-x-3 gap-y-1">
+          <span>CUET</span><span aria-hidden="true">/</span><span>Students index</span><span aria-hidden="true">/</span>
+          <span class="text-accent">Batch {latest.batch} added</span>
         </p>
-        <SearchBox class="mt-8" />
-        <p class="mt-3 text-sm text-faint">
-          Try{' '}
-          <a class="text-muted underline-offset-2 hover:underline" href="/1901049">1901049</a>,{' '}
-          <a class="text-muted underline-offset-2 hover:underline" href="/search?q=rahman">rahman</a> or{' '}
-          <a class="text-muted underline-offset-2 hover:underline" href="/search?q=2504">2504</a> (CSE '25)
+        <h1 class="mt-5 text-4xl leading-[1.05] font-semibold tracking-[-0.03em] text-balance sm:text-6xl">
+          Every CUET student,<br class="hidden sm:block" /> indexed.
+        </h1>
+        <p class="mt-5 max-w-xl text-base text-pretty text-muted sm:text-lg">
+          Look up anyone at Chittagong University of Engineering &amp; Technology by name or student ID, or walk through any batch
+          and department.
+        </p>
+        <SearchBox class="mt-8 max-w-2xl" />
+        <p class="mt-3 font-mono text-xs text-faint">
+          e.g.{' '}
+          <a class="text-muted hover:text-fg hover:underline" href="/1901049">1901049</a>{' '}·{' '}
+          <a class="text-muted hover:text-fg hover:underline" href="/search?q=rahman">rahman</a>{' '}·{' '}
+          <a class="text-muted hover:text-fg hover:underline" href="/search?q=2504">2504</a>
+          <span class="text-faint"> (all of CSE '25)</span>
         </p>
       </div>
+
+      <dl class="ruled self-end bg-line sm:grid-cols-2 lg:grid-cols-1">
+        {
+          stats.map((s) => (
+            <div class="flex items-baseline justify-between gap-4 bg-surface px-5 py-4">
+              <dt class="label">{s.k}</dt>
+              <dd class="font-mono text-lg font-medium tabular-nums">{s.v}</dd>
+            </div>
+          ))
+        }
+      </dl>
     </div>
   </section>
 
-  <section class="wrap pt-12">
-    <div class="mb-5 flex items-end justify-between gap-4">
+  <!-- 01 Batches -->
+  <section class="wrap pt-16">
+    <header class="mb-6 grid gap-3 border-t border-fg pt-4 sm:grid-cols-[160px_1fr_auto] sm:items-baseline">
+      <span class="label text-fg">01 — Batches</span>
       <div>
-        <h2 class="text-xl font-semibold tracking-tight">Browse by batch</h2>
-        <p class="mt-1 text-sm text-muted">Pick a batch, then a department, to see the full class list.</p>
+        <h2 class="text-2xl font-semibold tracking-tight">Browse by batch</h2>
+        <p class="mt-1 text-sm text-muted">Each batch opens into its departments and full class lists.</p>
       </div>
-      <a href="/batch" class="shrink-0 text-sm font-medium text-accent hover:underline">All batches →</a>
-    </div>
-    <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+      <a href="/batch" class="font-mono text-xs text-muted hover:text-fg">All batches →</a>
+    </header>
+
+    <div class="ruled grid-cols-2 sm:grid-cols-7">
       {
         batches.map((b, i) => (
-          <a href={`/batch/${b.batch}`} class="card-link p-4">
-            <div class="flex items-center justify-between">
-              <span class="text-2xl font-bold tracking-tight tabular-nums">{b.batch}</span>
-              {i === 0 && <span class="badge">Latest</span>}
+          <a href={`/batch/${b.batch}`} class="group relative bg-surface p-4 transition hover:bg-surface-2/60">
+            <div class="flex items-start justify-between">
+              <span class="font-mono text-3xl font-medium tracking-tight tabular-nums group-hover:text-accent">{b.batch}</span>
+              {i === 0 && <span class="badge">New</span>}
             </div>
-            <p class="mt-1 text-sm text-muted">Session {sessionLabel(b.session)}</p>
-            <p class="mt-3 text-xs text-faint">
-              {fmt(b.count)} students · {plural(b.classes.length, 'dept')}
-            </p>
+            <p class="mt-1 font-mono text-[11px] text-faint">{sessionLabel(b.session)}</p>
+            <p class="mt-4 text-sm text-muted tabular-nums">{fmt(b.count)}</p>
+            <span class="absolute inset-x-0 bottom-0 h-0.5 bg-line" aria-hidden="true">
+              <span class="block h-full bg-fg/70 transition group-hover:bg-accent" style={`width:${(b.count / maxBatch) * 100}%`} />
+            </span>
           </a>
         ))
       }
     </div>
   </section>
 
-  <section class="wrap pt-12">
-    <div class="mb-5 flex items-end justify-between gap-4">
+  <!-- 02 Departments -->
+  <section class="wrap pt-16">
+    <header class="mb-6 grid gap-3 border-t border-fg pt-4 sm:grid-cols-[160px_1fr_auto] sm:items-baseline">
+      <span class="label text-fg">02 — Departments</span>
       <div>
-        <h2 class="text-xl font-semibold tracking-tight">Browse by department</h2>
-        <p class="mt-1 text-sm text-muted">Every batch of a department in one place.</p>
+        <h2 class="text-2xl font-semibold tracking-tight">Browse by department</h2>
+        <p class="mt-1 text-sm text-muted">The strip shows which batches each department has, oldest to newest.</p>
       </div>
-      <a href="/department" class="shrink-0 text-sm font-medium text-accent hover:underline">All departments →</a>
-    </div>
-    <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <a href="/department" class="font-mono text-xs text-muted hover:text-fg">All departments →</a>
+    </header>
+
+    <div class="ruled">
+      <div class="hidden grid-cols-[64px_1fr_280px_90px] items-center gap-4 bg-surface-2/60 px-4 py-2 md:grid">
+        <span class="label">Code</span>
+        <span class="label">Department</span>
+        <span class="label flex justify-between"><span>{years[0]}</span><span>Batches</span><span>{years.at(-1)}</span></span>
+        <span class="label text-right">Students</span>
+      </div>
       {
-        departments.map(({ dept, count, classes }) => (
-          <a href={`/department/${dept.slug}`} class="card-link flex items-center gap-4 p-4">
-            <span class="grid h-11 w-14 shrink-0 place-items-center rounded-xl bg-accent-soft text-sm font-bold text-accent">
-              {dept.short}
-            </span>
-            <span class="min-w-0">
-              <span class="block truncate font-medium">{dept.name}</span>
-              <span class="block text-sm text-muted">
-                {fmt(count)} students · {plural(classes.length, 'batch')}
+        departments.map(({ dept, count, classes }) => {
+          const has = new Set(classes.map((c) => c.batch));
+          return (
+            <a
+              href={`/department/${dept.slug}`}
+              class="group grid grid-cols-[52px_1fr_auto] items-center gap-x-4 gap-y-2 bg-surface px-4 py-3 transition hover:bg-surface-2/60 md:grid-cols-[64px_1fr_280px_90px]"
+            >
+              <span class="font-mono text-sm font-semibold group-hover:text-accent">{dept.short}</span>
+              <span class="min-w-0">
+                <span class="block truncate font-medium">{dept.name}</span>
+                <span class="block font-mono text-[11px] text-faint">
+                  code {dept.code} · {plural(classes.length, 'batch')}
+                </span>
               </span>
-            </span>
-          </a>
-        ))
+              <span class="col-span-3 row-start-2 flex gap-[3px] md:col-span-1 md:row-start-auto" aria-label={`Batches: ${[...has].join(', ')}`}>
+                {years.map((y) => (
+                  <span
+                    title={`Batch ${y}`}
+                    class:list={['h-3 flex-1 rounded-[1px]', has.has(y) ? 'bg-fg/75 group-hover:bg-accent' : 'bg-line']}
+                  />
+                ))}
+              </span>
+              <span class="col-start-3 row-start-1 text-right font-mono text-sm tabular-nums md:col-start-auto md:row-start-auto">{fmt(count)}</span>
+            </a>
+          );
+        })
       }
     </div>
   </section>
 
-  <section class="wrap pt-12">
-    <div class="card p-6 sm:p-8">
-      <h2 class="text-xl font-semibold tracking-tight">Reading a CUET student ID</h2>
-      <p class="mt-1 text-sm text-muted">Every ID has seven digits that tell you the batch, department and class roll.</p>
-      <div class="mt-6 flex flex-wrap items-start gap-3 font-mono sm:gap-5">
-        <div class="text-center">
-          <div class="rounded-xl bg-accent-soft px-4 py-3 text-2xl font-bold text-accent sm:text-3xl">19</div>
-          <p class="mt-2 font-sans text-xs text-muted">Batch<br />(2019–20)</p>
-        </div>
-        <div class="text-center">
-          <div class="rounded-xl bg-surface-2 px-4 py-3 text-2xl font-bold sm:text-3xl">01</div>
-          <p class="mt-2 font-sans text-xs text-muted">Department<br />(CE)</p>
-        </div>
-        <div class="text-center">
-          <div class="rounded-xl bg-surface-2 px-4 py-3 text-2xl font-bold sm:text-3xl">049</div>
-          <p class="mt-2 font-sans text-xs text-muted">Class roll<br />(49th)</p>
-        </div>
+  <!-- 03 Anatomy of an ID -->
+  <section class="wrap pt-16">
+    <header class="mb-6 grid gap-3 border-t border-fg pt-4 sm:grid-cols-[160px_1fr] sm:items-baseline">
+      <span class="label text-fg">03 — Reference</span>
+      <div>
+        <h2 class="text-2xl font-semibold tracking-tight">Anatomy of a student ID</h2>
+        <p class="mt-1 text-sm text-muted">Seven digits: batch, department, class roll.</p>
       </div>
-      <div class="mt-6 flex flex-wrap gap-2 text-xs text-muted">
+    </header>
+
+    <div class="card bg-grid grid gap-10 p-6 sm:p-10 lg:grid-cols-[auto_1fr] lg:items-center">
+      <div class="flex justify-center gap-3 font-mono sm:gap-5">
         {
-          departments.map(({ dept }) => (
-            <span class="rounded-md bg-surface-2 px-2 py-1">
-              <span class="font-mono font-semibold text-fg">{dept.code}</span> {dept.short}
-            </span>
+          [
+            { d: '25', k: 'Batch', v: '2025–26', accent: true },
+            { d: '04', k: 'Department', v: 'CSE' },
+            { d: '001', k: 'Class roll', v: '1st' },
+          ].map((p) => (
+            <div class="text-center">
+              <div class:list={['text-5xl font-medium tracking-tight sm:text-7xl', p.accent && 'text-accent']}>{p.d}</div>
+              <div class="mx-1 mt-3 h-2 border-x border-b border-line-strong" aria-hidden="true" />
+              <div class="label mt-2">{p.k}</div>
+              <div class="mt-0.5 text-xs text-muted">{p.v}</div>
+            </div>
           ))
         }
       </div>
+      <div>
+        <p class="label mb-3">Department codes</p>
+        <div class="ruled grid-cols-3 sm:grid-cols-4">
+          {
+            departments.map(({ dept }) => (
+              <a href={`/department/${dept.slug}`} class="flex items-baseline gap-2 bg-surface px-3 py-2 font-mono text-sm transition hover:bg-surface-2/60">
+                <span class="text-faint">{dept.code}</span>
+                <span class="font-medium">{dept.short}</span>
+              </a>
+            ))
+          }
+        </div>
+        <p class="mt-3 text-xs text-muted">Code 12 was Materials Science &amp; Engineering (MSE) up to batch 22.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 API -->
+  <section class="wrap pt-16">
+    <header class="mb-6 grid gap-3 border-t border-fg pt-4 sm:grid-cols-[160px_1fr_auto] sm:items-baseline">
+      <span class="label text-fg">04 — API</span>
+      <div>
+        <h2 class="text-2xl font-semibold tracking-tight">Use the data in your project</h2>
+        <p class="mt-1 text-sm text-muted">A free, read-only JSON API with CORS enabled. No key needed.</p>
+      </div>
+      <a href="/api" class="font-mono text-xs text-muted hover:text-fg">API docs →</a>
+    </header>
+
+    <div class="ruled lg:grid-cols-[1fr_1.4fr]">
+      <ul class="space-y-3 bg-surface p-6 font-mono text-sm">
+        <li class="flex gap-3"><span class="text-accent">GET</span><span>/api/v1/students/:id</span></li>
+        <li class="flex gap-3"><span class="text-accent">GET</span><span>/api/v1/search?q=</span></li>
+        <li class="flex gap-3"><span class="text-accent">GET</span><span>/api/v1/batches</span></li>
+        <li class="flex gap-3"><span class="text-accent">GET</span><span>/api/v1/batches/:batch/:dept</span></li>
+        <li class="flex gap-3"><span class="text-accent">GET</span><span>/api/v1/departments</span></li>
+      </ul>
+      <pre class="overflow-x-auto bg-fg p-6 font-mono text-[13px] leading-relaxed text-bg"><span class="opacity-50">$</span> curl https://cuet.sayed.app/api/v1/students/2504001
+{apiSample}</pre>
     </div>
   </section>
 </Base>

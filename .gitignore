@@ -40,6 +40,7 @@ pnpm-lock.yaml
 # migrations with sensitive data
 /migrations/0002_*.sql
 /migrations/0003_*.sql
+/migrations/*_import_*.sql
 
 
 # CSV data files
