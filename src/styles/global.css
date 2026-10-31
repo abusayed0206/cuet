@@ -1,0 +1,129 @@
+@import 'tailwindcss';
+
+/* Design tokens. Components use the Tailwind names below (bg-surface, text-muted …). */
+:root {
+  --bg: #f7f8fa;
+  --surface: #ffffff;
+  --surface-2: #f1f3f6;
+  --border: #e3e7ed;
+  --text: #0f172a;
+  --muted: #5b6577;
+  --faint: #8a93a3;
+  --accent: #1d4ed8;
+  --accent-soft: #e8eefc;
+  --accent-text: #ffffff;
+  --ring: #93b0f5;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #0b0e14;
+    --surface: #121722;
+    --surface-2: #1a2030;
+    --border: #252d3d;
+    --text: #e6e9ef;
+    --muted: #9aa3b4;
+    --faint: #6b7487;
+    --accent: #7aa2ff;
+    --accent-soft: #1a2647;
+    --accent-text: #0b0e14;
+    --ring: #3d5fb8;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme='dark'] {
+  --bg: #0b0e14;
+  --surface: #121722;
+  --surface-2: #1a2030;
+  --border: #252d3d;
+  --text: #e6e9ef;
+  --muted: #9aa3b4;
+  --faint: #6b7487;
+  --accent: #7aa2ff;
+  --accent-soft: #1a2647;
+  --accent-text: #0b0e14;
+  --ring: #3d5fb8;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Menlo, monospace;
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--border);
+  --color-fg: var(--text);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-on-accent: var(--accent-text);
+  --color-ring: var(--ring);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    font-feature-settings: 'cv11', 'ss01';
+  }
+  body {
+    @apply bg-bg text-fg font-sans antialiased;
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+  ::selection {
+    background: var(--accent-soft);
+  }
+}
+
+@utility wrap {
+  @apply mx-auto w-full max-w-6xl px-4 sm:px-6;
+}
+@utility card {
+  @apply rounded-2xl border border-line bg-surface;
+}
+@utility card-link {
+  @apply card block transition hover:border-accent/50 hover:shadow-[0_4px_20px_-8px_rgb(0_0_0/0.15)];
+}
+@utility chip {
+  @apply inline-flex items-center gap-1.5 rounded-full border border-line bg-surface px-3 py-1 text-sm text-muted transition hover:border-accent/50 hover:text-fg;
+  &[aria-current='page'] {
+    @apply border-accent bg-accent text-on-accent;
+  }
+}
+@utility badge {
+  @apply inline-flex items-center rounded-md bg-accent-soft px-1.5 py-0.5 text-xs font-semibold text-accent;
+}
+@utility input {
+  @apply w-full rounded-xl border border-line bg-surface px-4 text-fg placeholder:text-faint outline-none transition focus:border-accent focus:ring-4 focus:ring-ring/30;
+}
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl bg-accent px-4 font-semibold text-on-accent transition hover:opacity-90;
+}
+@utility btn-ghost {
+  @apply inline-flex items-center justify-center gap-2 rounded-xl border border-line bg-surface px-4 font-medium text-fg transition hover:border-accent/50;
+}
+@utility eyebrow {
+  @apply text-xs font-semibold uppercase tracking-wider text-faint;
+}
+
+@layer components {
+  .prose-legal h2 {
+    @apply mt-8 mb-2 text-lg font-semibold text-fg;
+  }
+  .prose-legal p,
+  .prose-legal li {
+    @apply leading-relaxed text-muted;
+  }
+  .prose-legal ul {
+    @apply ml-5 list-disc space-y-1;
+  }
+  .prose-legal a {
+    @apply text-accent underline-offset-2 hover:underline;
+  }
+}

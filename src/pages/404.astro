@@ -1,0 +1,22 @@
+---
+import Base from '../layouts/Base.astro';
+import SearchBox from '../components/SearchBox.astro';
+
+// After Astro.rewrite('/404'), originPathname is the URL the visitor asked for.
+const id = (Astro.originPathname ?? Astro.url.pathname).slice(1);
+const looksLikeId = /^\d{7}$/.test(id);
+---
+
+<Base title="Not found" noindex hideHeaderSearch>
+  <div class="wrap max-w-xl py-20 text-center">
+    <p class="font-mono text-sm text-faint">404</p>
+    <h1 class="mt-2 text-2xl font-bold tracking-tight sm:text-3xl">
+      {looksLikeId ? `No student with ID ${id}` : 'Page not found'}
+    </h1>
+    <p class="mt-3 text-muted">
+      {looksLikeId ? 'That ID is not in the directory yet. Try searching by name instead.' : 'The page you were looking for does not exist.'}
+    </p>
+    <SearchBox class="mt-8 text-left" />
+    <a href="/" class="mt-6 inline-block text-sm text-accent hover:underline">Back to home</a>
+  </div>
+</Base>

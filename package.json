@@ -1,36 +1,30 @@
 {
   "name": "cuet",
-  "version": "0.3.0",
+  "version": "1.0.0",
   "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12"
+  },
   "scripts": {
-    "dev": "next dev",
-    "build": "next build --webpack",
-    "start": "next start",
-    "lint": "eslint .",
-    "generate-sitemap": "node generate-sitemap.js",
-    "cf:build": "npm run build && npx @opennextjs/cloudflare build && wrangler deploy",
-    "cf:dev": "wrangler dev --port 8787",
-    "cf:preview": "npm run build && npx @opennextjs/cloudflare build && wrangler dev"
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro build && astro preview",
+    "check": "wrangler types && astro check",
+    "deploy": "astro build && wrangler deploy",
+    "types": "wrangler types",
+    "db:migrate": "wrangler d1 migrations apply CUET_students --remote"
   },
   "dependencies": {
-    "@opennextjs/cloudflare": "^1.18.0",
-    "next": "^16.2.2",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "react-icons": "^5.5.0"
+    "@astrojs/cloudflare": "^14.4.3",
+    "@fontsource-variable/inter": "^5.3.0",
+    "astro": "^7.4.4"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20250115.0",
-    "@tailwindcss/postcss": "^4.1.11",
-    "@types/node": "^24.1.0",
-    "@types/react": "^19.1.8",
-    "@types/react-dom": "^19.1.6",
-    "autoprefixer": "^10.4.21",
-    "eslint": "^9.31.0",
-    "eslint-config-next": "^16.2.2",
-    "postcss": "^8.5.6",
-    "tailwindcss": "^4.1.11",
-    "typescript": "^5.8.3",
-    "wrangler": "^4.66.0"
+    "@astrojs/check": "^0.9.12",
+    "@tailwindcss/vite": "^4.3.3",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.9.3",
+    "wrangler": "^4.156.0"
   }
 }

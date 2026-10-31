@@ -1,0 +1,44 @@
+---
+interface Props {
+  size?: 'sm' | 'lg';
+  value?: string;
+  class?: string;
+  autofocus?: boolean;
+}
+const { size = 'lg', value = '', class: cls = '', autofocus = false } = Astro.props;
+const lg = size === 'lg';
+---
+
+<form action="/search" method="get" role="search" class:list={['relative', cls]}>
+  <label for={`q-${size}`} class="sr-only">Search by name or student ID</label>
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    aria-hidden="true"
+    class:list={['pointer-events-none absolute top-1/2 -translate-y-1/2 text-faint', lg ? 'left-4 size-5' : 'left-3 size-4']}
+  >
+    <circle cx="11" cy="11" r="7"></circle>
+    <path d="m20 20-3.5-3.5" stroke-linecap="round"></path>
+  </svg>
+  <input
+    id={`q-${size}`}
+    name="q"
+    type="search"
+    value={value}
+    autocomplete="off"
+    spellcheck="false"
+    enterkeyhint="search"
+    autofocus={autofocus}
+    placeholder={lg ? 'Name or student ID' : 'Name or ID…'}
+    class:list={['input', lg ? 'h-14 pl-12 pr-28 text-lg' : 'h-9 pl-9 pr-3 text-sm']}
+  />
+  {
+    lg && (
+      <button type="submit" class="btn absolute top-1/2 right-2 h-10 -translate-y-1/2">
+        Search
+      </button>
+    )
+  }
+</form>

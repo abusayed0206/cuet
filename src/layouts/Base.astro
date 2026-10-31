@@ -1,0 +1,135 @@
+---
+import '@fontsource-variable/inter';
+import '../styles/global.css';
+import SearchBox from '../components/SearchBox.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  noindex?: boolean;
+  /** Hide the compact search in the header (home and search pages have their own). */
+  hideHeaderSearch?: boolean;
+  jsonLd?: Record<string, unknown>;
+}
+
+const SITE = 'CUET Students Directory';
+const {
+  title,
+  description = 'Search CUET students by name or ID and browse every batch and department of Chittagong University of Engineering & Technology.',
+  noindex = false,
+  hideHeaderSearch = false,
+  jsonLd,
+} = Astro.props;
+
+const fullTitle = title ? `${title} · CUET Directory` : `${SITE} | Find Peers and Alumni`;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const ogImage = new URL('/OG.png', Astro.site).href;
+const path = Astro.url.pathname;
+const nav = [
+  { href: '/batch', label: 'Batches' },
+  { href: '/department', label: 'Departments' },
+  { href: '/search', label: 'Search' },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+    <meta name="theme-color" content="#f7f8fa" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0b0e14" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="apple-touch-icon" href="/apple-icon-180x180.png" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE} />
+    <meta property="og:title" content={title ?? SITE} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+
+    <script is:inline>
+      try {
+        const t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch {}
+    </script>
+  </head>
+  <body class="flex min-h-dvh flex-col">
+    <header class="sticky top-0 z-30 border-b border-line bg-bg/85 backdrop-blur-md">
+      <div class="wrap flex h-14 items-center gap-3 sm:gap-6">
+        <a href="/" class="flex shrink-0 items-center gap-2 font-semibold tracking-tight">
+          <img src="/CUET_Vector_ogo.svg" alt="" width="28" height="28" class="size-7" />
+          <span class="hidden sm:inline">CUET Directory</span>
+        </a>
+
+        <nav class="flex items-center gap-1 text-sm" aria-label="Main">
+          {
+            nav.map((n) => (
+              <a
+                href={n.href}
+                aria-current={path === n.href || path.startsWith(n.href + '/') ? 'page' : undefined}
+                class="rounded-lg px-2.5 py-1.5 text-muted transition hover:bg-surface-2 hover:text-fg aria-[current=page]:font-semibold aria-[current=page]:text-fg"
+              >
+                {n.label}
+              </a>
+            ))
+          }
+        </nav>
+
+        <div class="ml-auto flex items-center gap-2">
+          {!hideHeaderSearch && <SearchBox size="sm" class="hidden w-64 md:block" />}
+          <button
+            id="theme-toggle"
+            type="button"
+            class="grid size-9 place-items-center rounded-lg text-muted transition hover:bg-surface-2 hover:text-fg"
+            aria-label="Toggle dark mode"
+            title="Toggle dark mode"
+          >
+            <svg viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" stroke-linejoin="round"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-1">
+      <slot />
+    </main>
+
+    <footer class="mt-16 border-t border-line">
+      <div class="wrap flex flex-col gap-4 py-8 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
+        <p>
+          Built by <a href="https://sayed.dev/" class="font-medium text-fg hover:underline" rel="noopener">Sayed</a>{' '}
+          <span class="text-faint">(1901049)</span>. Not an official CUET service.
+        </p>
+        <nav class="flex gap-4" aria-label="Legal">
+          <a href="/privacy" class="hover:text-fg">Privacy</a>
+          <a href="/terms" class="hover:text-fg">Terms</a>
+          <a href="https://github.com/abusayed0206/cuet" class="hover:text-fg" rel="noopener">GitHub</a>
+        </nav>
+      </div>
+    </footer>
+
+    <script is:inline>
+      document.getElementById('theme-toggle')?.addEventListener('click', () => {
+        const root = document.documentElement;
+        const current = root.dataset.theme ?? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        const next = current === 'dark' ? 'light' : 'dark';
+        root.dataset.theme = next;
+        try {
+          localStorage.setItem('theme', next);
+        } catch {}
+      });
+    </script>
+  </body>
+</html>

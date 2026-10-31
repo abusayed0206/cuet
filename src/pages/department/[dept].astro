@@ -1,0 +1,60 @@
+---
+import Base from '../../layouts/Base.astro';
+import Crumbs from '../../components/Crumbs.astro';
+import { getOverview } from '../../lib/db';
+import { aliasTarget, deptBySlug, deptLabel } from '../../lib/departments';
+import { cachePage, fmt, sessionLabel } from '../../lib/http';
+
+const { dept: slug = '' } = Astro.params;
+const alias = aliasTarget(slug);
+if (alias || slug !== slug.toLowerCase()) return Astro.redirect(`/department/${alias ?? slug.toLowerCase()}`, 301);
+
+const dept = deptBySlug(slug);
+const info = dept && (await getOverview()).departments.find((d) => d.dept.code === dept.code);
+if (!dept || !info) return Astro.rewrite('/404');
+
+cachePage(Astro);
+const max = Math.max(...info.classes.map((c) => c.count));
+const renamed = info.classes.some((c) => deptLabel(dept, c.batch).short !== dept.short);
+---
+
+<Base title={dept.name} description={`${dept.name} at CUET: ${info.count} students across ${info.classes.length} batches.`}>
+  <div class="wrap pt-8">
+    <Crumbs items={[{ href: '/department', label: 'Departments' }, { label: dept.short }]} />
+
+    <div class="flex items-center gap-4">
+      <span class="grid h-14 w-16 shrink-0 place-items-center rounded-2xl bg-accent-soft text-lg font-bold text-accent">{dept.short}</span>
+      <div>
+        <h1 class="text-2xl font-bold tracking-tight sm:text-3xl">{dept.name}</h1>
+        <p class="mt-1 text-muted">
+          Code <span class="font-mono">{dept.code}</span> · {fmt(info.count)} students · {info.classes.length} batches
+        </p>
+      </div>
+    </div>
+    {
+      renamed && (
+        <p class="mt-4 rounded-xl border border-line bg-surface-2 px-4 py-3 text-sm text-muted">
+          Batches up to 22 were admitted as <strong class="text-fg">Materials Science &amp; Engineering (MSE)</strong>; the
+          department was later renamed.
+        </p>
+      )
+    }
+
+    <div class="card mt-8 divide-y divide-line">
+      {
+        info.classes.map((c) => (
+          <a href={`/batch/${c.batch}/${dept.slug}`} class="flex items-center gap-4 px-4 py-3 transition hover:bg-surface-2/60">
+            <span class="w-20 shrink-0">
+              <span class="block font-semibold">Batch {c.batch}</span>
+              <span class="block text-xs text-faint">{sessionLabel(c.session)}</span>
+            </span>
+            <span class="h-2 flex-1 overflow-hidden rounded-full bg-surface-2" aria-hidden="true">
+              <span class="block h-full rounded-full bg-accent/70" style={`width:${Math.max(4, (c.count / max) * 100)}%`} />
+            </span>
+            <span class="w-24 shrink-0 text-right text-sm text-muted tabular-nums">{c.count} students</span>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</Base>

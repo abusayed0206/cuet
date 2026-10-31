@@ -1,0 +1,75 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Crumbs from '../../../components/Crumbs.astro';
+import StudentTable from '../../../components/StudentTable.astro';
+import { getClass, getOverview } from '../../../lib/db';
+import { aliasTarget, deptBySlug, deptLabel } from '../../../lib/departments';
+import { cachePage, sessionLabel } from '../../../lib/http';
+
+const { batch = '', dept: slug = '' } = Astro.params;
+const alias = aliasTarget(slug);
+if (alias || slug !== slug.toLowerCase()) return Astro.redirect(`/batch/${batch}/${alias ?? slug.toLowerCase()}`, 301);
+
+const dept = deptBySlug(slug);
+if (!dept || !/^\d{2}$/.test(batch)) return Astro.rewrite('/404');
+
+const [students, overview] = await Promise.all([getClass(batch, dept.code), getOverview()]);
+if (!students.length) return Astro.rewrite('/404');
+
+cachePage(Astro);
+const label = deptLabel(dept, batch);
+const session = students[0]!.session;
+const batchInfo = overview.batches.find((b) => b.batch === batch);
+const deptInfo = overview.departments.find((d) => d.dept.code === dept.code);
+---
+
+<Base
+  title={`${label.short} batch ${batch} (${sessionLabel(session)})`}
+  description={`Class list of ${label.name}, CUET batch ${batch} (session ${session}): ${students.length} students with IDs and admission merit.`}
+>
+  <div class="wrap pt-8">
+    <Crumbs items={[{ href: '/batch', label: 'Batches' }, { href: `/batch/${batch}`, label: `Batch ${batch}` }, { label: label.short }]} />
+
+    <h1 class="text-2xl font-bold tracking-tight sm:text-3xl">
+      {label.short} <span class="text-muted">· Batch {batch}</span>
+    </h1>
+    <p class="mt-2 text-muted">
+      {label.name} · Session {sessionLabel(session)} · {students.length} students
+    </p>
+
+    <div class="mt-6 grid gap-4 lg:grid-cols-2">
+      {
+        batchInfo && (
+          <div>
+            <p class="eyebrow mb-2">Other departments in batch {batch}</p>
+            <div class="flex flex-wrap gap-2">
+              {batchInfo.classes.map((c) => (
+                <a href={`/batch/${batch}/${c.dept.slug}`} class="chip" aria-current={c.code === dept.code ? 'page' : undefined}>
+                  {deptLabel(c.dept, batch).short}
+                </a>
+              ))}
+            </div>
+          </div>
+        )
+      }
+      {
+        deptInfo && (
+          <div>
+            <p class="eyebrow mb-2">{dept.short} in other batches</p>
+            <div class="flex flex-wrap gap-2">
+              {deptInfo.classes.map((c) => (
+                <a href={`/batch/${c.batch}/${dept.slug}`} class="chip tabular-nums" aria-current={c.batch === batch ? 'page' : undefined}>
+                  {c.batch}
+                </a>
+              ))}
+            </div>
+          </div>
+        )
+      }
+    </div>
+
+    <div class="mt-8">
+      <StudentTable students={students} interactive />
+    </div>
+  </div>
+</Base>

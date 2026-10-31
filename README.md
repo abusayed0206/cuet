@@ -1,186 +1,79 @@
-# CUET Students Directory 📚
+# CUET Students Directory
 
-Welcome to the **CUET Students Directory** - a comprehensive Next.js application for browsing and searching CUET student information with a modern, responsive interface.
+Search and browse students of Chittagong University of Engineering & Technology by name, ID, batch and department.
 
-🔍 **Live Demo:** [https://cuet.sayed.app/](https://cuet.sayed.app/)
+**Live:** https://cuet.sayed.app
 
-## 🚀 Features
+- Search by name (words in any order) or by full/partial student ID
+- Browse batch → department → full class list, with filtering and sorting
+- Department pages across all batches; student profiles with classmates navigation
+- Light/dark theme, mobile-first, almost no client-side JavaScript
 
-- **🔍 Student Search**: Search students by name with intelligent filtering
-- **📊 Batch Browser**: Browse students by department and batch (12-24)
-- **👤 Student Profiles**: Detailed individual student pages with metadata
-- **🏛️ Department Listings**: Organized by departments with student counts
-- **📱 Responsive Design**: Modern UI with Tailwind CSS
-- **⚡ Fast Performance**: Built with Next.js 14 and edge runtime
-- **🔗 SEO Optimized**: Complete sitemap with 7k+ student profiles
-- **🗃️ Database Integration**: Powered by Supabase
+## Stack
 
-## 🏗️ Tech Stack
+| | |
+|---|---|
+| Framework | [Astro 7](https://astro.build), server-rendered |
+| Hosting | Cloudflare Workers via `@astrojs/cloudflare` |
+| Database | Cloudflare D1 (`CUET_students`) |
+| Styling | Tailwind CSS 4 |
 
-- **Framework**: Next.js 14.2.30 with App Router
-- **Database**: Supabase (PostgreSQL)
-- **Styling**: Tailwind CSS
-- **TypeScript**: Full type safety
-- **Deployment**: Vercel (edge runtime)
-- **Icons**: React Icons
-- **Data**: 7,691+ student records
+Pages are cached at the edge for a day (`src/middleware.ts`); every deploy gets a fresh cache.
 
-## 🔗 API Endpoints
+## Routes
 
-### Student Information
+| URL | Page |
+|---|---|
+| `/` | Search + batches + departments |
+| `/search?q=…&batch=25&dept=cse` | Search (a full ID jumps to the profile) |
+| `/batch`, `/batch/25`, `/batch/25/cse` | Batches, one batch, one class list |
+| `/department`, `/department/cse` | Departments, one department across batches |
+| `/2504001` | Student profile |
+| `/sitemap.xml` | Generated from D1 |
 
-#### `GET /api/student/[studentid]`
+Old URLs (`/batch?department=cse&batch=24`, `/search?name=…`, `sitemap_N.xml`) redirect to the new ones.
 
-Retrieve detailed student information.
+## How departments are resolved
 
-**Example Response:**
+A CUET ID is `YY DD RRR`: batch, department code, class roll. The site derives the department from
+`DD` (see `src/lib/departments.ts`) rather than the `department` text column, which has been
+imported inconsistently. Code `12` is shown as MSE for batches ≤ 22 and MME afterwards.
 
-```json
-{
-  "name": "ASHIKUL ISLAM",
-  "studentid": "2304001",
-  "department": "Department of Computer Science & Engineering",
-  "admission_roll": "112120",
-  "admission_merit": "232",
-  "batch": "23",
-  "session": "2023-24"
-}
+## Develop
+
+Requires Node 22.12+ (see `.nvmrc`).
+
+```sh
+npm install
+npm run dev          # http://localhost:4321, uses a local D1 copy
+npm run check        # type-check
+npm run build
+npm run preview      # run the built Worker locally
+npm run deploy       # build + wrangler deploy
 ```
 
-#### `GET /api/student/search?query=[name]`
+Local D1 starts empty. To copy production data locally:
 
-Search students by name.
-
-**Example Response:**
-
-```json
-{
-  "results": [
-    {
-      "name": "MD. ASHIKUL ISLAM",
-      "studentid": "2304001",
-      "department": "Department of Computer Science & Engineering",
-      "batch": "23"
-    }
-  ],
-  "total": 1
-}
+```sh
+npx wrangler d1 export CUET_students --remote --output prod.sql
+npx wrangler d1 execute CUET_students --local --file prod.sql
 ```
 
-### Department & Batch Data
+## Adding a new batch
 
-#### `GET /api/[department]/[batch]`
+1. Put the rows in a SQL migration (`migrations/000N_*.sql`) using the full department name, e.g.
+   `Department of Computer Science & Engineering`. `scripts/convert-csv-to-sql.js` converts a CSV.
+2. `npm run db:migrate` to apply it to production D1.
+3. `npm run deploy` (a new deploy also clears the edge cache).
 
-Get all students in a specific department and batch.
+## Branches
 
-**Example Response:**
+- `main`: this site, deployed to the `cuet` Worker (cuet.sayed.app).
+- `redirect`: tiny site for the `cuet` Cloudflare Pages project (cuet.pages.dev) that redirects to cuet.sayed.app.
 
-```json
-{
-  "department": "Department of Computer Science & Engineering",
-  "departmentCode": "CSE",
-  "batch": "23",
-  "session": "2023-24",
-  "totalStudents": 132,
-  "students": [
-    {
-      "name": "ASHIKUL ISLAM",
-      "studentid": "2304001",
-      "department": "Department of Computer Science & Engineering",
-      "admission_roll": "112120",
-      "admission_merit": "232",
-      "batch": "23",
-      "session": "2023-24"
-    }
-  ]
-}
-```
+## Data & license
 
-**Supported Departments:**
+Data was compiled from publicly available sources; see [/privacy](https://cuet.sayed.app/privacy) and
+[/terms](https://cuet.sayed.app/terms). Code is under the license in `LICENSE.md`.
 
-- `cse` - Computer Science & Engineering
-- `eee` - Electrical & Electronic Engineering
-- `civil` - Civil Engineering
-- `me` - Mechanical Engineering
-- `arch` - Architecture
-- `bme` - Biomedical Engineering
-- And more...
-
-## 🚀 Features
-
-- **Student Information:** Access detailed profiles including student ID, name, department, and more.
-- **Batch Listings:** Retrieve lists of students for specific departments and batches.
-
-## 🛠️ Installation
-
-1. **Clone the repository:**
-
-   ```bash
-   git clone https://github.com/abusayed0206/cuet.git
-   cd cuet
-   ```
-
-2. **Install dependencies:**
-
-   ```bash
-   bun install
-   # or npm install
-   ```
-
-3. **Set up environment variables:**
-   Create a `.env.local` file in the root directory:
-
-   ```env
-   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-   SUPABASE_SERVICE_KEY=your_supabase_service_key
-   ```
-
-4. **Run the development server:**
-
-   ```bash
-   bun dev
-   # or npm run dev
-   ```
-
-5. **Open your browser:**
-   Navigate to [http://localhost:3000](http://localhost:3000)
-
-## 📊 Database Schema
-
-The main database table `cuet` contains:
-
-- `studentid` - Unique student identifier
-- `name` - Student's full name
-- `batch` - Academic batch (e.g., "19", "20", "21")
-- `session` - Academic session (e.g., "2019-20")
-- `department` - Full department name
-- `hall` - Residential hall name
-- `public_email` - Contact email
-- `dplink` - Profile picture URL
-- `currentstatus` - Current status/bio
-- `linkedin` - LinkedIn profile URL
-
-## 📜 Scripts
-
-- `bun dev` - Start development server
-- `bun build` - Build for production
-- `bun start` - Start production server
-- `node generate-sitemap.js` - Generate sitemap from CSV data
-
-## 🤝 Contribution
-
-Your contributions are welcome! Here’s how you can help:
-
-- **Beautify the Code:** Enhance the code's appearance and structure.
-- **Maintain the Project:** Contact me at [sayed.dev/contact](https://sayed.dev/contact) from your academic email, and I'll grant you direct write permissions. Alternatively, you can open a pull request (PR).
-
-When adding new features, please create a new branch and submit a PR. This helps keep the project organized and manageable.
-
-## ⚠️ Disclaimer
-
-The code in this repository might contain errors, typos, or logical issues. As I am not from a CS background and have utilized multiple AI assistants like GitHub Copilot, ClaudeAI, and ChatGPT for coding, please forgive any mistakes and contribute by submitting PRs to help improve the project.
-
-## 📫 Contact
-
-For any queries, reach out at [sayed.dev](https://sayed.dev).
+Built by [Sayed](https://sayed.dev/).

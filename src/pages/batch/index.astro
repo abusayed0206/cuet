@@ -1,0 +1,53 @@
+---
+import Base from '../../layouts/Base.astro';
+import Crumbs from '../../components/Crumbs.astro';
+import { getOverview } from '../../lib/db';
+import { deptBySlug, deptLabel } from '../../lib/departments';
+import { cachePage, fmt, sessionLabel } from '../../lib/http';
+
+// Old links: /batch?department=cse&batch=24
+const qBatch = Astro.url.searchParams.get('batch');
+const qDept = Astro.url.searchParams.get('department');
+if (qBatch && /^\d{2}$/.test(qBatch)) {
+  const d = qDept ? deptBySlug(qDept) : undefined;
+  return Astro.redirect(d ? `/batch/${qBatch}/${d.slug}` : `/batch/${qBatch}`, 301);
+}
+
+cachePage(Astro);
+const { batches } = await getOverview();
+---
+
+<Base title="All batches" description="Every CUET batch with its session and per-department student counts.">
+  <div class="wrap pt-8">
+    <Crumbs items={[{ label: 'Batches' }]} />
+    <h1 class="text-2xl font-bold tracking-tight sm:text-3xl">All batches</h1>
+    <p class="mt-2 text-muted">Choose a department within a batch to open its class list.</p>
+
+    <div class="mt-8 space-y-3">
+      {
+        batches.map((b, i) => (
+          <section class="card p-4 sm:p-5">
+            <div class="flex flex-wrap items-baseline justify-between gap-2">
+              <h2 class="flex items-baseline gap-3">
+                <a href={`/batch/${b.batch}`} class="text-xl font-bold tracking-tight hover:text-accent">
+                  Batch {b.batch}
+                </a>
+                <span class="text-sm text-muted">Session {sessionLabel(b.session)}</span>
+                {i === 0 && <span class="badge">Latest</span>}
+              </h2>
+              <span class="text-sm text-faint">{fmt(b.count)} students</span>
+            </div>
+            <div class="mt-3 flex flex-wrap gap-2">
+              {b.classes.map((c) => (
+                <a href={`/batch/${b.batch}/${c.dept.slug}`} class="chip">
+                  <span class="font-semibold text-fg">{deptLabel(c.dept, b.batch).short}</span>
+                  <span class="tabular-nums">{c.count}</span>
+                </a>
+              ))}
+            </div>
+          </section>
+        ))
+      }
+    </div>
+  </div>
+</Base>

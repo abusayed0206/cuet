@@ -1,17 +1,12 @@
 {
+	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "cuet",
-	"compatibility_date": "2025-11-09",
-	"compatibility_flags": [
-		"nodejs_compat"
-	],
-	// Next.js App Configuration (OpenNext Cloudflare output)
-	"main": ".open-next/worker.js",
+	"main": "@astrojs/cloudflare/entrypoints/server",
+	"compatibility_date": "2026-10-01",
 	"assets": {
-		"directory": ".open-next/assets",
-		"binding": "ASSETS",
-		"not_found_handling": "single-page-application"
+		"directory": "./dist",
+		"binding": "ASSETS"
 	},
-	// D1 Database Binding
 	"d1_databases": [
 		{
 			"binding": "DB",
@@ -19,7 +14,6 @@
 			"database_id": "f4b7db3e-ee71-4af0-8914-1a541f6c87a3"
 		}
 	],
-	// Enable observability
 	"observability": {
 		"enabled": true
 	}

@@ -1,0 +1,150 @@
+---
+import Base from '../layouts/Base.astro';
+import Crumbs from '../components/Crumbs.astro';
+import { ID_RE, cleanName, getNeighbours, getStudent, meritText, parseId } from '../lib/db';
+import { deptByCode, deptLabel } from '../lib/departments';
+import { cachePage, sessionLabel } from '../lib/http';
+
+const id = Astro.params.studentId ?? '';
+if (!ID_RE.test(id)) return Astro.rewrite('/404');
+
+const [student, nb] = await Promise.all([getStudent(id), getNeighbours(id)]);
+if (!student) return Astro.rewrite('/404');
+
+cachePage(Astro);
+const { batch, code, roll } = parseId(id);
+const dept = deptByCode(code);
+const label = dept ? deptLabel(dept, batch) : { short: code, name: `Department ${code}` };
+const name = cleanName(student.name);
+const merit = meritText(student.admission_merit);
+const classUrl = dept ? `/batch/${batch}/${dept.slug}` : `/batch/${batch}`;
+const initials = name
+  .replace(/^(md|mst|mohammad|muhammad)\.?\s+/i, '')
+  .split(/[\s.]+/)
+  .filter(Boolean)
+  .slice(0, 2)
+  .map((w) => w[0])
+  .join('')
+  .toUpperCase();
+
+const facts = [
+  { k: 'Department', v: label.name, href: dept ? `/department/${dept.slug}` : undefined },
+  { k: 'Batch', v: batch, href: `/batch/${batch}` },
+  { k: 'Session', v: sessionLabel(student.session) },
+  { k: 'Class roll', v: String(Number(roll)) },
+  { k: 'Admission roll', v: student.admission_roll || '—' },
+  { k: 'Admission merit', v: merit ? (/^\d+$/.test(merit) ? `#${merit}` : merit) : '—' },
+];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name,
+  identifier: id,
+  affiliation: {
+    '@type': 'CollegeOrUniversity',
+    name: 'Chittagong University of Engineering & Technology',
+    department: label.name,
+  },
+};
+---
+
+<Base
+  title={`${name} (${id})`}
+  description={`${name}, student ID ${id}: ${label.name}, CUET batch ${batch}, session ${student.session}.`}
+  jsonLd={jsonLd}
+>
+  <div class="wrap max-w-3xl pt-8">
+    <Crumbs items={[{ href: `/batch/${batch}`, label: `Batch ${batch}` }, { href: classUrl, label: label.short }, { label: id }]} />
+
+    <article class="card overflow-hidden">
+      <header class="flex flex-col items-start gap-5 border-b border-line p-6 sm:flex-row sm:items-center sm:p-8">
+        <div class="grid size-16 shrink-0 place-items-center rounded-2xl bg-accent-soft text-xl font-bold text-accent" aria-hidden="true">
+          {initials || '?'}
+        </div>
+        <div class="min-w-0 flex-1">
+          <h1 class="text-2xl font-bold tracking-tight text-balance sm:text-3xl">{name}</h1>
+          <p class="mt-1 text-muted">{label.name} · Batch {batch}</p>
+        </div>
+        <button
+          type="button"
+          data-copy={id}
+          class="group inline-flex items-center gap-2 rounded-xl border border-line bg-surface-2 px-3 py-2 font-mono text-lg font-semibold tracking-wider transition hover:border-accent/50"
+          title="Copy student ID"
+        >
+          {id}
+          <svg viewBox="0 0 24 24" class="size-4 text-faint group-hover:text-fg" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <rect x="9" y="9" width="11" height="11" rx="2"></rect>
+            <path d="M5 15V5a2 2 0 0 1 2-2h10"></path>
+          </svg>
+          <span class="sr-only">Copy</span>
+        </button>
+      </header>
+
+      <dl class="grid grid-cols-2 gap-px border-b border-line bg-line sm:grid-cols-3">
+        {
+          facts.map((f) => (
+            <div class="bg-surface p-5 sm:p-6">
+              <dt class="eyebrow">{f.k}</dt>
+              <dd class="mt-1.5 font-semibold break-words">
+                {f.href ? (
+                  <a href={f.href} class="hover:text-accent hover:underline">
+                    {f.v}
+                  </a>
+                ) : (
+                  f.v
+                )}
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+
+      <div class="flex flex-wrap items-center gap-x-6 gap-y-2 p-5 font-mono text-sm sm:p-6">
+        <span class="font-sans text-xs text-faint">ID breakdown</span>
+        <span><span class="rounded bg-accent-soft px-1.5 py-0.5 font-semibold text-accent">{batch}</span> <span class="font-sans text-muted">batch</span></span>
+        <span><span class="rounded bg-surface-2 px-1.5 py-0.5 font-semibold">{code}</span> <span class="font-sans text-muted">{label.short}</span></span>
+        <span><span class="rounded bg-surface-2 px-1.5 py-0.5 font-semibold">{roll}</span> <span class="font-sans text-muted">class roll</span></span>
+      </div>
+    </article>
+
+    <nav class="mt-4 grid grid-cols-2 gap-3" aria-label="Classmates">
+      {
+        nb.prev ? (
+          <a href={`/${nb.prev.studentid}`} class="card-link p-4">
+            <span class="eyebrow">← Previous</span>
+            <span class="mt-1 block truncate text-sm font-medium">{cleanName(nb.prev.name)}</span>
+            <span class="block font-mono text-xs text-faint">{nb.prev.studentid}</span>
+          </a>
+        ) : (
+          <span />
+        )
+      }
+      {
+        nb.next && (
+          <a href={`/${nb.next.studentid}`} class="card-link p-4 text-right">
+            <span class="eyebrow">Next →</span>
+            <span class="mt-1 block truncate text-sm font-medium">{cleanName(nb.next.name)}</span>
+            <span class="block font-mono text-xs text-faint">{nb.next.studentid}</span>
+          </a>
+        )
+      }
+    </nav>
+
+    <a href={classUrl} class="btn-ghost mt-3 h-11 w-full">
+      See all {nb.classSize} classmates in {label.short} batch {batch}
+    </a>
+  </div>
+</Base>
+
+<script>
+  for (const btn of document.querySelectorAll<HTMLButtonElement>('[data-copy]')) {
+    btn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(btn.dataset.copy!);
+        btn.classList.add('border-accent');
+        setTimeout(() => btn.classList.remove('border-accent'), 1200);
+      } catch {}
+    });
+  }
+</script>

@@ -1,0 +1,126 @@
+---
+import Base from '../layouts/Base.astro';
+import SearchBox from '../components/SearchBox.astro';
+import { getOverview } from '../lib/db';
+import { cachePage, fmt, plural, sessionLabel } from '../lib/http';
+
+cachePage(Astro);
+const { total, batches, departments } = await getOverview();
+const latest = batches[0];
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'CUET Students Directory',
+  url: 'https://cuet.sayed.app/',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: 'https://cuet.sayed.app/search?q={query}',
+    'query-input': 'required name=query',
+  },
+};
+---
+
+<Base hideHeaderSearch jsonLd={jsonLd}>
+  <section class="border-b border-line bg-surface">
+    <div class="wrap py-14 sm:py-20">
+      <div class="mx-auto max-w-2xl text-center">
+        <p class="badge mb-4">Batch {latest?.batch} ({sessionLabel(latest?.session ?? '')}) now included</p>
+        <h1 class="text-3xl font-bold tracking-tight text-balance sm:text-5xl">Find any CUET student</h1>
+        <p class="mt-4 text-base text-pretty text-muted sm:text-lg">
+          {fmt(total)} students across {batches.length} batches and {departments.length} departments of Chittagong University of
+          Engineering &amp; Technology.
+        </p>
+        <SearchBox class="mt-8" />
+        <p class="mt-3 text-sm text-faint">
+          Try{' '}
+          <a class="text-muted underline-offset-2 hover:underline" href="/1901049">1901049</a>,{' '}
+          <a class="text-muted underline-offset-2 hover:underline" href="/search?q=rahman">rahman</a> or{' '}
+          <a class="text-muted underline-offset-2 hover:underline" href="/search?q=2504">2504</a> (CSE '25)
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap pt-12">
+    <div class="mb-5 flex items-end justify-between gap-4">
+      <div>
+        <h2 class="text-xl font-semibold tracking-tight">Browse by batch</h2>
+        <p class="mt-1 text-sm text-muted">Pick a batch, then a department, to see the full class list.</p>
+      </div>
+      <a href="/batch" class="shrink-0 text-sm font-medium text-accent hover:underline">All batches →</a>
+    </div>
+    <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+      {
+        batches.map((b, i) => (
+          <a href={`/batch/${b.batch}`} class="card-link p-4">
+            <div class="flex items-center justify-between">
+              <span class="text-2xl font-bold tracking-tight tabular-nums">{b.batch}</span>
+              {i === 0 && <span class="badge">Latest</span>}
+            </div>
+            <p class="mt-1 text-sm text-muted">Session {sessionLabel(b.session)}</p>
+            <p class="mt-3 text-xs text-faint">
+              {fmt(b.count)} students · {plural(b.classes.length, 'dept')}
+            </p>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="wrap pt-12">
+    <div class="mb-5 flex items-end justify-between gap-4">
+      <div>
+        <h2 class="text-xl font-semibold tracking-tight">Browse by department</h2>
+        <p class="mt-1 text-sm text-muted">Every batch of a department in one place.</p>
+      </div>
+      <a href="/department" class="shrink-0 text-sm font-medium text-accent hover:underline">All departments →</a>
+    </div>
+    <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        departments.map(({ dept, count, classes }) => (
+          <a href={`/department/${dept.slug}`} class="card-link flex items-center gap-4 p-4">
+            <span class="grid h-11 w-14 shrink-0 place-items-center rounded-xl bg-accent-soft text-sm font-bold text-accent">
+              {dept.short}
+            </span>
+            <span class="min-w-0">
+              <span class="block truncate font-medium">{dept.name}</span>
+              <span class="block text-sm text-muted">
+                {fmt(count)} students · {plural(classes.length, 'batch')}
+              </span>
+            </span>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="wrap pt-12">
+    <div class="card p-6 sm:p-8">
+      <h2 class="text-xl font-semibold tracking-tight">Reading a CUET student ID</h2>
+      <p class="mt-1 text-sm text-muted">Every ID has seven digits that tell you the batch, department and class roll.</p>
+      <div class="mt-6 flex flex-wrap items-start gap-3 font-mono sm:gap-5">
+        <div class="text-center">
+          <div class="rounded-xl bg-accent-soft px-4 py-3 text-2xl font-bold text-accent sm:text-3xl">19</div>
+          <p class="mt-2 font-sans text-xs text-muted">Batch<br />(2019–20)</p>
+        </div>
+        <div class="text-center">
+          <div class="rounded-xl bg-surface-2 px-4 py-3 text-2xl font-bold sm:text-3xl">01</div>
+          <p class="mt-2 font-sans text-xs text-muted">Department<br />(CE)</p>
+        </div>
+        <div class="text-center">
+          <div class="rounded-xl bg-surface-2 px-4 py-3 text-2xl font-bold sm:text-3xl">049</div>
+          <p class="mt-2 font-sans text-xs text-muted">Class roll<br />(49th)</p>
+        </div>
+      </div>
+      <div class="mt-6 flex flex-wrap gap-2 text-xs text-muted">
+        {
+          departments.map(({ dept }) => (
+            <span class="rounded-md bg-surface-2 px-2 py-1">
+              <span class="font-mono font-semibold text-fg">{dept.code}</span> {dept.short}
+            </span>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Base>

@@ -5,14 +5,10 @@
 /.pnp
 .pnp.js
 .yarn/install-state.gz
-.open-next/
 
 # testing
 /coverage
 
-# next.js
-/.next/
-/out/
 
 # production
 /build
@@ -29,15 +25,12 @@ yarn-error.log*
 # local env files
 .env*.local
 
-# vercel
-.vercel
 
 # wrangler local state
 .wrangler/
 
 # typescript
 *.tsbuildinfo
-next-env.d.ts
 
 # lock files - use npm
 bun.lock
@@ -45,8 +38,15 @@ yarn.lock
 pnpm-lock.yaml
 
 # migrations with sensitive data
-/migrations/*.sql
-!/migrations/0001_create_students_table.sql
+/migrations/0002_*.sql
+/migrations/0003_*.sql
+
 
 # CSV data files
 /public/*.csv
+
+# astro
+dist/
+.astro/
+.dev.vars*
+worker-configuration.d.ts

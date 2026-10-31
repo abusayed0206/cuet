@@ -1,0 +1,151 @@
+---
+import { cleanName, meritSortKey, meritText, parseId, type Student } from '../lib/db';
+import { deptByCode, deptLabel } from '../lib/departments';
+
+interface Props {
+  students: Student[];
+  /** Show department + batch columns (search results). */
+  mixed?: boolean;
+  /** Add a filter box and sortable headers (class lists). */
+  interactive?: boolean;
+}
+const { students, mixed = false, interactive = false } = Astro.props;
+
+const rows = students.map((s) => {
+  const { code } = parseId(s.studentid);
+  const d = deptByCode(code);
+  return {
+    id: s.studentid,
+    name: cleanName(s.name),
+    dept: d ? deptLabel(d, s.batch).short : '',
+    batch: s.batch,
+    merit: meritText(s.admission_merit),
+    meritKey: meritSortKey(s.admission_merit),
+    roll: s.admission_roll ?? '',
+  };
+});
+const hasMerit = rows.some((r) => r.merit);
+const hasRoll = rows.some((r) => r.roll);
+const th = 'px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-faint';
+---
+
+<div data-student-table class="card overflow-hidden">
+  {
+    interactive && (
+      <div class="flex flex-wrap items-center gap-3 border-b border-line p-3">
+        <div class="relative min-w-48 flex-1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" class="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-faint">
+            <path d="M3 5h18M6 12h12M10 19h4" stroke-linecap="round" />
+          </svg>
+          <input
+            data-filter
+            type="search"
+            placeholder="Filter this list by name or ID…"
+            aria-label="Filter list"
+            class="input h-10 pl-9 text-sm"
+          />
+        </div>
+        <p class="text-sm text-muted" aria-live="polite">
+          <span data-count>{rows.length}</span> students
+        </p>
+      </div>
+    )
+  }
+
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead class="border-b border-line bg-surface-2/60">
+        <tr>
+          <th scope="col" class={th}>
+            {interactive ? <button type="button" data-sort="id" class="uppercase hover:text-fg">ID</button> : 'ID'}
+          </th>
+          <th scope="col" class={th}>
+            {interactive ? <button type="button" data-sort="name" class="uppercase hover:text-fg">Name</button> : 'Name'}
+          </th>
+          {mixed && <th scope="col" class={`${th} hidden sm:table-cell`}>Department</th>}
+          {mixed && <th scope="col" class={`${th} hidden sm:table-cell`}>Batch</th>}
+          {
+            hasMerit && (
+              <th scope="col" class={`${th} text-right`}>
+                {interactive ? <button type="button" data-sort="merit" class="uppercase hover:text-fg">Merit</button> : 'Merit'}
+              </th>
+            )
+          }
+          {hasRoll && !mixed && <th scope="col" class={`${th} hidden text-right md:table-cell`}>Adm. roll</th>}
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-line">
+        {
+          rows.map((r) => (
+            <tr
+              class="transition hover:bg-surface-2/60"
+              data-row
+              data-id={r.id}
+              data-name={r.name.toLowerCase()}
+              data-merit={r.meritKey}
+            >
+              <td class="px-4 py-2.5 font-mono text-[13px] whitespace-nowrap text-muted">{r.id}</td>
+              <td class="px-4 py-2.5">
+                <a href={`/${r.id}`} class="font-medium hover:text-accent hover:underline">
+                  {r.name}
+                </a>
+                {mixed && (
+                  <span class="mt-0.5 block text-xs text-faint sm:hidden">
+                    {r.dept} · Batch {r.batch}
+                  </span>
+                )}
+              </td>
+              {mixed && <td class="hidden px-4 py-2.5 text-muted sm:table-cell">{r.dept}</td>}
+              {mixed && <td class="hidden px-4 py-2.5 text-muted sm:table-cell">{r.batch}</td>}
+              {hasMerit && <td class="px-4 py-2.5 text-right whitespace-nowrap text-muted tabular-nums">{r.merit || '—'}</td>}
+              {hasRoll && !mixed && <td class="hidden px-4 py-2.5 text-right text-muted tabular-nums md:table-cell">{r.roll || '—'}</td>}
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+    {interactive && <p data-empty hidden class="p-8 text-center text-muted">No one in this list matches that filter.</p>}
+  </div>
+</div>
+
+<script>
+  for (const root of document.querySelectorAll<HTMLElement>('[data-student-table]')) {
+    const input = root.querySelector<HTMLInputElement>('[data-filter]');
+    if (!input) continue;
+    const tbody = root.querySelector('tbody')!;
+    const rows = [...root.querySelectorAll<HTMLTableRowElement>('[data-row]')];
+    const count = root.querySelector('[data-count]')!;
+    const empty = root.querySelector<HTMLElement>('[data-empty]')!;
+
+    input.addEventListener('input', () => {
+      const q = input.value.trim().toLowerCase();
+      let shown = 0;
+      for (const r of rows) {
+        const hit = !q || r.dataset.name!.includes(q) || r.dataset.id!.includes(q);
+        r.hidden = !hit;
+        if (hit) shown++;
+      }
+      count.textContent = String(shown);
+      empty.hidden = shown > 0;
+    });
+
+    let current = 'id';
+    let asc = true;
+    for (const btn of root.querySelectorAll<HTMLButtonElement>('[data-sort]')) {
+      btn.addEventListener('click', () => {
+        const key = btn.dataset.sort!;
+        asc = key === current ? !asc : true;
+        current = key;
+        const val = (r: HTMLTableRowElement) =>
+          key === 'merit' ? Number(r.dataset.merit) : key === 'name' ? r.dataset.name! : r.dataset.id!;
+        rows.sort((a, b) => {
+          const x = val(a), y = val(b);
+          return (x < y ? -1 : x > y ? 1 : 0) * (asc ? 1 : -1);
+        });
+        for (const r of rows) tbody.appendChild(r);
+        for (const t of root.querySelectorAll('th')) t.removeAttribute('aria-sort');
+        btn.closest('th')!.setAttribute('aria-sort', asc ? 'ascending' : 'descending');
+      });
+    }
+  }
+</script>

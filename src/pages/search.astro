@@ -1,0 +1,97 @@
+---
+import Base from '../layouts/Base.astro';
+import SearchBox from '../components/SearchBox.astro';
+import StudentTable from '../components/StudentTable.astro';
+import { ID_RE, getOverview, getStudent, searchStudents } from '../lib/db';
+import { deptBySlug } from '../lib/departments';
+import { cachePage, fmt } from '../lib/http';
+
+const params = Astro.url.searchParams;
+// `name` was the query parameter on the old site.
+const q = (params.get('q') ?? params.get('name') ?? '').trim().slice(0, 80);
+const batch = params.get('batch') ?? '';
+const dept = deptBySlug(params.get('dept') ?? '');
+
+const compact = q.replace(/\s+/g, '');
+if (ID_RE.test(compact) && (await getStudent(compact))) {
+  return Astro.redirect(`/${compact}`, 302);
+}
+// Only filters, no text: the class/batch pages show that better.
+if (!q && /^\d{2}$/.test(batch)) {
+  return Astro.redirect(dept ? `/batch/${batch}/${dept.slug}` : `/batch/${batch}`, 302);
+}
+
+const { batches, departments } = await getOverview();
+const tooShort = q.length > 0 && q.length < 2 && !/^\d$/.test(q);
+const { results, more } =
+  q && !tooShort ? await searchStudents(q, { batch: /^\d{2}$/.test(batch) ? batch : undefined, code: dept?.code }) : { results: [], more: false };
+
+cachePage(Astro, 3600, 60);
+const filtered = Boolean(batch || dept);
+---
+
+<Base title={q ? `“${q}”` : 'Search'} hideHeaderSearch noindex={Boolean(q)}>
+  <div class="wrap pt-8">
+    <h1 class="sr-only">Search students</h1>
+    <SearchBox value={q} autofocus={!q} />
+
+    <form action="/search" method="get" class="mt-3 flex flex-wrap items-center gap-2 text-sm" id="filters">
+      <input type="hidden" name="q" value={q} />
+      <label class="sr-only" for="f-batch">Batch</label>
+      <select id="f-batch" name="batch" class="input h-9 w-auto max-w-full pr-8 pl-3 text-sm">
+        <option value="">All batches</option>
+        {batches.map((b) => <option value={b.batch} selected={b.batch === batch}>Batch {b.batch}</option>)}
+      </select>
+      <label class="sr-only" for="f-dept">Department</label>
+      <select id="f-dept" name="dept" class="input h-9 w-auto max-w-full min-w-0 flex-1 pr-8 pl-3 text-sm sm:flex-none">
+        <option value="">All departments</option>
+        {departments.map(({ dept: d }) => <option value={d.slug} selected={d.slug === dept?.slug}>{d.short} – {d.name}</option>)}
+      </select>
+      <noscript><button class="btn h-9">Apply</button></noscript>
+      {filtered && <a href={`/search?q=${encodeURIComponent(q)}`} class="text-muted hover:text-fg">Clear filters</a>}
+    </form>
+
+    <div class="mt-8">
+      {
+        !q ? (
+          <div class="card p-6 text-muted sm:p-8">
+            <h2 class="font-semibold text-fg">Search tips</h2>
+            <ul class="mt-3 space-y-2 text-sm">
+              <li>
+                <strong class="text-fg">Full ID</strong> like <code class="font-mono">1904001</code> opens that student directly.
+              </li>
+              <li>
+                <strong class="text-fg">Partial ID</strong>: <code class="font-mono">25</code> is all of batch 25, <code class="font-mono">2504</code> is CSE batch 25.
+              </li>
+              <li>
+                <strong class="text-fg">Names</strong>: words can be in any order and partial. <code class="font-mono">islam rafi</code> matches names containing both.
+              </li>
+            </ul>
+          </div>
+        ) : tooShort ? (
+          <p class="text-muted">Type at least two letters.</p>
+        ) : results.length === 0 ? (
+          <div class="card p-8 text-center">
+            <p class="font-semibold">No students match “{q}”{filtered && ' with these filters'}.</p>
+            <p class="mt-2 text-sm text-muted">
+              Check the spelling, try fewer words, or {filtered ? <a class="text-accent hover:underline" href={`/search?q=${encodeURIComponent(q)}`}>search all batches</a> : <a class="text-accent hover:underline" href="/batch">browse by batch</a>}.
+            </p>
+          </div>
+        ) : (
+          <>
+            <p class="mb-3 text-sm text-muted">
+              {more ? `Showing the first ${fmt(results.length)} matches. Add a word or a filter to narrow it down.` : `${fmt(results.length)} ${results.length === 1 ? 'match' : 'matches'}`}
+            </p>
+            <StudentTable students={results} mixed />
+          </>
+        )
+      }
+    </div>
+  </div>
+</Base>
+
+<script>
+  // Apply filters as soon as they change.
+  const form = document.getElementById('filters') as HTMLFormElement | null;
+  form?.addEventListener('change', () => form.requestSubmit());
+</script>

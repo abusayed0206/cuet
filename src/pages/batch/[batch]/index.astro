@@ -1,0 +1,62 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Crumbs from '../../../components/Crumbs.astro';
+import { getOverview } from '../../../lib/db';
+import { deptLabel } from '../../../lib/departments';
+import { cachePage, fmt, sessionLabel } from '../../../lib/http';
+
+const { batch = '' } = Astro.params;
+const { batches } = await getOverview();
+const idx = batches.findIndex((b) => b.batch === batch);
+if (idx < 0) return Astro.rewrite('/404');
+
+cachePage(Astro);
+const b = batches[idx]!;
+const newer = batches[idx - 1];
+const older = batches[idx + 1];
+---
+
+<Base title={`Batch ${b.batch} (${sessionLabel(b.session)})`} description={`CUET batch ${b.batch}, session ${b.session}: ${b.count} students across ${b.classes.length} departments.`}>
+  <div class="wrap pt-8">
+    <Crumbs items={[{ href: '/batch', label: 'Batches' }, { label: `Batch ${b.batch}` }]} />
+
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <h1 class="text-2xl font-bold tracking-tight sm:text-3xl">Batch {b.batch}</h1>
+        <p class="mt-2 text-muted">
+          Session {sessionLabel(b.session)} · {fmt(b.count)} students · {b.classes.length} departments
+        </p>
+      </div>
+      <div class="flex gap-2 text-sm">
+        {older && <a href={`/batch/${older.batch}`} class="btn-ghost h-9">← {older.batch}</a>}
+        {newer && <a href={`/batch/${newer.batch}`} class="btn-ghost h-9">{newer.batch} →</a>}
+      </div>
+    </div>
+
+    <div class="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        b.classes.map((c) => {
+          const label = deptLabel(c.dept, b.batch);
+          return (
+            <a href={`/batch/${b.batch}/${c.dept.slug}`} class="card-link flex items-center gap-4 p-4">
+              <span class="grid h-11 w-14 shrink-0 place-items-center rounded-xl bg-accent-soft text-sm font-bold text-accent">
+                {label.short}
+              </span>
+              <span class="min-w-0 flex-1">
+                <span class="block truncate font-medium">{label.name}</span>
+                <span class="block font-mono text-xs text-faint">
+                  {b.batch}
+                  {c.code}xxx
+                </span>
+              </span>
+              <span class="text-right">
+                <span class="block text-lg font-semibold tabular-nums">{c.count}</span>
+                <span class="block text-xs text-faint">students</span>
+              </span>
+            </a>
+          );
+        })
+      }
+    </div>
+  </div>
+</Base>
