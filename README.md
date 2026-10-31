@@ -49,8 +49,17 @@ npm run dev          # http://localhost:4321, uses a local D1 copy
 npm run check        # type-check
 npm run build
 npm run preview      # run the built Worker locally
-npm run deploy       # build + wrangler deploy
+npm run deploy       # build + wrangler deploy (manual; normally not needed)
 ```
+
+## Deploys
+
+Cloudflare Workers Builds is connected to this repo:
+
+- Push to `main` → `npm run build` + `npx wrangler deploy` (production, cuet.sayed.app)
+- Push to any other branch (except `redirect`) → `npx wrangler versions upload` (preview version, not live)
+
+Build status and logs: Cloudflare dashboard → Workers & Pages → `cuet` → Deployments.
 
 Local D1 starts empty. To copy production data locally:
 
@@ -64,7 +73,7 @@ npx wrangler d1 execute CUET_students --local --file prod.sql
 1. Put the rows in a SQL migration (`migrations/000N_*.sql`) using the full department name, e.g.
    `Department of Computer Science & Engineering`. `scripts/convert-csv-to-sql.js` converts a CSV.
 2. `npm run db:migrate` to apply it to production D1.
-3. `npm run deploy` (a new deploy also clears the edge cache).
+3. Push to `main` (or `npm run deploy`); a new deploy also clears the edge cache.
 
 ## Branches
 
