@@ -106,14 +106,14 @@ const toc = [
 
       <form id="try" class="mt-8 flex max-w-2xl gap-2" autocomplete="off">
         <label for="try-path" class="sr-only">Endpoint path</label>
-        <div class="input flex h-12 items-center gap-2 px-3 font-mono text-sm">
+        <div class="input flex h-12 min-w-0 flex-1 items-center gap-2 px-3 font-mono text-sm">
           <span class="text-accent">GET</span>
           <span class="hidden text-faint sm:inline">/api/v1/</span>
-          <input id="try-path" value="students/2504001" class="min-w-0 flex-1 bg-transparent outline-none" spellcheck="false" />
+          <input id="try-path" value="students/2504001" class="w-full min-w-0 flex-1 bg-transparent outline-none" spellcheck="false" />
         </div>
-        <button class="btn h-12 shrink-0">Send</button>
+        <button class="btn h-12 shrink-0 px-3 sm:px-4">Send</button>
       </form>
-      <pre id="try-out" hidden class="mt-3 max-h-96 max-w-2xl overflow-auto rounded-[3px] bg-fg p-4 font-mono text-[12.5px] leading-relaxed text-bg"></pre>
+      <pre id="try-out" hidden class="mt-3 max-h-96 max-w-2xl overflow-auto rounded-[3px] bg-fg p-4 font-mono text-[12.5px] leading-relaxed break-all whitespace-pre-wrap text-bg sm:break-normal sm:whitespace-pre"></pre>
     </div>
   </section>
 
@@ -200,7 +200,7 @@ const toc = [
           <div class="bg-surface">
             {
               fields.map(([name, type, desc]) => (
-                <div class="grid grid-cols-[130px_1fr] gap-3 border-b border-line px-4 py-2.5 last:border-b-0">
+                <div class="grid grid-cols-[104px_1fr] gap-3 sm:grid-cols-[130px_1fr] border-b border-line px-4 py-2.5 last:border-b-0">
                   <span class="font-mono text-[13px] font-medium">{name}</span>
                   <span class="text-sm text-muted">
                     <span class="font-mono text-xs text-faint">{type}</span> {desc}
@@ -209,7 +209,7 @@ const toc = [
               ))
             }
           </div>
-          <pre class="overflow-x-auto bg-fg p-5 font-mono text-[12.5px] leading-relaxed text-bg">{sampleJson}</pre>
+          <pre class="overflow-x-auto bg-fg p-4 font-mono text-[12px] leading-relaxed break-all whitespace-pre-wrap text-bg sm:p-5 sm:text-[12.5px] sm:break-normal sm:whitespace-pre">{sampleJson}</pre>
         </div>
       </section>
 

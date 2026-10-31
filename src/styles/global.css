@@ -82,6 +82,20 @@
   body {
     @apply bg-bg text-fg font-sans antialiased;
   }
+  /* Never let the page scroll sideways. `clip` (unlike `hidden`) keeps the sticky header working. */
+  html,
+  body {
+    overflow-x: clip;
+  }
+  /* Grid and flex children default to min-width:auto, so one long unbreakable or `truncate`d
+     line can stretch a column past the screen. Zero specificity: explicit classes still win. */
+  :where(.grid, .ruled) > *,
+  :where(.flex) > :where(.min-w-0, .truncate) {
+    min-width: 0;
+  }
+  pre {
+    max-width: 100%;
+  }
   :focus-visible {
     outline: 2px solid var(--ring);
     outline-offset: 2px;

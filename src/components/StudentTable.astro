@@ -26,7 +26,7 @@ const rows = students.map((s) => {
 });
 const hasMerit = rows.some((r) => r.merit);
 const hasRoll = rows.some((r) => r.roll);
-const th = 'px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider text-faint';
+const th = 'px-3 py-2.5 sm:px-4 text-left text-xs font-semibold uppercase tracking-wider text-faint';
 ---
 
 <div data-student-table class="card overflow-hidden">
@@ -84,9 +84,9 @@ const th = 'px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider
               data-name={r.name.toLowerCase()}
               data-merit={r.meritKey}
             >
-              <td class="px-4 py-2.5 font-mono text-[13px] whitespace-nowrap text-muted">{r.id}</td>
-              <td class="px-4 py-2.5">
-                <a href={`/${r.id}`} class="font-medium hover:text-accent hover:underline">
+              <td class="px-3 py-2.5 sm:px-4 font-mono text-xs whitespace-nowrap text-muted sm:text-[13px]">{r.id}</td>
+              <td class="px-3 py-2.5 sm:px-4">
+                <a href={`/${r.id}`} class="font-medium [overflow-wrap:anywhere] hover:text-accent hover:underline">
                   {r.name}
                 </a>
                 {mixed && (
@@ -95,10 +95,10 @@ const th = 'px-4 py-2.5 text-left text-xs font-semibold uppercase tracking-wider
                   </span>
                 )}
               </td>
-              {mixed && <td class="hidden px-4 py-2.5 text-muted sm:table-cell">{r.dept}</td>}
-              {mixed && <td class="hidden px-4 py-2.5 text-muted sm:table-cell">{r.batch}</td>}
-              {hasMerit && <td class="px-4 py-2.5 text-right whitespace-nowrap text-muted tabular-nums">{r.merit || '—'}</td>}
-              {hasRoll && !mixed && <td class="hidden px-4 py-2.5 text-right text-muted tabular-nums md:table-cell">{r.roll || '—'}</td>}
+              {mixed && <td class="hidden px-3 py-2.5 sm:px-4 text-muted sm:table-cell">{r.dept}</td>}
+              {mixed && <td class="hidden px-3 py-2.5 sm:px-4 text-muted sm:table-cell">{r.batch}</td>}
+              {hasMerit && <td class="px-3 py-2.5 sm:px-4 text-right whitespace-nowrap text-muted tabular-nums">{r.merit || '—'}</td>}
+              {hasRoll && !mixed && <td class="hidden px-3 py-2.5 sm:px-4 text-right text-muted tabular-nums md:table-cell">{r.roll || '—'}</td>}
             </tr>
           ))
         }

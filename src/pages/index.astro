@@ -132,7 +132,7 @@ const jsonLd = {
             >
               <span class="font-mono text-sm font-semibold group-hover:text-accent">{dept.short}</span>
               <span class="min-w-0">
-                <span class="block truncate font-medium">{dept.name}</span>
+                <span class="block font-medium leading-snug sm:truncate">{dept.name}</span>
                 <span class="block font-mono text-[11px] text-faint">
                   code {dept.code} · {plural(classes.length, 'batch')}
                 </span>
@@ -216,7 +216,7 @@ const jsonLd = {
         <li class="flex gap-3"><span class="text-accent">GET</span><span>/api/v1/batches/:batch/:dept</span></li>
         <li class="flex gap-3"><span class="text-accent">GET</span><span>/api/v1/departments</span></li>
       </ul>
-      <pre class="overflow-x-auto bg-fg p-6 font-mono text-[13px] leading-relaxed text-bg"><span class="opacity-50">$</span> curl https://cuet.sayed.app/api/v1/students/2504001
+      <pre class="overflow-x-auto bg-fg p-4 font-mono text-[12px] leading-relaxed break-all whitespace-pre-wrap text-bg sm:p-6 sm:text-[13px] sm:break-normal sm:whitespace-pre"><span class="opacity-50">$</span> curl https://cuet.sayed.app/api/v1/students/2504001
 {apiSample}</pre>
     </div>
   </section>
