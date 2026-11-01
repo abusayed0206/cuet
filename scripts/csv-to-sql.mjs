@@ -81,7 +81,9 @@ for (const [n, r] of records.entries()) {
   );
 }
 
-writeFileSync(output, lines.join('\n') + '\n');
+// Keep the precomputed tables (class_counts, name_words) in step with the import.
+const refresh = readFileSync(new URL('./refresh-derived.sql', import.meta.url), 'utf8');
+writeFileSync(output, lines.join('\n') + '\n\n' + refresh);
 console.log(`Wrote ${lines.length} rows to ${output}`);
 if (problems.length) {
   console.warn(`Skipped ${problems.length} invalid rows:\n  ${problems.join('\n  ')}`);

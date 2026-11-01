@@ -1,5 +1,4 @@
-import { getSitemapRows, type SitemapRow } from './db';
-import { deptByCode } from './departments';
+import { getOverview, getSitemapRows } from './db';
 
 export const SITE = 'https://cuet.sayed.app';
 
@@ -37,30 +36,15 @@ export function sitemapIndex(entries: Entry[]) {
 }
 
 /**
- * Everything the sitemaps need, with lastmod rolled up from student rows:
+ * Index and page sitemaps, with lastmod from class_counts (via the overview):
  * a batch/class/department page changes when any of its students does.
  */
 export async function sitemapData() {
-  const rows = await getSitemapRows();
-  const byBatch = new Map<string, SitemapRow[]>();
-  const classMod = new Map<string, string>(); // "25/cse" -> date
-  const deptMod = new Map<string, string>(); // "cse" -> date
-  let latest = STATIC_LASTMOD;
-
-  for (const r of rows) {
-    const updated = r.updated || STATIC_LASTMOD;
-    latest = max(latest, updated);
-    if (!byBatch.has(r.batch)) byBatch.set(r.batch, []);
-    byBatch.get(r.batch)!.push(r);
-    const slug = deptByCode(r.code)?.slug;
-    if (!slug) continue;
-    const k = `${r.batch}/${slug}`;
-    classMod.set(k, max(classMod.get(k) ?? '', updated));
-    deptMod.set(slug, max(deptMod.get(slug) ?? '', updated));
-  }
-
-  const batchMod = new Map([...byBatch].map(([b, rs]) => [b, rs.reduce((m, r) => max(m, r.updated || STATIC_LASTMOD), '')]));
-  const batches = [...byBatch.keys()].sort().reverse();
+  const { batches: all, departments } = await getOverview();
+  const newest = (dates: string[]) => dates.reduce(max, STATIC_LASTMOD);
+  const batchMod = new Map(all.map((b) => [b.batch, newest(b.classes.map((c) => c.updated))]));
+  const batches = all.map((b) => b.batch);
+  const latest = newest([...batchMod.values()]);
 
   const pages: Entry[] = [
     { path: '/', lastmod: latest },
@@ -70,10 +54,17 @@ export async function sitemapData() {
     { path: '/privacy', lastmod: '2026-04-01' },
     { path: '/privacy/v1', lastmod: '2025-07-25' },
     { path: '/terms', lastmod: '2026-04-01' },
-    ...batches.map((b) => ({ path: `/batch/${b}`, lastmod: batchMod.get(b)! })),
-    ...[...classMod].map(([k, d]) => ({ path: `/batch/${k}`, lastmod: d })),
-    ...[...deptMod].map(([slug, d]) => ({ path: `/department/${slug}`, lastmod: d })),
+    ...all.map((b) => ({ path: `/batch/${b.batch}`, lastmod: batchMod.get(b.batch)! })),
+    ...all.flatMap((b) => b.classes.map((c) => ({ path: `/batch/${b.batch}/${c.dept.slug}`, lastmod: newest([c.updated]) }))),
+    ...departments.map((d) => ({ path: `/department/${d.dept.slug}`, lastmod: newest(d.classes.map((c) => c.updated)) })),
   ];
 
-  return { rows, byBatch, batches, batchMod, pages, latest };
+  return { batches, batchMod, pages, latest };
+}
+
+/** Every student profile in one batch; null if the batch is unknown. */
+export async function batchSitemapRows(batch: string) {
+  if (!/^\d{2}$/.test(batch)) return null;
+  const rows = await getSitemapRows(batch);
+  return rows.length ? rows.map((r) => ({ path: `/${r.studentid}`, lastmod: r.updated || STATIC_LASTMOD })) : null;
 }

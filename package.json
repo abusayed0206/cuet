@@ -13,7 +13,8 @@
     "check": "wrangler types && astro check",
     "deploy": "astro build && wrangler deploy",
     "types": "wrangler types",
-    "db:migrate": "wrangler d1 migrations apply CUET_students --remote"
+    "db:migrate": "wrangler d1 migrations apply CUET_students --remote",
+    "db:refresh": "wrangler d1 execute CUET_students --remote --file scripts/refresh-derived.sql"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^14.4.3",
