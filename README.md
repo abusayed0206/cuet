@@ -26,8 +26,8 @@ scripts/csv-to-sql.mjs CSV → D1 migration for importing a new batch
 scripts/refresh-derived.sql  rebuilds class_counts / name_words (see below)
 ```
 
-D1 bills every row a query *reads*, and `students` has ~17K rows, so no request
-path may scan it. Counts come from `class_counts` (one row per class) and name
+D1 bills every row a query *reads*, and `students` has ~8.6K rows (a full scan
+counts as ~17K reads), so no request path may scan it. Counts come from `class_counts` (one row per class) and name
 search goes through the indexed `name_words` table. After changing `students`
 by hand, run `npm run db:refresh` (imports made with csv-to-sql do it already).
 
