@@ -104,11 +104,44 @@ Cloudflare Workers Builds watches this repo:
 ## Adding a new batch
 
 1. Prepare a CSV with headers `studentid,name,admission_roll,admission_merit`.
-2. `node scripts/csv-to-sql.mjs batch26.csv migrations/0005_import_batch_26.sql`
+2. `node scripts/csv-to-sql.mjs batch26.csv migrations/0006_import_batch_26.sql`
+   (use the next free migration number; the script appends `scripts/refresh-derived.sql`,
+   so `class_counts` and `name_words` update in the same migration)
 3. `npm run db:migrate` (applies new migrations to production D1)
-4. Push to `main` so the edge cache refreshes, then `node scripts/indexnow.mjs --since <today>`.
+4. Check the derived tables match; all three numbers must be equal:
+   ```sh
+   npx wrangler d1 execute CUET_students --remote --command "SELECT (SELECT COUNT(*) FROM students), (SELECT SUM(count) FROM class_counts), (SELECT COUNT(DISTINCT studentid) FROM name_words)"
+   ```
+   If they differ, run `npm run db:refresh`.
+5. Push to `main` so the edge cache and the in-memory overview refresh, then
+   `node scripts/indexnow.mjs --since <today>`.
 
 Import migrations contain personal data and are gitignored; keep the CSV outside the repo.
+
+### Editing existing students
+
+Any hand-made change to `students` (a fix migration, `d1 execute`, the dashboard) must be
+followed by `npm run db:refresh`, or counts and search go stale:
+
+- Added/removed students or changed batch/session: `db:refresh` is enough.
+- **Renamed** a student: the refresh only indexes students it hasn't seen, so delete their
+  old words first: `DELETE FROM name_words WHERE studentid = '2504001';` then `db:refresh`.
+- Deleted a student: also `DELETE FROM name_words WHERE studentid = ...` (stale rows are
+  harmless for results, but waste reads).
+
+Don't rebuild `name_words` from scratch (`DELETE FROM name_words` + refresh): that is
+~50K row writes, half the free daily limit.
+
+### D1 budget (free plan)
+
+D1 bills every row a query *reads*: 5M/day, then all queries fail until 00:00 UTC. A
+query without an index on its `WHERE` reads all ~8.6K students (plus index rows). Before
+adding a query, check its plan in `wrangler d1 execute --local` with `EXPLAIN QUERY PLAN`:
+it must say `SEARCH ... USING INDEX`, never `SCAN students`. Usage per database:
+dashboard → D1 → CUET_students → Metrics.
+
+Avoid `node scripts/indexnow.mjs` without `--since`: it makes crawlers fetch every
+profile at once (that, plus full-table scans, caused the Nov 2026 outage).
 
 ## Backups
 
