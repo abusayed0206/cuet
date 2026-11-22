@@ -127,9 +127,9 @@ export interface Overview {
   departments: DeptSummary[]; // only those with students, in table order
 }
 
-// class_counts is precomputed by scripts/refresh-derived.sql (one row per class
-// instead of scanning every student). Data only changes on imports, so also
-// keep it in isolate memory.
+// class_counts is precomputed by the derived-table SQL in the README (one row
+// per class instead of scanning every student). Data only changes on imports,
+// so also keep it in isolate memory.
 let cached: { at: number; data: Overview } | null = null;
 const TTL_MS = 60 * 60 * 1000;
 
@@ -226,7 +226,7 @@ export async function searchStudents(q: string, { batch, code, limit = 100 }: Se
     where.push('studentid = ?');
     params.push(query);
   } else {
-    // Same separators and lowercasing as scripts/refresh-derived.sql.
+    // Same separators and lowercasing as the derived-table SQL in the README.
     const words = query.toLowerCase().split(/[\s.\-()]+/).filter(Boolean);
     const key = words.reduce((a, w) => (w.length > a.length ? w : a), '');
     if (!key) return { results: [] as Student[], more: false };

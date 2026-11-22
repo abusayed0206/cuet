@@ -3,7 +3,7 @@
 An independent index of Chittagong University of Engineering & Technology students: search by name or ID, browse every
 batch and department, or use the public JSON API.
 
-**Site** https://cuet.sayed.app · **API docs** https://cuet.sayed.app/api
+**Site** https://cuet.sayed.app · **API docs** [/api](https://cuet.sayed.app/api) · **[API.md](API.md)**
 
 ## Stack
 
@@ -21,17 +21,14 @@ src/
   lib/api.ts           JSON helpers, rate limiting, API response shapes
   pages/               routes (pages + /api endpoints)
   components/, layouts/
-migrations/            D1 schema and data fixes (data imports are gitignored)
-scripts/csv-to-sql.mjs CSV → D1 migration for importing a new batch
-scripts/import-archive.mjs  the pre-2012 archive (see below)
-scripts/check-data.mjs      checks the data in D1 against the rules (see below)
-scripts/refresh-derived.sql  rebuilds class_counts / name_words (see below)
+api/
+  cuet_api.py          the same API as a Flask blueprint of api.sayed.app
+scripts/indexnow.mjs   pushes the sitemap to the search engines
 ```
 
 D1 bills every row a query *reads*, and `students` has ~12.8K rows (a full scan
 counts as ~26K reads), so no request path may scan it. Counts come from `class_counts` (one row per class) and name
-search goes through the indexed `name_words` table. After changing `students`
-by hand, run `npm run db:refresh` (imports made with csv-to-sql do it already).
+search goes through the indexed `name_words` table.
 
 ### Student IDs
 
@@ -95,8 +92,8 @@ Read-only, no key, CORS `*`, 60 requests/minute per IP, responses cached up to 2
 | `GET /api/v1/batches/{batch}/{dept}` | full class list |
 | `GET /api/v1/departments` | departments with their batches |
 
-The legacy `/api/student/{id}` and `/api/student/search?query=` endpoints still answer in the old flat format. Full
-reference with a live console: [/api](https://cuet.sayed.app/api).
+The legacy `/api/student/{id}` and `/api/student/search?query=` endpoints still answer in the old flat format. The
+complete reference, with examples and the data model, is in **[API.md](API.md)**.
 
 ## Development
 
@@ -109,12 +106,16 @@ npm run check     # wrangler types + astro check
 npm run preview   # build and run the real Worker locally
 ```
 
-The local D1 starts empty. Copy production into it:
+The local D1 starts empty. To work against the real data, put a copy of the
+database in the local D1 state:
 
 ```sh
 npx wrangler d1 export CUET_students --remote --output prod.sql
 npx wrangler d1 execute CUET_students --local --file prod.sql
 ```
+
+`.wrangler/state/v3/d1/miniflare-D1DatabaseObject/<hash>.sqlite` is the file
+the local Worker opens - a single SQLite file can be copied straight into it.
 
 ## Deployment
 
@@ -135,73 +136,58 @@ Cloudflare Workers Builds watches this repo:
 - **Bing, Yandex, Seznam, Naver**: `node scripts/indexnow.mjs` pushes every sitemap URL via IndexNow;
   `--since YYYY-MM-DD` sends only changed pages. Key file: `public/1144afef155385c08e4aca5b16ec8642.txt`.
 
-## Adding a new batch
+## The database
 
-1. Prepare a CSV with headers `studentid,name,admission_roll,admission_merit`.
-2. `node scripts/csv-to-sql.mjs batch26.csv migrations/0011_import_batch_26.sql`
-   (use the next free migration number; the script appends `scripts/refresh-derived.sql`,
-   so `class_counts` and `name_words` update in the same migration)
-3. `npm run db:migrate` (applies new migrations to production D1)
-4. `npm run db:check` - the rules the site relies on, see below
-5. Push to `main` so the edge cache and the in-memory overview refresh, then
-   `node scripts/indexnow.mjs --since <today>`.
+The schema, the indexes and the data dictionary are in [API.md](API.md). Two
+tables are derived and have to be rebuilt after any change to `students`:
+`class_counts` (one row per batch × department) and `name_words` (the
+lowercased words of every name, the search index).
 
-Import migrations contain personal data and are gitignored; keep the CSV outside the repo.
+```sql
+DELETE FROM class_counts;
+INSERT INTO class_counts (batch, code, session, count, updated)
+SELECT batch, dept_code, MIN(session), COUNT(*), MAX(date(COALESCE(updated_at, created_at)))
+FROM students GROUP BY batch, dept_code;
 
-### Checking the data
-
-`npm run db:check` runs the rules the site depends on against D1 and exits
-non-zero when one is broken:
-
-1. `students` == `SUM(class_counts)` == the students in `name_words`
-2. `class_counts` matches the students it counts
-3. every student ID has a shape the site accepts
-4. every student has a department code, and a class roll only where the ID has one
-5. the session matches the batch
-6. no student ID carries two names
-
-It also reports (without failing) the names that two students in a batch
-share - the source really has those, they are different people.
-
-Run it after every import, and `node scripts/check-data.mjs --local` against a
-local copy of the database before applying a migration.
-
-### Importing the pre-2012 archive
-
-The `cuet-archive` package (batches 03–16, CUET's old HTML pages and the 2016
-department allotment PDFs) has its own importer, because its CSV has a
-different shape and most of its rows have no student ID:
-
-```sh
-npx wrangler d1 execute CUET_students --remote --command "SELECT studentid, name, batch, dept_code FROM students" --json > live.json
-node scripts/import-archive.mjs "C:/Users/abusa/cuet-archive/clean/cuet_students_03-16.csv" live.json migrations/0012_import_archive.sql
-npm run db:migrate
+DELETE FROM name_words;
+INSERT OR IGNORE INTO name_words (word, studentid)
+WITH RECURSIVE split(studentid, rest, word) AS (
+  SELECT studentid, lower(replace(replace(replace(replace(name, '.', ' '), '-', ' '), '(', ' '), ')', ' ')) || ' ', ''
+  FROM students
+  UNION ALL
+  SELECT studentid, substr(rest, instr(rest, ' ') + 1), substr(rest, 1, instr(rest, ' ') - 1)
+  FROM split WHERE rest <> ''
+)
+SELECT word, studentid FROM split WHERE word <> '';
 ```
 
-It imports name, student ID, department, class roll, batch, session, admission
-roll and merit, and skips students that are already in the database.
+The separators (space `.` `-` `(` `)`) must match `searchStudents()` in `src/lib/db.ts`.
 
-- `--replace ids.txt` - the student IDs of an earlier import of the same
-  archive: those rows are dropped and inserted again, for when the ID scheme
-  changes.
-- `--inferred inferred.csv` - the archive's list of rows with an inferred
-  field; those rows get `inferred = 1` and the reason in `note`.
-- `--provenance` - only write the `source`, `inferred` and `note` columns of
-  rows that are already in the database.
+### The name_words trap
 
-### Editing existing students
+`name_words` is `WITHOUT ROWID` with the key `(word, studentid)`, so `studentid`
+on its own is not indexed. `DELETE FROM name_words WHERE studentid = '…'` scans the
+whole table - ~36K rows. An import that deletes one row per student does that
+4,000 times: 148 million row reads, 29 times the daily limit, and the site goes
+down. Keep `idx_name_words_studentid` (so the delete is a seek) and delete in
+one statement (`WHERE studentid IN (…)`).
 
-Any hand-made change to `students` (a fix migration, `d1 execute`, the dashboard) must be
-followed by `npm run db:refresh`, or counts and search go stale:
+### Checks
 
-- Added/removed students or changed batch/session: `db:refresh` is enough.
-- **Renamed** a student: the refresh only indexes students it hasn't seen, so delete their
-  old words first: `DELETE FROM name_words WHERE studentid = '2504001';` then `db:refresh`.
-- Deleted a student: also `DELETE FROM name_words WHERE studentid = ...` (stale rows are
-  harmless for results, but waste reads).
+After any change to the data, these three numbers have to agree, and the rest
+of the rules should hold:
 
-Don't rebuild `name_words` from scratch (`DELETE FROM name_words` + refresh): that is
-~50K row writes, half the free daily limit.
+```sql
+SELECT (SELECT COUNT(*) FROM students) students,
+       (SELECT SUM(count) FROM class_counts) class_sum,
+       (SELECT COUNT(DISTINCT studentid) FROM name_words) words;          -- all three equal
+
+SELECT COUNT(*) FROM students WHERE dept_code IS NULL;                    -- 0
+SELECT COUNT(*) FROM students WHERE class_roll IS NOT NULL
+   AND class_roll <> substr(studentid, 5, 3);                            -- 0
+SELECT COUNT(*) FROM students WHERE session <> '20' || batch || '-'      -- 0
+   || substr('0' || (CAST(batch AS INTEGER) + 1), -2);
+```
 
 ### D1 budget (free plan)
 
@@ -211,26 +197,14 @@ adding a query, check its plan in `wrangler d1 execute --local` with `EXPLAIN QU
 it must say `SEARCH ... USING INDEX`, never `SCAN students`. Usage per database:
 dashboard → D1 → CUET_students → Metrics.
 
-Avoid `node scripts/indexnow.mjs` without `--since`: it makes crawlers fetch every
-profile at once (that, plus full-table scans, caused the Nov 2026 outage).
-
-### The name_words trap
-
-`name_words` is `WITHOUT ROWID` with the key `(word, studentid)`, so `studentid`
-on its own is not indexed. `DELETE FROM name_words WHERE studentid = '…'` scans the
-whole table — ~36K rows. An import that deletes one row per student does that
-4,000 times: 148 million row reads, 29 times the daily limit, and the site goes
-down. Two rules:
-
-- keep `idx_name_words_studentid` (migration 0011) so the delete is a seek
-- delete in one statement: `DELETE FROM name_words WHERE studentid IN (…)`
-
-`scripts/import-archive.mjs` does the second one. Check what a migration costs
-before applying it:
+Check what a migration or a batch of queries costs before running it:
 
 ```sh
 npx wrangler d1 insights CUET_students --time-period 1d --sort-by reads --limit 20
 ```
+
+Avoid `node scripts/indexnow.mjs` without `--since`: it makes crawlers fetch every
+profile at once (that, plus full-table scans, caused the Nov 2026 outage).
 
 ## Backups
 
