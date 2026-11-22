@@ -214,6 +214,24 @@ dashboard → D1 → CUET_students → Metrics.
 Avoid `node scripts/indexnow.mjs` without `--since`: it makes crawlers fetch every
 profile at once (that, plus full-table scans, caused the Nov 2026 outage).
 
+### The name_words trap
+
+`name_words` is `WITHOUT ROWID` with the key `(word, studentid)`, so `studentid`
+on its own is not indexed. `DELETE FROM name_words WHERE studentid = '…'` scans the
+whole table — ~36K rows. An import that deletes one row per student does that
+4,000 times: 148 million row reads, 29 times the daily limit, and the site goes
+down. Two rules:
+
+- keep `idx_name_words_studentid` (migration 0011) so the delete is a seek
+- delete in one statement: `DELETE FROM name_words WHERE studentid IN (…)`
+
+`scripts/import-archive.mjs` does the second one. Check what a migration costs
+before applying it:
+
+```sh
+npx wrangler d1 insights CUET_students --time-period 1d --sort-by reads --limit 20
+```
+
 ## Backups
 
 D1 keeps 30 days of point-in-time history (Time Travel). For an offline copy:

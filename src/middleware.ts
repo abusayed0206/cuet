@@ -18,7 +18,20 @@ export const onRequest = defineMiddleware(async (ctx, next) => {
   const hit = await cache.match(cacheKey);
   if (hit) return hit;
 
-  const res = await next();
+  let res: Response;
+  try {
+    res = await next();
+  } catch (err) {
+    // D1 refuses queries when the free tier's daily row-read limit is spent.
+    // That is temporary: say so with a 503, not a 404 - a 404 tells the search
+    // engines that the page does not exist.
+    console.error('request failed', err);
+    return new Response('The directory is temporarily unavailable. Please try again in a few minutes.', {
+      status: 503,
+      headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Retry-After': '900' },
+    });
+  }
+
   if (res.status === 200 && /s-maxage=\d+/.test(res.headers.get('Cache-Control') ?? '')) {
     ctx.locals.cfContext?.waitUntil(cache.put(cacheKey, res.clone()));
   }

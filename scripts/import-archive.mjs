@@ -176,6 +176,7 @@ function generatedId(batch, code, seed) {
 }
 
 const lines = [];
+const replaced = [];
 for (const r of records) {
   const batch = String(r[col.batch]).trim().padStart(2, '0');
   const session = r[col.session].trim();
@@ -249,7 +250,9 @@ for (const r of records) {
 
   if (existing) {
     // An earlier import of this archive: drop it, it comes back with the new ID.
-    lines.push(`DELETE FROM name_words WHERE studentid = ${sql(existing.studentid)};`);
+    // The name_words rows are deleted in one statement at the end of the file -
+    // one DELETE per student would scan the whole table every time.
+    replaced.push(existing.studentid);
     lines.push(`DELETE FROM students WHERE studentid = ${sql(existing.studentid)};`);
     stats.replaced++;
     b.replaced++;
@@ -264,6 +267,13 @@ for (const r of records) {
       `VALUES (${sql(name)}, ${sql(targetId)}, ${sql(code)}, ${sql(classRoll)}, ${sql(admissionRoll)}, ${sql(merit)}, ${sql(batch)}, ${sql(session)}, ` +
       `${sql(source)}, ${note ? 1 : 0}, ${sql(note)});`,
   );
+}
+
+// One statement for all of them: a DELETE per student would scan name_words
+// from the start every time (studentid is the second half of its key).
+if (replaced.length) {
+  const ids = replaced.map((id) => sql(id)).join(', ');
+  lines.unshift(`DELETE FROM name_words WHERE studentid IN (${ids});`);
 }
 
 // Keep the precomputed tables (class_counts, name_words) in step with the import.

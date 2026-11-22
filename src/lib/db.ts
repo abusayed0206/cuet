@@ -62,19 +62,31 @@ export async function getStudent(id: string) {
 /** Previous/next student in the same class plus class size (from the overview). */
 export async function getNeighbours(student: Student) {
   const { studentid: id, batch, dept_code: code } = student;
-  const [[prev, next], overview] = await Promise.all([
+  const [[prev, next], size] = await Promise.all([
     env.DB.batch([
       env.DB.prepare('SELECT studentid, name FROM students WHERE batch = ? AND dept_code = ? AND studentid < ? ORDER BY studentid DESC LIMIT 1').bind(batch, code, id),
       env.DB.prepare('SELECT studentid, name FROM students WHERE batch = ? AND dept_code = ? AND studentid > ? ORDER BY studentid ASC LIMIT 1').bind(batch, code, id),
     ]),
-    getOverview(),
+    getClassSize(batch, code),
   ]);
   type Row = { studentid: string; name: string };
   return {
     prev: (prev.results[0] as Row | undefined) ?? null,
     next: (next.results[0] as Row | undefined) ?? null,
-    classSize: overview.batches.find((b) => b.batch === batch)?.classes.find((c) => c.code === code)?.count ?? 0,
+    classSize: size,
   };
+}
+
+/**
+ * How many students are in one class. One row, not the whole overview: a
+ * student page is the most visited page there is, and D1 bills every row a
+ * query reads.
+ */
+export async function getClassSize(batch: string, code: string) {
+  const row = await env.DB.prepare('SELECT count FROM class_counts WHERE batch = ? AND code = ?')
+    .bind(batch, code)
+    .first<{ count: number }>();
+  return row?.count ?? 0;
 }
 
 // ---------- a class (batch + department) ----------
@@ -153,7 +165,8 @@ export async function getOverview(): Promise<Overview> {
     batches: [...batches.values()],
     departments: DEPARTMENTS.map((d) => depts.get(d.code)).filter((d): d is DeptSummary => !!d),
   };
-  cached = { at: Date.now(), data };
+  // An empty overview means the database said nothing - do not cache that.
+  if (data.batches.length) cached = { at: Date.now(), data };
   return data;
 }
 
