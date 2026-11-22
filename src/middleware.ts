@@ -16,7 +16,7 @@ export const onRequest = defineMiddleware(async (ctx, next) => {
   const cache = (caches as unknown as { default: Cache }).default;
 
   const hit = await cache.match(cacheKey);
-  if (hit) return hit;
+  if (hit) return withSecurityHeaders(hit);
 
   let res: Response;
   try {
@@ -34,5 +34,19 @@ export const onRequest = defineMiddleware(async (ctx, next) => {
   if (res.status === 200 && /s-maxage=\d+/.test(res.headers.get('Cache-Control') ?? '')) {
     ctx.locals.cfContext?.waitUntil(cache.put(cacheKey, res.clone()));
   }
-  return res;
+  return withSecurityHeaders(res);
 });
+
+function withSecurityHeaders(res: Response) {
+  const headers = new Headers(res.headers);
+  headers.set('X-Frame-Options', 'DENY');
+  headers.set('X-Content-Type-Options', 'nosniff');
+  headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  headers.set('Permissions-Policy', 'camera=(), geolocation=(), microphone=()');
+  headers.set('Cross-Origin-Opener-Policy', 'same-origin');
+  return new Response(res.body, {
+    status: res.status,
+    statusText: res.statusText,
+    headers,
+  });
+}

@@ -37,11 +37,10 @@ def get_cuet_db_connection():
     conn = getattr(_local, 'conn', None)
     if conn is None:
         db_uri = f'file:{CUET_DB_PATH.resolve()}?mode=ro'
-        try:
-            conn = sqlite3.connect(db_uri, uri=True, check_same_thread=False)
-        except sqlite3.OperationalError:
-            conn = sqlite3.connect(str(CUET_DB_PATH), check_same_thread=False)
+        conn = sqlite3.connect(db_uri, uri=True, check_same_thread=False)
         conn.row_factory = sqlite3.Row
+        conn.execute('PRAGMA query_only = ON')
+        conn.execute('PRAGMA busy_timeout = 3000')
         _local.conn = conn
     return conn
 
