@@ -21,7 +21,7 @@ The same API, served from two hosts. The responses are identical.
 
 | | |
 |---|---|
-| **https://cuet.sayed.app/api/v1/…** | the main site (Cloudflare Workers + D1) |
+| **https://cuet.sayed.app/api/v1/…** | the main site (Cloudflare Workers, backed by the CUET API) |
 | **https://api.sayed.app/cuet/api/v1/…** | the same API as one more service of the api.sayed.app gateway (Flask + gunicorn + SQLite) |
 
 The gateway version lives in [`api/`](api/README.md) and is registered as a
@@ -316,10 +316,9 @@ is enough — no export format to keep in sync:
 sqlite3 cuet.sqlite "SELECT COUNT(*) FROM students;"
 ```
 
-The site code talks to the database through the D1 binding (`env.DB`). On a
-server with SQLite directly, that is the only part that has to change: a thin
-wrapper that offers `prepare(sql).bind(...).all()` / `.first()` / `batch()`
-over `better-sqlite3` (or node:sqlite) keeps `src/lib/db.ts` unchanged.
+The site code now calls the Flask CUET API through `src/lib/api-client.ts`;
+it no longer holds or accesses a direct database binding. A different API
+origin can be selected with `CUET_API_URL`.
 
 Two things to keep:
 

@@ -117,10 +117,10 @@ const jsonLd = {
     <nav class="mt-4 grid grid-cols-2 gap-3" aria-label="Classmates">
       {
         nb.prev ? (
-          <a href={`/${nb.prev.studentid}`} class="card-link p-4">
+          <a href={`/${nb.prev.id}`} class="card-link p-4">
             <span class="eyebrow">← Previous</span>
             <span class="mt-1 block truncate text-sm font-medium">{cleanName(nb.prev.name)}</span>
-            <span class="block font-mono text-xs text-faint">{nb.prev.studentid}</span>
+            <span class="block font-mono text-xs text-faint">{nb.prev.id}</span>
           </a>
         ) : (
           <span />
@@ -128,10 +128,10 @@ const jsonLd = {
       }
       {
         nb.next && (
-          <a href={`/${nb.next.studentid}`} class="card-link p-4 text-right">
+          <a href={`/${nb.next.id}`} class="card-link p-4 text-right">
             <span class="eyebrow">Next →</span>
             <span class="mt-1 block truncate text-sm font-medium">{cleanName(nb.next.name)}</span>
-            <span class="block font-mono text-xs text-faint">{nb.next.studentid}</span>
+            <span class="block font-mono text-xs text-faint">{nb.next.id}</span>
           </a>
         )
       }

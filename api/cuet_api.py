@@ -277,7 +277,83 @@ def v1_student(student_id):
     s = get_student(student_id)
     if not s:
         return api_error(404, 'not_found', f'No student with ID {student_id}.')
-    return json_response({'data': api_student(s)})
+    data = api_student(s)
+    if request.args.get('include') == 'neighbours':
+        data['neighbours'] = class_neighbours(s)
+    return json_response({'data': data})
+
+
+def class_neighbours(s):
+    """The students before and after this one in its class, and the class size."""
+    rows = _query(
+        f'SELECT {COLS} FROM students WHERE batch = ? AND dept_code = ? ORDER BY studentid',
+        (s['batch'], s['dept_code']),
+    )
+    ids = [r['studentid'] for r in rows]
+    try:
+        i = ids.index(s['studentid'])
+    except ValueError:
+        return {'prev': None, 'next': None, 'class_size': len(ids)}
+    brief = lambda r: {'id': r['studentid'], 'name': clean_name(r['name'])} if r else None
+    return {
+        'prev': brief(rows[i - 1] if i > 0 else None),
+        'next': brief(rows[i + 1] if i < len(rows) - 1 else None),
+        'class_size': len(rows),
+    }
+
+
+@cuet_bp.route('/api/v1/overview')
+def v1_overview():
+    """The whole overview in one call: totals, batches and their classes."""
+    overview = get_overview()
+    return json_response({
+        'data': {
+            'total': overview['total'],
+            'batches': [
+                {
+                    'batch': b['batch'],
+                    'session': b['session'],
+                    'count': b['count'],
+                    'classes': [
+                        {'batch': c['batch'], 'code': c['code'], 'session': c['session'],
+                         'count': c['count'], 'updated': c['updated']}
+                        for c in b['classes']
+                    ],
+                }
+                for b in overview['batches']
+            ],
+            'departments': [
+                {
+                    'code': d['dept']['code'],
+                    'slug': d['dept']['slug'],
+                    'short': d['dept']['short'],
+                    'name': d['dept']['name'],
+                    'count': d['count'],
+                    'classes': [
+                        {'batch': c['batch'], 'code': c['code'], 'session': c['session'],
+                         'count': c['count'], 'updated': c['updated']}
+                        for c in d['classes']
+                    ],
+                }
+                for d in overview['departments']
+            ],
+        }
+    })
+
+
+@cuet_bp.route('/api/v1/sitemap/<batch>')
+def v1_sitemap(batch):
+    """The student IDs of one batch, with the day they last changed."""
+    if not re.fullmatch(r'\d{2}', batch):
+        return api_error(400, 'invalid_batch', 'batch is two digits, e.g. 25.')
+    rows = _query(
+        'SELECT studentid, date(COALESCE(updated_at, created_at)) AS updated '
+        'FROM students WHERE batch = ? ORDER BY studentid',
+        (batch,),
+    )
+    if not rows:
+        return api_error(404, 'not_found', f'No students in batch {batch}.')
+    return json_response({'data': [{'id': r['studentid'], 'updated': r['updated']} for r in rows]})
 
 
 @cuet_bp.route('/api/v1/search')

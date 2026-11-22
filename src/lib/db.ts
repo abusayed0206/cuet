@@ -1,5 +1,5 @@
-import { env } from 'cloudflare:workers';
-import { DEPARTMENTS, deptByCode, type Department } from './departments';
+import { apiGet } from './api-client';
+import { deptByCode, type Department } from './departments';
 
 export interface Student {
   name: string;
@@ -12,13 +12,34 @@ export interface Student {
   session: string;
 }
 
-const COLS = 'name, studentid, dept_code, class_roll, admission_roll, admission_merit, batch, session';
+// The shape the API returns.
+interface ApiStudent {
+  id: string;
+  name: string;
+  department: { code: string; slug: string; short: string; name: string } | null;
+  batch: string;
+  session: string;
+  class_roll: number | null;
+  admission_roll: string | null;
+  admission_merit: string | null;
+}
 
-// The student ID is the URL key and nothing else: the batch, the department
-// and the class roll are columns. Real CUET IDs are seven digits (YY DD RRR);
-// the pre-2012 intakes carry a hash, either after the department code or -
-// when the source published no department - right after the batch.
+/** The student ID is the URL key and nothing else: the batch, the department
+ * and the class roll are columns of their own. */
 export const ID_RE = /^\d{2}(\d{5}|\d{2}[a-z]{3}|[a-z]{5})$/;
+
+function toStudent(s: ApiStudent): Student {
+  return {
+    name: s.name,
+    studentid: s.id,
+    dept_code: s.department?.code ?? '00',
+    class_roll: s.class_roll === null ? null : String(s.class_roll).padStart(3, '0'),
+    admission_roll: s.admission_roll,
+    admission_merit: s.admission_merit,
+    batch: s.batch,
+    session: s.session,
+  };
+}
 
 export function cleanName(name: string) {
   return name.replace(/\s+/g, ' ').trim();
@@ -56,46 +77,30 @@ export function meritLabel(batch: string) {
 // ---------- single student ----------
 
 export async function getStudent(id: string) {
-  return env.DB.prepare(`SELECT ${COLS} FROM students WHERE studentid = ?`).bind(id).first<Student>();
+  const { data } = await apiGet<{ data: ApiStudent }>(`/api/v1/students/${encodeURIComponent(id)}`);
+  return toStudent(data);
 }
 
-/** Previous/next student in the same class plus class size (from the overview). */
+/** Previous/next student in the same class plus class size, in one call. */
 export async function getNeighbours(student: Student) {
-  const { studentid: id, batch, dept_code: code } = student;
-  const [[prev, next], size] = await Promise.all([
-    env.DB.batch([
-      env.DB.prepare('SELECT studentid, name FROM students WHERE batch = ? AND dept_code = ? AND studentid < ? ORDER BY studentid DESC LIMIT 1').bind(batch, code, id),
-      env.DB.prepare('SELECT studentid, name FROM students WHERE batch = ? AND dept_code = ? AND studentid > ? ORDER BY studentid ASC LIMIT 1').bind(batch, code, id),
-    ]),
-    getClassSize(batch, code),
-  ]);
-  type Row = { studentid: string; name: string };
+  const { data } = await apiGet<{ data: ApiStudent & { neighbours: { prev: { id: string; name: string } | null; next: { id: string; name: string } | null; class_size: number } } }>(
+    `/api/v1/students/${encodeURIComponent(student.studentid)}`,
+    { include: 'neighbours' },
+  );
   return {
-    prev: (prev.results[0] as Row | undefined) ?? null,
-    next: (next.results[0] as Row | undefined) ?? null,
-    classSize: size,
+    prev: data.neighbours.prev,
+    next: data.neighbours.next,
+    classSize: data.neighbours.class_size,
   };
-}
-
-/**
- * How many students are in one class. One row, not the whole overview: a
- * student page is the most visited page there is, and D1 bills every row a
- * query reads.
- */
-export async function getClassSize(batch: string, code: string) {
-  const row = await env.DB.prepare('SELECT count FROM class_counts WHERE batch = ? AND code = ?')
-    .bind(batch, code)
-    .first<{ count: number }>();
-  return row?.count ?? 0;
 }
 
 // ---------- a class (batch + department) ----------
 
 export async function getClass(batch: string, code: string) {
-  const { results } = await env.DB.prepare(`SELECT ${COLS} FROM students WHERE batch = ? AND dept_code = ? ORDER BY studentid`)
-    .bind(batch, code)
-    .all<Student>();
-  return results;
+  const dept = deptByCode(code);
+  if (!dept) return [];
+  const { data } = await apiGet<{ data: ApiStudent[] }>(`/api/v1/batches/${batch}/${dept.slug}`);
+  return data.map(toStudent);
 }
 
 // ---------- overview: counts per batch x department ----------
@@ -127,47 +132,26 @@ export interface Overview {
   departments: DeptSummary[]; // only those with students, in table order
 }
 
-// class_counts is precomputed by the derived-table SQL in the README (one row
-// per class instead of scanning every student). Data only changes on imports,
-// so also keep it in isolate memory.
-let cached: { at: number; data: Overview } | null = null;
-const TTL_MS = 60 * 60 * 1000;
+interface ApiOverview {
+  total: number;
+  batches: { batch: string; session: string; count: number; classes: ClassSummary[] }[];
+  departments: { code: string; slug: string; short: string; name: string; count: number; classes: ClassSummary[] }[];
+}
 
 export async function getOverview(): Promise<Overview> {
-  if (cached && Date.now() - cached.at < TTL_MS) return cached.data;
-
-  const { results } = await env.DB.prepare(
-    'SELECT batch, code, session, count, updated FROM class_counts ORDER BY batch DESC, code ASC',
-  ).all<ClassSummary>();
-
-  const batches = new Map<string, BatchSummary>();
-  const depts = new Map<string, DeptSummary>();
-  let total = 0;
-
-  for (const row of results) {
-    const dept = deptByCode(row.code);
-    if (!dept) continue;
-    total += row.count;
-
-    let b = batches.get(row.batch);
-    if (!b) batches.set(row.batch, (b = { batch: row.batch, session: row.session, count: 0, classes: [] }));
-    b.count += row.count;
-    b.classes.push({ ...row, dept });
-
-    let d = depts.get(row.code);
-    if (!d) depts.set(row.code, (d = { dept, count: 0, classes: [] }));
-    d.count += row.count;
-    d.classes.push(row);
-  }
-
-  const data: Overview = {
-    total,
-    batches: [...batches.values()],
-    departments: DEPARTMENTS.map((d) => depts.get(d.code)).filter((d): d is DeptSummary => !!d),
-  };
-  // An empty overview means the database said nothing - do not cache that.
-  if (data.batches.length) cached = { at: Date.now(), data };
-  return data;
+  const { data } = await apiGet<{ data: ApiOverview }>('/api/v1/overview');
+  const batches = data.batches.map((b) => ({
+    batch: b.batch,
+    session: b.session,
+    count: b.count,
+    classes: b.classes.map((c) => ({ ...c, dept: deptByCode(c.code) as Department })),
+  }));
+  const departments = data.departments.map((d) => ({
+    dept: deptByCode(d.code) ?? { code: d.code, slug: d.slug, short: d.short, name: d.name },
+    count: d.count,
+    classes: d.classes,
+  }));
+  return { total: data.total, batches, departments };
 }
 
 // ---------- search ----------
@@ -178,89 +162,17 @@ export interface SearchOptions {
   limit?: number;
 }
 
-const escapeLike = (s: string) => s.replace(/[\\%_]/g, (c) => `\\${c}`);
-
-/** Typographic dashes are stored as '-', so a query has to be folded too. */
-export function normalizeQuery(q: string) {
-  return q.replace(/[\u2010-\u2015\u2212]/g, '-');
-}
-
 /**
- * Words that are written in more than one way. A name is searched with the
- * way it is written and with the ways it is often written, so "mohammad
- * kawsarul" finds "Md. Kawsarul Islam" and the other way round.
- */
-const SYNONYMS: Record<string, string[]> = {
-  md: ['mohammad', 'muhammad'],
-  mohammad: ['md'],
-  muhammad: ['md'],
-  mst: ['most', 'musammat'],
-  most: ['mst'],
-  min: ['minur'],
-  minim: ['minur'],
-};
-
-/** The next word after "rah" in the index: "rai". */
-const nextWord = (w: string) => w.slice(0, -1) + String.fromCharCode(w.charCodeAt(w.length - 1) + 1);
-
-/**
- * Name search: every word must appear somewhere in the name (case-insensitive),
- * and the longest word must also start a word of the name. That word is looked
- * up in the indexed name_words table so only candidates are read, not every row.
- * Digit-only queries match student IDs by prefix ("25" -> batch 25, "2504" -> CSE '25).
+ * Name search, or an ID prefix when the query is digits ("25" -> batch 25,
+ * "2504" -> CSE '25'). The search itself lives in the API, next to the data.
  */
 export async function searchStudents(q: string, { batch, code, limit = 100 }: SearchOptions = {}) {
-  const where: string[] = [];
-  const params: (string | number)[] = [];
-  const query = normalizeQuery(q.trim());
-
-  if (/^\d{1,7}$/.test(query)) {
-    // An ID prefix ("25" -> batch 25, "2504" -> CSE '25'). The pre-2012 IDs
-    // carry a hash instead of a class roll and are not IDs, so they are left
-    // out - those students are found by name.
-    where.push('studentid BETWEEN ? AND ?');
-    params.push(query.padEnd(7, '0'), query.padEnd(7, '9'));
-    where.push('class_roll IS NOT NULL');
-  } else if (ID_RE.test(query)) {
-    // A pre-2012 student ID, e.g. "0301kqm" - there is only one.
-    where.push('studentid = ?');
-    params.push(query);
-  } else {
-    // Same separators and lowercasing as the derived-table SQL in the README.
-    const words = query.toLowerCase().split(/[\s.\-()]+/).filter(Boolean);
-    const key = words.reduce((a, w) => (w.length > a.length ? w : a), '');
-    if (!key) return { results: [] as Student[], more: false };
-    // Prefix range: "rah" -> word >= 'rah' AND word < 'rai'. The longest word
-    // (and the words it can also be written as) picks the candidates.
-    const keyVariants = [key, ...(SYNONYMS[key] ?? [])];
-    where.push(`studentid IN (SELECT studentid FROM name_words WHERE ${keyVariants.map(() => '(word >= ? AND word < ?)').join(' OR ')})`);
-    for (const v of keyVariants) params.push(v, nextWord(v));
-    // Every word has to appear in the name, written the way it is written or
-    // the way it is often written ("mohammad" also finds "Md.").
-    for (const word of words.slice(0, 6)) {
-      const variants = [word, ...(SYNONYMS[word] ?? [])];
-      where.push(`(${variants.map(() => "name LIKE ? ESCAPE '\\'").join(' OR ')})`);
-      for (const v of variants) params.push(`%${escapeLike(v)}%`);
-    }
-  }
-  if (batch) {
-    where.push('batch = ?');
-    params.push(batch);
-  }
-  if (code) {
-    where.push('dept_code = ?');
-    params.push(code);
-  }
-  if (!where.length) return { results: [] as Student[], more: false };
-
-  params.push(limit + 1);
-  const { results } = await env.DB.prepare(
-    `SELECT ${COLS} FROM students WHERE ${where.join(' AND ')} ORDER BY batch DESC, studentid ASC LIMIT ?`,
-  )
-    .bind(...params)
-    .all<Student>();
-
-  return { results: results.slice(0, limit), more: results.length > limit };
+  const dept = code ? deptByCode(code) : undefined;
+  const { data, meta } = await apiGet<{ data: ApiStudent[]; meta: { count: number; has_more: boolean } }>(
+    '/api/v1/search',
+    { q, batch, dept: dept?.slug, limit },
+  );
+  return { results: data.map(toStudent), more: meta.has_more };
 }
 
 // ---------- sitemap ----------
@@ -268,17 +180,11 @@ export async function searchStudents(q: string, { batch, code, limit = 100 }: Se
 export interface SitemapRow {
   studentid: string;
   batch: string;
-  code: string;
   updated: string; // YYYY-MM-DD
 }
 
-/** One batch only, via the batch index. */
+/** One batch only. */
 export async function getSitemapRows(batch: string) {
-  const { results } = await env.DB.prepare(
-    `SELECT studentid, batch, dept_code AS code, date(COALESCE(updated_at, created_at)) AS updated
-     FROM students WHERE batch = ? ORDER BY studentid`,
-  )
-    .bind(batch)
-    .all<SitemapRow>();
-  return results;
+  const { data } = await apiGet<{ data: { id: string; updated: string }[] }>(`/api/v1/sitemap/${batch}`);
+  return data.map((r) => ({ studentid: r.id, batch, updated: r.updated }));
 }

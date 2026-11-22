@@ -8,7 +8,7 @@ batch and department, or use the public JSON API.
 ## Stack
 
 - **Astro 7** (server-rendered) on **Cloudflare Workers** via `@astrojs/cloudflare`
-- **Cloudflare D1** (`CUET_students`): the single source of truth for student data; no data files live in this repo
+- **CUET JSON API** on `api.sayed.app`: the source of truth for student data
 - **Tailwind CSS 4**, almost no client JavaScript
 - Edge cache per deploy (`src/middleware.ts`), API rate limit via the Workers rate-limiting binding
 
@@ -17,7 +17,7 @@ batch and department, or use the public JSON API.
 ```
 src/
   lib/departments.ts   department table, keyed by the two-digit department code
-  lib/db.ts            all D1 queries
+  lib/db.ts            API-backed student, search, overview and sitemap helpers
   lib/api.ts           JSON helpers, rate limiting, API response shapes
   pages/               routes (pages + /api endpoints)
   components/, layouts/
@@ -26,9 +26,8 @@ api/
 scripts/indexnow.mjs   pushes the sitemap to the search engines
 ```
 
-D1 bills every row a query *reads*, and `students` has ~12.8K rows (a full scan
-counts as ~26K reads), so no request path may scan it. Counts come from `class_counts` (one row per class) and name
-search goes through the indexed `name_words` table.
+The VPS database keeps precomputed `class_counts` and `name_words` indexes so
+directory counts and name searches do not require full-table scans.
 
 ### Student IDs
 
@@ -101,21 +100,13 @@ Node 22.12+ (`.nvmrc` pins 24).
 
 ```sh
 npm install
-npm run dev       # http://localhost:4321 with a local D1
+npm run dev       # http://localhost:4321, using the live CUET API
 npm run check     # wrangler types + astro check
 npm run preview   # build and run the real Worker locally
 ```
 
-The local D1 starts empty. To work against the real data, put a copy of the
-database in the local D1 state:
-
-```sh
-npx wrangler d1 export CUET_students --remote --output prod.sql
-npx wrangler d1 execute CUET_students --local --file prod.sql
-```
-
-`.wrangler/state/v3/d1/miniflare-D1DatabaseObject/<hash>.sqlite` is the file
-the local Worker opens - a single SQLite file can be copied straight into it.
+Set `CUET_API_URL` to point development at another API instance. The production
+default is `https://api.sayed.app/cuet`.
 
 ## Deployment
 
@@ -129,7 +120,7 @@ Cloudflare Workers Builds watches this repo:
 ## Search engines
 
 - `/sitemap.xml` is a sitemap index: `/sitemap-pages.xml` (home, listings, batch/class/department pages) plus one
-  `/sitemap-batch-YY.xml` per batch with every profile. All entries carry `<lastmod>` from D1's `updated_at`.
+  `/sitemap-batch-YY.xml` per batch with every profile. All entries carry `<lastmod>` from the API database's `updated_at`.
 - `robots.txt` allows everything except `/search?…` (search result pages are also `noindex`).
 - Pages have canonical URLs, Open Graph tags and JSON-LD (`WebSite` + search action, `Person`, `BreadcrumbList`).
 - **Google**: the sitemap is submitted in Search Console (property `cuet.sayed.app`).
@@ -166,11 +157,8 @@ The separators (space `.` `-` `(` `)`) must match `searchStudents()` in `src/lib
 ### The name_words trap
 
 `name_words` is `WITHOUT ROWID` with the key `(word, studentid)`, so `studentid`
-on its own is not indexed. `DELETE FROM name_words WHERE studentid = '…'` scans the
-whole table - ~36K rows. An import that deletes one row per student does that
-4,000 times: 148 million row reads, 29 times the daily limit, and the site goes
-down. Keep `idx_name_words_studentid` (so the delete is a seek) and delete in
-one statement (`WHERE studentid IN (…)`).
+on its own is not indexed. Keep `idx_name_words_studentid` and delete name-index
+rows in one statement (`WHERE studentid IN (…)`) rather than once per student.
 
 ### Checks
 
@@ -189,32 +177,14 @@ SELECT COUNT(*) FROM students WHERE session <> '20' || batch || '-'      -- 0
    || substr('0' || (CAST(batch AS INTEGER) + 1), -2);
 ```
 
-### D1 budget (free plan)
-
-D1 bills every row a query *reads*: 5M/day, then all queries fail until 00:00 UTC. A
-query without an index on its `WHERE` reads all ~12.8K students (plus index rows). Before
-adding a query, check its plan in `wrangler d1 execute --local` with `EXPLAIN QUERY PLAN`:
-it must say `SEARCH ... USING INDEX`, never `SCAN students`. Usage per database:
-dashboard → D1 → CUET_students → Metrics.
-
-Check what a migration or a batch of queries costs before running it:
-
-```sh
-npx wrangler d1 insights CUET_students --time-period 1d --sort-by reads --limit 20
-```
-
-Avoid `node scripts/indexnow.mjs` without `--since`: it makes crawlers fetch every
-profile at once (that, plus full-table scans, caused the Nov 2026 outage).
+Page responses and API calls are cached in the application or edge. Avoid
+`node scripts/indexnow.mjs` without `--since`: it makes crawlers fetch every
+profile at once.
 
 ## Backups
 
-D1 keeps 30 days of point-in-time history (Time Travel). For an offline copy:
-
-```sh
-npx wrangler d1 export CUET_students --remote --output cuet-backup.sql
-```
-
-Keep the export outside the repository - it holds every student's name.
+The source database is kept by the `api.sayed.app` CUET service. Any offline
+backup should be stored outside the repository because it contains student names.
 
 ## Branches
 

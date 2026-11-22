@@ -1,6 +1,6 @@
 // Departments keyed by the two digits in a CUET student ID (YY DD RRR).
-// The ID is the reliable source: the `department` text column in D1 is
-// inconsistent between imports ("Department of CSE…" vs "CSE").
+// The ID is the reliable source: historical department text was inconsistent
+// between imports ("Department of CSE…" vs "CSE").
 
 export interface Department {
   code: string; // "04"

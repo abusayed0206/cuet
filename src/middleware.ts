@@ -22,9 +22,8 @@ export const onRequest = defineMiddleware(async (ctx, next) => {
   try {
     res = await next();
   } catch (err) {
-    // D1 refuses queries when the free tier's daily row-read limit is spent.
-    // That is temporary: say so with a 503, not a 404 - a 404 tells the search
-    // engines that the page does not exist.
+    // The directory is backed by the VPS API. Report upstream failures with
+    // a 503 rather than a 404, so search engines do not remove valid pages.
     console.error('request failed', err);
     return new Response('The directory is temporarily unavailable. Please try again in a few minutes.', {
       status: 503,

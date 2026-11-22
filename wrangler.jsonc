@@ -7,13 +7,6 @@
 		"directory": "./dist",
 		"binding": "ASSETS"
 	},
-	"d1_databases": [
-		{
-			"binding": "DB",
-			"database_name": "CUET_students",
-			"database_id": "f4b7db3e-ee71-4af0-8914-1a541f6c87a3"
-		}
-	],
 	// Per-IP limit for /api/* (cached responses are served before this check).
 	"ratelimits": [
 		{
