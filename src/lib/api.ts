@@ -53,7 +53,7 @@ export function apiStudent(s: Student) {
     department: d ? apiDept(d, batch) : null,
     batch,
     session: s.session,
-    class_roll: Number(roll),
+    class_roll: roll ? Number(roll) : null,
     admission_roll: s.admission_roll || null,
     admission_merit: meritText(s.admission_merit) || null,
     url: `${SITE}/${s.studentid}`,

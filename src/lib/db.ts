@@ -12,11 +12,34 @@ export interface Student {
 
 const COLS = 'name, studentid, admission_roll, admission_merit, batch, session';
 
-export const ID_RE = /^\d{7}$/;
+export const ID_RE = /^\d{2}(\d{5}|\d{2}[a-z]{3}|[a-z]{5})$/;
 
-/** "2504001" -> { batch: "25", code: "04", roll: "001" } */
+/**
+ * "2504001" -> { batch: "25", code: "04", roll: "001" }
+ * "0301kqm" -> { batch: "03", code: "01", roll: "" }   hash instead of a class roll
+ * "03xkqzp" -> { batch: "03", code: "00", roll: "" }   the department was not published
+ */
 export function parseId(id: string) {
-  return { batch: id.slice(0, 2), code: id.slice(2, 4), roll: id.slice(4) };
+  const batch = id.slice(0, 2);
+  const code = /^\d\d$/.test(id.slice(2, 4)) ? id.slice(2, 4) : '00';
+  const roll = /^\d+$/.test(id.slice(4)) ? id.slice(4) : '';
+  return { batch, code, roll };
+}
+
+/**
+ * The student IDs that belong to one class (batch + department). Real IDs
+ * start with the batch and the department code; the pre-2012 ones carry a
+ * hash instead of a class roll, either after the code or - when the source
+ * published no department - right after the batch.
+ */
+function classRange(batch: string, code: string): [string, string] {
+  if (code === '00') return [`${batch}aaaaa`, `${batch}zzzzz`];
+  return [`${batch}${code}`, `${batch}${String(Number(code) + 1).padStart(2, '0')}`];
+}
+
+/** One class (batch + department) as a LIKE pattern, for the department filter. */
+function classPattern(code: string) {
+  return code === '00' ? '[0-9][0-9][a-z][a-z][a-z][a-z][a-z]' : null;
 }
 
 export function cleanName(name: string) {
@@ -43,12 +66,14 @@ export async function getStudent(id: string) {
 /** Previous/next student in the same class plus class size (from the overview). */
 export async function getNeighbours(id: string) {
   const { batch, code } = parseId(id);
-  const lo = `${batch}${code}000`;
-  const hi = `${batch}${code}999`;
-  const [[prev, next], overview] = await Promise.all([env.DB.batch([
-    env.DB.prepare('SELECT studentid, name FROM students WHERE studentid >= ? AND studentid < ? ORDER BY studentid DESC LIMIT 1').bind(lo, id),
-    env.DB.prepare('SELECT studentid, name FROM students WHERE studentid > ? AND studentid <= ? ORDER BY studentid ASC LIMIT 1').bind(id, hi),
-  ]), getOverview()]);
+  const [lo, hi] = classRange(batch, code);
+  const [[prev, next], overview] = await Promise.all([
+    env.DB.batch([
+      env.DB.prepare('SELECT studentid, name FROM students WHERE studentid >= ? AND studentid < ? ORDER BY studentid DESC LIMIT 1').bind(lo, hi),
+      env.DB.prepare('SELECT studentid, name FROM students WHERE studentid > ? AND studentid < ? ORDER BY studentid ASC LIMIT 1').bind(id, hi),
+    ]),
+    getOverview(),
+  ]);
   type Row = { studentid: string; name: string };
   return {
     prev: (prev.results[0] as Row | undefined) ?? null,
@@ -60,8 +85,9 @@ export async function getNeighbours(id: string) {
 // ---------- a class (batch + department) ----------
 
 export async function getClass(batch: string, code: string) {
-  const { results } = await env.DB.prepare(`SELECT ${COLS} FROM students WHERE studentid BETWEEN ? AND ? ORDER BY studentid`)
-    .bind(`${batch}${code}000`, `${batch}${code}999`)
+  const [lo, hi] = classRange(batch, code);
+  const { results } = await env.DB.prepare(`SELECT ${COLS} FROM students WHERE studentid >= ? AND studentid < ? ORDER BY studentid`)
+    .bind(lo, hi)
     .all<Student>();
   return results;
 }
@@ -92,7 +118,7 @@ export interface DeptSummary {
 export interface Overview {
   total: number;
   batches: BatchSummary[]; // newest first
-  departments: DeptSummary[]; // in code order, only those with students
+  departments: DeptSummary[]; // only those with students, in table order
 }
 
 // class_counts is precomputed by scripts/refresh-derived.sql (one row per class
@@ -147,6 +173,11 @@ export interface SearchOptions {
 
 const escapeLike = (s: string) => s.replace(/[\\%_]/g, (c) => `\\${c}`);
 
+/** Typographic dashes are stored as '-', so a query has to be folded too. */
+export function normalizeQuery(q: string) {
+  return q.replace(/[\u2010-\u2015\u2212]/g, '-');
+}
+
 /**
  * Name search: every word must appear somewhere in the name (case-insensitive),
  * and the longest word must also start a word of the name. That word is looked
@@ -156,11 +187,19 @@ const escapeLike = (s: string) => s.replace(/[\\%_]/g, (c) => `\\${c}`);
 export async function searchStudents(q: string, { batch, code, limit = 100 }: SearchOptions = {}) {
   const where: string[] = [];
   const params: (string | number)[] = [];
-  const query = q.trim();
+  const query = normalizeQuery(q.trim());
 
   if (/^\d{1,7}$/.test(query)) {
+    // An ID prefix ("25" -> batch 25, "2504" -> CSE '25'). The pre-2012 IDs
+    // carry a hash instead of a class roll and are not IDs, so they are left
+    // out - those students are found by name.
     where.push('studentid BETWEEN ? AND ?');
     params.push(query.padEnd(7, '0'), query.padEnd(7, '9'));
+    where.push("studentid NOT GLOB '*[^0-9]*'");
+  } else if (ID_RE.test(query)) {
+    // A pre-2012 student ID, e.g. "0301kqm" - there is only one.
+    where.push('studentid = ?');
+    params.push(query);
   } else {
     // Same separators and lowercasing as scripts/refresh-derived.sql.
     const key = query.toLowerCase().split(/[\s.\-()]+/).reduce((a, w) => (w.length > a.length ? w : a), '');
@@ -178,8 +217,16 @@ export async function searchStudents(q: string, { batch, code, limit = 100 }: Se
     params.push(batch);
   }
   if (code) {
-    where.push('substr(studentid, 3, 2) = ?');
-    params.push(code);
+    // Real IDs carry the department code; the pre-2012 ones carry a hash, and
+    // the ones without a published department carry a hash after the batch.
+    const pattern = classPattern(code);
+    if (pattern) {
+      where.push('studentid GLOB ?');
+      params.push(pattern);
+    } else {
+      where.push('substr(studentid, 3, 2) = ?');
+      params.push(code);
+    }
   }
   if (!where.length) return { results: [] as Student[], more: false };
 
@@ -204,11 +251,14 @@ export interface SitemapRow {
 
 /** One batch only, via the studentid index. */
 export async function getSitemapRows(batch: string) {
+  const next = String(Number(batch) + 1).padStart(2, '0');
   const { results } = await env.DB.prepare(
-    `SELECT studentid, batch, substr(studentid, 3, 2) AS code, date(COALESCE(updated_at, created_at)) AS updated
-     FROM students WHERE studentid BETWEEN ? AND ? ORDER BY studentid`,
+    `SELECT studentid, batch,
+            CASE WHEN substr(studentid, 3, 2) GLOB '[0-9][0-9]' THEN substr(studentid, 3, 2) ELSE '00' END AS code,
+            date(COALESCE(updated_at, created_at)) AS updated
+     FROM students WHERE studentid >= ? AND studentid < ? ORDER BY studentid`,
   )
-    .bind(`${batch}00000`, `${batch}99999`)
+    .bind(`${batch}00000`, `${next}00000`)
     .all<SitemapRow>();
   return results;
 }

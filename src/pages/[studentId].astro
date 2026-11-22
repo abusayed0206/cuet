@@ -31,7 +31,7 @@ const facts = [
   { k: 'Department', v: label.name, href: dept ? `/department/${dept.slug}` : undefined },
   { k: 'Batch', v: batch, href: `/batch/${batch}` },
   { k: 'Session', v: sessionLabel(student.session) },
-  { k: 'Class roll', v: String(Number(roll)) },
+  { k: 'Class roll', v: roll ? String(Number(roll)) : 'Not published' },
   { k: 'Admission roll', v: student.admission_roll || '—' },
   { k: 'Admission merit', v: merit ? (/^\d+$/.test(merit) ? `#${merit}` : merit) : '—' },
 ];
@@ -104,7 +104,10 @@ const jsonLd = {
         <span class="font-sans text-xs text-faint">ID breakdown</span>
         <span><span class="rounded bg-accent-soft px-1.5 py-0.5 font-semibold text-accent">{batch}</span> <span class="font-sans text-muted">batch</span></span>
         <span><span class="rounded bg-surface-2 px-1.5 py-0.5 font-semibold">{code}</span> <span class="font-sans text-muted">{label.short}</span></span>
-        <span><span class="rounded bg-surface-2 px-1.5 py-0.5 font-semibold">{roll}</span> <span class="font-sans text-muted">class roll</span></span>
+        <span>
+          <span class="rounded bg-surface-2 px-1.5 py-0.5 font-semibold">{roll || 'XXX'}</span>{' '}
+          <span class="font-sans text-muted">{roll ? 'class roll' : 'no class roll'}</span>
+        </span>
       </div>
     </article>
 

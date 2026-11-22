@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Crumbs from '../../components/Crumbs.astro';
+import UnpublishedIntakes from '../../components/UnpublishedIntakes.astro';
 import { getOverview } from '../../lib/db';
 import { aliasTarget, deptBySlug, deptLabel } from '../../lib/departments';
 import { cachePage, fmt, sessionLabel } from '../../lib/http';
@@ -10,8 +11,10 @@ const alias = aliasTarget(slug);
 if (alias || slug !== slug.toLowerCase()) return Astro.redirect(`/department/${alias ?? slug.toLowerCase()}`, 301);
 
 const dept = deptBySlug(slug);
-const info = dept && (await getOverview()).departments.find((d) => d.dept.code === dept.code);
+const overview = await getOverview();
+const info = dept && overview.departments.find((d) => d.dept.code === dept.code);
 if (!dept || !info) return Astro.rewrite('/404');
+const unpublished = overview.departments.find((d) => d.dept.code === '00')?.classes ?? [];
 
 cachePage(Astro);
 const max = Math.max(...info.classes.map((c) => c.count));
@@ -55,6 +58,10 @@ const renamed = info.classes.some((c) => deptLabel(dept, c.batch).short !== dept
           </a>
         ))
       }
+    </div>
+
+    <div class="mt-6">
+      <UnpublishedIntakes batches={unpublished} />
     </div>
   </div>
 </Base>

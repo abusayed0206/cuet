@@ -68,12 +68,12 @@ const endpoints: { id: string; path: string; summary: string; params: Param[]; e
 ];
 
 const fields = [
-  ['id', 'string', '7-digit student ID'],
+  ['id', 'string', 'Student ID: 7 digits, or a hash for the pre-2012 intakes'],
   ['name', 'string', 'Name as published'],
   ['department', 'object', '{ code, slug, short, name }, from the ID; code 12 is MSE up to batch 22'],
   ['batch', 'string', 'Two-digit batch, e.g. "25"'],
   ['session', 'string', 'Academic session, e.g. "2025-26"'],
-  ['class_roll', 'number', 'Last three digits of the ID'],
+  ['class_roll', 'number | null', 'Last three digits of the ID; null for the pre-2012 intakes'],
   ['admission_roll', 'string | null', 'Admission test roll'],
   ['admission_merit', 'string | null', 'Merit position as published; may contain quota notes like "T-5"'],
   ['url', 'string', 'Profile page on this site'],

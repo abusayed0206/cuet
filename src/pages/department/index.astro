@@ -1,11 +1,13 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Crumbs from '../../components/Crumbs.astro';
+import UnpublishedIntakes from '../../components/UnpublishedIntakes.astro';
 import { getOverview } from '../../lib/db';
 import { cachePage, fmt } from '../../lib/http';
 
 cachePage(Astro);
 const { departments } = await getOverview();
+const unpublished = departments.find((d) => d.dept.code === '00')?.classes ?? [];
 ---
 
 <Base title="All departments" description="Every CUET department with its batches and student counts.">
@@ -40,6 +42,10 @@ const { departments } = await getOverview();
           );
         })
       }
+    </div>
+
+    <div class="mt-6">
+      <UnpublishedIntakes batches={unpublished} />
     </div>
   </div>
 </Base>

@@ -26,8 +26,8 @@ scripts/csv-to-sql.mjs CSV → D1 migration for importing a new batch
 scripts/refresh-derived.sql  rebuilds class_counts / name_words (see below)
 ```
 
-D1 bills every row a query *reads*, and `students` has ~8.6K rows (a full scan
-counts as ~17K reads), so no request path may scan it. Counts come from `class_counts` (one row per class) and name
+D1 bills every row a query *reads*, and `students` has ~12.8K rows (a full scan
+counts as ~26K reads), so no request path may scan it. Counts come from `class_counts` (one row per class) and name
 search goes through the indexed `name_words` table. After changing `students`
 by hand, run `npm run db:refresh` (imports made with csv-to-sql do it already).
 
@@ -35,6 +35,26 @@ by hand, run `npm run db:refresh` (imports made with csv-to-sql do it already).
 
 IDs are `YY DD RRR`: batch, department code, class roll. The site and API take the department from `DD`, not from the
 `department` text column. Code `12` shows as MSE for batches ≤ 22 and MME after that.
+
+Batches 03–11 come from the pre-2012 CUET site, which published merit lists
+instead of student IDs, and the 2016 department allotment PDFs print only
+"serial, merit, roll, name", where the serial is a merit-ordered row number,
+not a class roll. Those students carry a hash where the class roll would be:
+
+```
+2504001    a real CUET student ID
+0301dpt    batch 03, CE, hash instead of a class roll
+04zmvle    batch 04, hash instead of department and class roll (none published)
+```
+
+The batch and the department are real, the hash is derived from the row's own
+key (batch, admission roll, name), so it is stable and unique. Only the CSE
+thesis registers and the laptop list print a real student ID; those are used as
+they are. Because the hash is not a class roll, the pre-2012 students are found
+by name, and `searchStudents()` leaves them out of an ID-prefix search.
+
+Department code `00` means the source published no department (batches 04 and
+08); their student IDs carry the hash right after the batch.
 
 ## Routes
 
@@ -117,6 +137,24 @@ Cloudflare Workers Builds watches this repo:
    `node scripts/indexnow.mjs --since <today>`.
 
 Import migrations contain personal data and are gitignored; keep the CSV outside the repo.
+
+### Importing the pre-2012 archive
+
+The `cuet-archive` package (batches 03–16, CUET's old HTML pages and the 2016
+department allotment PDFs) has its own importer, because its CSV has a
+different shape and most of its rows have no student ID:
+
+```sh
+npx wrangler d1 execute CUET_students --remote --command "SELECT studentid, name, batch FROM students" --json > live.json
+node scripts/import-archive.mjs "C:/Users/abusa/cuet-archive/clean/cuet_students_03-16.csv" live.json migrations/0007_import_archive.sql
+npm run db:migrate
+```
+
+It imports name, student ID, department, batch, session, admission roll and
+merit, and skips students that are already in the database. Re-running it after
+an ID scheme change: pass the student IDs of the earlier import with
+`--replace ids.txt` — those rows are dropped and inserted again with the new
+ID.
 
 ### Editing existing students
 

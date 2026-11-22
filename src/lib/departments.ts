@@ -22,6 +22,9 @@ export const DEPARTMENTS: Department[] = [
   { code: '10', slug: 'wre', short: 'WRE', name: 'Water Resources Engineering' },
   { code: '11', slug: 'bme', short: 'BME', name: 'Biomedical Engineering' },
   { code: '12', slug: 'mme', short: 'MME', name: 'Materials & Metallurgical Engineering' },
+  // Pre-2012 intakes (batches 04 and 08) were published as a merit list with
+  // no department column, so their student IDs carry 00 instead of a code.
+  { code: '00', slug: 'unknown', short: 'N/A', name: 'Department not published' },
 ];
 
 // Old slugs used by the previous site.
@@ -50,4 +53,10 @@ export function deptLabel(d: Department, batch?: string): { short: string; name:
     return { short: 'MSE', name: 'Materials Science & Engineering' };
   }
   return { short: d.short, name: d.name };
+}
+
+/** The legacy API's flat department string: "Department of X". */
+export function deptText(d: Department, batch?: string) {
+  const name = deptLabel(d, batch).name;
+  return name.startsWith('Department') ? name : `Department of ${name}`;
 }

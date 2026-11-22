@@ -80,7 +80,9 @@ const jsonLd = {
       <span class="label text-fg">01 — Batches</span>
       <div>
         <h2 class="text-2xl font-semibold tracking-tight">Browse by batch</h2>
-        <p class="mt-1 text-sm text-muted">Each batch opens into its departments and full class lists.</p>
+        <p class="mt-1 text-sm text-muted">
+          Each batch opens into its departments and full class lists. Batches 03&ndash;11 come from CUET&rsquo;s pre-2012 site.
+        </p>
       </div>
       <a href="/batch" class="font-mono text-xs text-muted hover:text-fg">All batches →</a>
     </header>
@@ -193,6 +195,11 @@ const jsonLd = {
           }
         </div>
         <p class="mt-3 text-xs text-muted">Code 12 was Materials Science &amp; Engineering (MSE) up to batch 22.</p>
+        <p class="mt-3 text-xs text-muted">
+          The intakes before 2012 were published as merit lists, without student IDs, so their IDs carry a hash where the
+          class roll would be &mdash; <span class="font-mono">03 01 kqm</span>: batch, department, hash. Those students are found
+          by name.
+        </p>
       </div>
     </div>
   </section>

@@ -4,8 +4,12 @@
 
 DELETE FROM class_counts;
 INSERT INTO class_counts (batch, code, session, count, updated)
-SELECT batch, substr(studentid, 3, 2), MIN(session), COUNT(*), MAX(date(COALESCE(updated_at, created_at)))
-FROM students GROUP BY batch, substr(studentid, 3, 2);
+SELECT batch,
+       CASE WHEN substr(studentid, 3, 2) GLOB '[0-9][0-9]' THEN substr(studentid, 3, 2) ELSE '00' END,
+       MIN(session), COUNT(*), MAX(date(COALESCE(updated_at, created_at)))
+FROM students
+GROUP BY batch,
+         CASE WHEN substr(studentid, 3, 2) GLOB '[0-9][0-9]' THEN substr(studentid, 3, 2) ELSE '00' END;
 
 -- Incremental: a full rebuild would cost ~100K row writes (the free daily cap).
 -- Renamed students keep their old words; for those, delete their rows first.

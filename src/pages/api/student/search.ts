@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 import { cleanName, searchStudents } from '../../../lib/db';
-import { deptByCode, deptLabel } from '../../../lib/departments';
+import { deptByCode, deptText } from '../../../lib/departments';
 import { apiError, json, preflight, rateLimit } from '../../../lib/api';
 
 /** Legacy endpoint from the old site, kept for existing integrations. Prefer /api/v1/search. */
@@ -18,7 +18,7 @@ export const GET: APIRoute = async ({ url, request }) => {
         return {
           name: cleanName(s.name),
           studentid: s.studentid,
-          department: d ? `Department of ${deptLabel(d, s.batch).name}` : null,
+          department: d ? deptText(d, s.batch) : null,
           batch: s.batch,
         };
       }),

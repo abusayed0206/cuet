@@ -1,0 +1,31 @@
+---
+/**
+ * A note for the intakes whose source published no department, so their
+ * students can only be found by batch (and by name).
+ */
+interface Props {
+  batches: { batch: string; session: string; count: number }[];
+}
+const { batches } = Astro.props;
+const students = batches.reduce((n, b) => n + b.count, 0);
+const years = batches.map((b) => b.session.replace('-', '–')).join(' and ');
+---
+
+{
+  batches.length > 0 && (
+    <aside class="card bg-surface-2/40 p-5 sm:p-6">
+      <p class="eyebrow">Department not published</p>
+      <p class="mt-2 text-sm text-muted">
+        For the {years} intake CUET published a merit list without a department, so those {students} students are listed by
+        batch only. They are in the directory and searchable by name.
+      </p>
+      <div class="mt-4 flex flex-wrap gap-2">
+        {batches.map((b) => (
+          <a href={`/batch/${b.batch}`} class="chip tabular-nums">
+            Batch {b.batch} · {b.count} students
+          </a>
+        ))}
+      </div>
+    </aside>
+  )
+}
