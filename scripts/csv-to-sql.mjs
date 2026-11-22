@@ -72,12 +72,10 @@ for (const [n, r] of records.entries()) {
     continue;
   }
   const yy = Number(id.slice(0, 2));
-  const deptName = id.slice(2, 4) === '12' && yy <= 22 ? 'Materials Science & Engineering' : dept;
-  const session = `20${String(yy).padStart(2, '0')}-${String((yy + 1) % 100).padStart(2, '0')}`;
   const roll = col.admission_roll !== undefined ? r[col.admission_roll]?.trim() : '';
   const merit = col.admission_merit !== undefined ? r[col.admission_merit]?.trim() : '';
   lines.push(
-    `INSERT OR IGNORE INTO students (name, studentid, department, admission_roll, admission_merit, batch, session) VALUES (${sql(name)}, ${sql(id)}, ${sql(`Department of ${deptName}`)}, ${sql(roll)}, ${sql(merit)}, ${sql(id.slice(0, 2))}, ${sql(session)});`,
+    `INSERT OR IGNORE INTO students (name, studentid, dept_code, class_roll, admission_roll, admission_merit, batch, session) VALUES (${sql(name)}, ${sql(id)}, ${sql(id.slice(2, 4))}, ${sql(id.slice(4, 7))}, ${sql(roll)}, ${sql(merit)}, ${sql(id.slice(0, 2))}, ${sql(`20${String(yy).padStart(2, '0')}-${String((yy + 1) % 100).padStart(2, '0')}`)});`,
   );
 }
 

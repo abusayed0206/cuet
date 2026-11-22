@@ -1,18 +1,21 @@
 ---
 import Base from '../layouts/Base.astro';
 import Crumbs from '../components/Crumbs.astro';
-import { ID_RE, cleanName, getNeighbours, getStudent, meritText, parseId } from '../lib/db';
+import { ID_RE, cleanName, getNeighbours, getStudent, meritLabel, meritText } from '../lib/db';
 import { deptByCode, deptLabel } from '../lib/departments';
 import { cachePage, sessionLabel } from '../lib/http';
 
 const id = Astro.params.studentId ?? '';
 if (!ID_RE.test(id)) return Astro.rewrite('/404');
 
-const [student, nb] = await Promise.all([getStudent(id), getNeighbours(id)]);
+const student = await getStudent(id);
 if (!student) return Astro.rewrite('/404');
+const nb = await getNeighbours(student);
 
 cachePage(Astro);
-const { batch, code, roll } = parseId(id);
+const batch = student.batch;
+const code = student.dept_code;
+const roll = student.class_roll ?? '';
 const dept = deptByCode(code);
 const label = dept ? deptLabel(dept, batch) : { short: code, name: `Department ${code}` };
 const name = cleanName(student.name);
@@ -33,7 +36,7 @@ const facts = [
   { k: 'Session', v: sessionLabel(student.session) },
   { k: 'Class roll', v: roll ? String(Number(roll)) : 'Not published' },
   { k: 'Admission roll', v: student.admission_roll || '—' },
-  { k: 'Admission merit', v: merit ? (/^\d+$/.test(merit) ? `#${merit}` : merit) : '—' },
+  { k: meritLabel(batch), v: merit ? (/^\d+$/.test(merit) ? `#${merit}` : merit) : '—' },
 ];
 
 const jsonLd = {

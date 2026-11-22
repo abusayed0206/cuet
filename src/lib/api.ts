@@ -1,5 +1,5 @@
 import { env } from 'cloudflare:workers';
-import { cleanName, meritText, parseId, type Student } from './db';
+import { cleanName, meritText, type Student } from './db';
 import { deptByCode, deptLabel, type Department } from './departments';
 
 const SITE = 'https://cuet.sayed.app';
@@ -45,15 +45,14 @@ export function apiDept(d: Department, batch?: string) {
 }
 
 export function apiStudent(s: Student) {
-  const { batch, code, roll } = parseId(s.studentid);
-  const d = deptByCode(code);
+  const d = deptByCode(s.dept_code);
   return {
     id: s.studentid,
     name: cleanName(s.name),
-    department: d ? apiDept(d, batch) : null,
-    batch,
+    department: d ? apiDept(d, s.batch) : null,
+    batch: s.batch,
     session: s.session,
-    class_roll: roll ? Number(roll) : null,
+    class_roll: s.class_roll ? Number(s.class_roll) : null,
     admission_roll: s.admission_roll || null,
     admission_merit: meritText(s.admission_merit) || null,
     url: `${SITE}/${s.studentid}`,

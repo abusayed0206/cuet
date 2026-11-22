@@ -4,43 +4,21 @@ import { DEPARTMENTS, deptByCode, type Department } from './departments';
 export interface Student {
   name: string;
   studentid: string;
+  dept_code: string;
+  class_roll: string | null;
   admission_roll: string | null;
   admission_merit: string | null;
   batch: string;
   session: string;
 }
 
-const COLS = 'name, studentid, admission_roll, admission_merit, batch, session';
+const COLS = 'name, studentid, dept_code, class_roll, admission_roll, admission_merit, batch, session';
 
+// The student ID is the URL key and nothing else: the batch, the department
+// and the class roll are columns. Real CUET IDs are seven digits (YY DD RRR);
+// the pre-2012 intakes carry a hash, either after the department code or -
+// when the source published no department - right after the batch.
 export const ID_RE = /^\d{2}(\d{5}|\d{2}[a-z]{3}|[a-z]{5})$/;
-
-/**
- * "2504001" -> { batch: "25", code: "04", roll: "001" }
- * "0301kqm" -> { batch: "03", code: "01", roll: "" }   hash instead of a class roll
- * "03xkqzp" -> { batch: "03", code: "00", roll: "" }   the department was not published
- */
-export function parseId(id: string) {
-  const batch = id.slice(0, 2);
-  const code = /^\d\d$/.test(id.slice(2, 4)) ? id.slice(2, 4) : '00';
-  const roll = /^\d+$/.test(id.slice(4)) ? id.slice(4) : '';
-  return { batch, code, roll };
-}
-
-/**
- * The student IDs that belong to one class (batch + department). Real IDs
- * start with the batch and the department code; the pre-2012 ones carry a
- * hash instead of a class roll, either after the code or - when the source
- * published no department - right after the batch.
- */
-function classRange(batch: string, code: string): [string, string] {
-  if (code === '00') return [`${batch}aaaaa`, `${batch}zzzzz`];
-  return [`${batch}${code}`, `${batch}${String(Number(code) + 1).padStart(2, '0')}`];
-}
-
-/** One class (batch + department) as a LIKE pattern, for the department filter. */
-function classPattern(code: string) {
-  return code === '00' ? '[0-9][0-9][a-z][a-z][a-z][a-z][a-z]' : null;
-}
 
 export function cleanName(name: string) {
   return name.replace(/\s+/g, ' ').trim();
@@ -57,6 +35,24 @@ export function meritSortKey(m: string | null) {
   return Number.isNaN(n) ? Number.MAX_SAFE_INTEGER : n;
 }
 
+/**
+ * What the printed merit means in a batch. The scales are not comparable:
+ * batch 03 is the admission merit position, batch 11 the department
+ * allotment merit, batch 16 the admission-test merit, batches 04 and 08 the
+ * merit value as published.
+ */
+const MERIT_LABEL: Record<string, string> = {
+  '03': 'Admission merit',
+  '04': 'Published merit',
+  '08': 'Published merit',
+  '11': 'Department merit',
+  '16': 'Admission-test merit',
+};
+
+export function meritLabel(batch: string) {
+  return MERIT_LABEL[batch] ?? 'Merit';
+}
+
 // ---------- single student ----------
 
 export async function getStudent(id: string) {
@@ -64,13 +60,12 @@ export async function getStudent(id: string) {
 }
 
 /** Previous/next student in the same class plus class size (from the overview). */
-export async function getNeighbours(id: string) {
-  const { batch, code } = parseId(id);
-  const [lo, hi] = classRange(batch, code);
+export async function getNeighbours(student: Student) {
+  const { studentid: id, batch, dept_code: code } = student;
   const [[prev, next], overview] = await Promise.all([
     env.DB.batch([
-      env.DB.prepare('SELECT studentid, name FROM students WHERE studentid >= ? AND studentid < ? ORDER BY studentid DESC LIMIT 1').bind(lo, hi),
-      env.DB.prepare('SELECT studentid, name FROM students WHERE studentid > ? AND studentid < ? ORDER BY studentid ASC LIMIT 1').bind(id, hi),
+      env.DB.prepare('SELECT studentid, name FROM students WHERE batch = ? AND dept_code = ? AND studentid < ? ORDER BY studentid DESC LIMIT 1').bind(batch, code, id),
+      env.DB.prepare('SELECT studentid, name FROM students WHERE batch = ? AND dept_code = ? AND studentid > ? ORDER BY studentid ASC LIMIT 1').bind(batch, code, id),
     ]),
     getOverview(),
   ]);
@@ -85,9 +80,8 @@ export async function getNeighbours(id: string) {
 // ---------- a class (batch + department) ----------
 
 export async function getClass(batch: string, code: string) {
-  const [lo, hi] = classRange(batch, code);
-  const { results } = await env.DB.prepare(`SELECT ${COLS} FROM students WHERE studentid >= ? AND studentid < ? ORDER BY studentid`)
-    .bind(lo, hi)
+  const { results } = await env.DB.prepare(`SELECT ${COLS} FROM students WHERE batch = ? AND dept_code = ? ORDER BY studentid`)
+    .bind(batch, code)
     .all<Student>();
   return results;
 }
@@ -179,6 +173,24 @@ export function normalizeQuery(q: string) {
 }
 
 /**
+ * Words that are written in more than one way. A name is searched with the
+ * way it is written and with the ways it is often written, so "mohammad
+ * kawsarul" finds "Md. Kawsarul Islam" and the other way round.
+ */
+const SYNONYMS: Record<string, string[]> = {
+  md: ['mohammad', 'muhammad'],
+  mohammad: ['md'],
+  muhammad: ['md'],
+  mst: ['most', 'musammat'],
+  most: ['mst'],
+  min: ['minur'],
+  minim: ['minur'],
+};
+
+/** The next word after "rah" in the index: "rai". */
+const nextWord = (w: string) => w.slice(0, -1) + String.fromCharCode(w.charCodeAt(w.length - 1) + 1);
+
+/**
  * Name search: every word must appear somewhere in the name (case-insensitive),
  * and the longest word must also start a word of the name. That word is looked
  * up in the indexed name_words table so only candidates are read, not every row.
@@ -195,21 +207,27 @@ export async function searchStudents(q: string, { batch, code, limit = 100 }: Se
     // out - those students are found by name.
     where.push('studentid BETWEEN ? AND ?');
     params.push(query.padEnd(7, '0'), query.padEnd(7, '9'));
-    where.push("studentid NOT GLOB '*[^0-9]*'");
+    where.push('class_roll IS NOT NULL');
   } else if (ID_RE.test(query)) {
     // A pre-2012 student ID, e.g. "0301kqm" - there is only one.
     where.push('studentid = ?');
     params.push(query);
   } else {
     // Same separators and lowercasing as scripts/refresh-derived.sql.
-    const key = query.toLowerCase().split(/[\s.\-()]+/).reduce((a, w) => (w.length > a.length ? w : a), '');
+    const words = query.toLowerCase().split(/[\s.\-()]+/).filter(Boolean);
+    const key = words.reduce((a, w) => (w.length > a.length ? w : a), '');
     if (!key) return { results: [] as Student[], more: false };
-    // Prefix range: "rah" -> word >= 'rah' AND word < 'rai'.
-    where.push('studentid IN (SELECT studentid FROM name_words WHERE word >= ? AND word < ?)');
-    params.push(key, key.slice(0, -1) + String.fromCharCode(key.charCodeAt(key.length - 1) + 1));
-    for (const word of query.split(/\s+/).filter(Boolean).slice(0, 6)) {
-      where.push("name LIKE ? ESCAPE '\\'");
-      params.push(`%${escapeLike(word)}%`);
+    // Prefix range: "rah" -> word >= 'rah' AND word < 'rai'. The longest word
+    // (and the words it can also be written as) picks the candidates.
+    const keyVariants = [key, ...(SYNONYMS[key] ?? [])];
+    where.push(`studentid IN (SELECT studentid FROM name_words WHERE ${keyVariants.map(() => '(word >= ? AND word < ?)').join(' OR ')})`);
+    for (const v of keyVariants) params.push(v, nextWord(v));
+    // Every word has to appear in the name, written the way it is written or
+    // the way it is often written ("mohammad" also finds "Md.").
+    for (const word of words.slice(0, 6)) {
+      const variants = [word, ...(SYNONYMS[word] ?? [])];
+      where.push(`(${variants.map(() => "name LIKE ? ESCAPE '\\'").join(' OR ')})`);
+      for (const v of variants) params.push(`%${escapeLike(v)}%`);
     }
   }
   if (batch) {
@@ -217,16 +235,8 @@ export async function searchStudents(q: string, { batch, code, limit = 100 }: Se
     params.push(batch);
   }
   if (code) {
-    // Real IDs carry the department code; the pre-2012 ones carry a hash, and
-    // the ones without a published department carry a hash after the batch.
-    const pattern = classPattern(code);
-    if (pattern) {
-      where.push('studentid GLOB ?');
-      params.push(pattern);
-    } else {
-      where.push('substr(studentid, 3, 2) = ?');
-      params.push(code);
-    }
+    where.push('dept_code = ?');
+    params.push(code);
   }
   if (!where.length) return { results: [] as Student[], more: false };
 
@@ -249,16 +259,13 @@ export interface SitemapRow {
   updated: string; // YYYY-MM-DD
 }
 
-/** One batch only, via the studentid index. */
+/** One batch only, via the batch index. */
 export async function getSitemapRows(batch: string) {
-  const next = String(Number(batch) + 1).padStart(2, '0');
   const { results } = await env.DB.prepare(
-    `SELECT studentid, batch,
-            CASE WHEN substr(studentid, 3, 2) GLOB '[0-9][0-9]' THEN substr(studentid, 3, 2) ELSE '00' END AS code,
-            date(COALESCE(updated_at, created_at)) AS updated
-     FROM students WHERE studentid >= ? AND studentid < ? ORDER BY studentid`,
+    `SELECT studentid, batch, dept_code AS code, date(COALESCE(updated_at, created_at)) AS updated
+     FROM students WHERE batch = ? ORDER BY studentid`,
   )
-    .bind(`${batch}00000`, `${next}00000`)
+    .bind(batch)
     .all<SitemapRow>();
   return results;
 }

@@ -40,25 +40,28 @@ const DEPTS = {
   CE: '01', EEE: '02', ME: '03', CSE: '04', URP: '05', ARCH: '06',
   PME: '07', ETE: '08', MIE: '09', CWR: '10', BME: '11', MME: '12',
 };
-const DEPT_NAME = {
-  '01': 'Civil Engineering', '02': 'Electrical & Electronic Engineering',
-  '03': 'Mechanical Engineering', '04': 'Computer Science & Engineering',
-  '05': 'Urban & Regional Planning', '06': 'Architecture',
-  '07': 'Petroleum & Mining Engineering', '08': 'Electronics & Telecommunication Engineering',
-  '09': 'Mechatronics & Industrial Engineering', '10': 'Water Resources Engineering',
-  '11': 'Biomedical Engineering', '12': 'Materials & Metallurgical Engineering',
-};
 const UNKNOWN_DEPT = '00';
 
 // Sources that print a real student ID. Everything else gets a generated one.
 const ID_IS_PRINTED = /thesis_register|LaptopList/i;
 
 const args = process.argv.slice(2);
-const replaceIdx = args.indexOf('--replace');
-const replaceFile = replaceIdx >= 0 ? args.splice(replaceIdx, 2)[1] : null;
+const flag = (name) => {
+  const i = args.indexOf(name);
+  return i >= 0 ? args.splice(i, 2)[1] : null;
+};
+const replaceFile = flag('--replace');
+const inferredFile = flag('--inferred');
+const provenanceOnly = args.includes('--provenance');
+if (provenanceOnly) {
+  const i = args.indexOf('--provenance');
+  args.splice(i, 1);
+}
 const [input, liveFile, output] = args;
 if (!input || !liveFile || !output) {
-  console.error('Usage: node scripts/import-archive.mjs <archive.csv> <live-students.json> <out.sql> [--replace <ids.txt>]');
+  console.error(
+    'Usage: node scripts/import-archive.mjs <archive.csv> <live-students.json> <out.sql> [--replace <ids.txt>] [--inferred <inferred.csv>] [--provenance]',
+  );
   process.exit(1);
 }
 
@@ -135,11 +138,22 @@ const replaceIds = new Set(
   replaceFile ? readFileSync(replaceFile, 'utf8').split(/\r?\n/).map((s) => s.trim()).filter(Boolean) : [],
 );
 
+// Rows whose file had a field inferred rather than printed, with the reason.
+const inferred = new Map();
+if (inferredFile) {
+  const [ih, ...irecs] = parseCsv(readFileSync(inferredFile, 'utf8').replace(/^\uFEFF/, ''));
+  const ic = Object.fromEntries(ih.map((h, i) => [h.trim().toLowerCase(), i]));
+  for (const r of irecs) {
+    const k = `${String(r[ic.batch]).trim().padStart(2, '0')}|${normName(cleanName(r[ic.name] ?? ''))}`;
+    inferred.set(k, (r[ic.note] ?? '').trim());
+  }
+}
+
 const taken = new Set(liveById.keys());
 const sql = (v) => (v === null || v === '' ? 'NULL' : `'${String(v).replace(/'/g, "''")}'`);
 
 const stats = {
-  total: records.length, inserted: 0, replaced: 0, skipped: 0,
+  total: records.length, inserted: 0, replaced: 0, skipped: 0, provenance: 0,
   printedId: 0, generatedId: 0, withMerit: 0, withRoll: 0,
   byBatch: new Map(),
 };
@@ -180,6 +194,26 @@ for (const r of records) {
   const printed = ID_IS_PRINTED.test(source) && /^\d{7}$/.test(archiveId);
   const key = `${batch}|${normName(name)}`;
 
+  // Otherwise match on the name. A hand-organised student is left alone, an
+  // earlier import of this archive is replaced.
+  const same = liveByName.get(key) ?? [];
+
+  if (provenanceOnly) {
+    // Only the rows this archive brought in: they carry a hash in their ID,
+    // or they are on the list of an earlier import. The department tells two
+    // students with the same name apart.
+    const mine = same.find((x) => x.dept_code === code && (replaceIds.has(x.studentid) || /[a-z]/.test(x.studentid)));
+    if (mine) {
+      same.splice(same.indexOf(mine), 1);
+      const note = inferred.get(key) ?? '';
+      lines.push(
+        `UPDATE students SET source = ${sql(source)}, inferred = ${note ? 1 : 0}, note = ${sql(note)} WHERE studentid = ${sql(mine.studentid)};`,
+      );
+      stats.provenance++;
+    }
+    continue;
+  }
+
   // A printed student ID is exact: if the database already has that ID, the
   // student is there and this row is redundant - hand-organised data wins.
   if (printed && liveById.has(archiveId)) {
@@ -188,9 +222,6 @@ for (const r of records) {
     continue;
   }
 
-  // Otherwise match on the name. A hand-organised student is left alone, an
-  // earlier import of this archive is replaced.
-  const same = liveByName.get(key) ?? [];
   const handOrganised = same.find((x) => !replaceIds.has(x.studentid));
   const existing = handOrganised ?? same.find((x) => replaceIds.has(x.studentid));
   if (handOrganised) {
@@ -212,6 +243,10 @@ for (const r of records) {
     stats.generatedId++;
   }
 
+  const note = inferred.get(key) ?? '';
+  if (merit) stats.withMerit++;
+  if (admissionRoll) stats.withRoll++;
+
   if (existing) {
     // An earlier import of this archive: drop it, it comes back with the new ID.
     lines.push(`DELETE FROM name_words WHERE studentid = ${sql(existing.studentid)};`);
@@ -223,26 +258,23 @@ for (const r of records) {
     b.inserted++;
   }
 
-  if (targetId === archiveId) stats.printedId++;
-  else stats.generatedId++;
-  if (merit) stats.withMerit++;
-  if (admissionRoll) stats.withRoll++;
-
-  const deptColumn = code === UNKNOWN_DEPT ? 'Department not published' : `Department of ${DEPT_NAME[code]}`;
+  const classRoll = printed ? targetId.slice(4, 7) : null;
   lines.push(
-    `INSERT OR IGNORE INTO students (name, studentid, department, admission_roll, admission_merit, batch, session) ` +
-      `VALUES (${sql(name)}, ${sql(targetId)}, ${sql(deptColumn)}, ${sql(admissionRoll)}, ${sql(merit)}, ${sql(batch)}, ${sql(session)});`,
+    `INSERT OR IGNORE INTO students (name, studentid, dept_code, class_roll, admission_roll, admission_merit, batch, session, source, inferred, note) ` +
+      `VALUES (${sql(name)}, ${sql(targetId)}, ${sql(code)}, ${sql(classRoll)}, ${sql(admissionRoll)}, ${sql(merit)}, ${sql(batch)}, ${sql(session)}, ` +
+      `${sql(source)}, ${note ? 1 : 0}, ${sql(note)});`,
   );
 }
 
 // Keep the precomputed tables (class_counts, name_words) in step with the import.
-const refresh = readFileSync(new URL('./refresh-derived.sql', import.meta.url), 'utf8');
-writeFileSync(output, lines.join('\n') + '\n\n' + refresh);
+const refresh = provenanceOnly ? '' : readFileSync(new URL('./refresh-derived.sql', import.meta.url), 'utf8');
+writeFileSync(output, lines.join('\n') + '\n' + (refresh ? '\n' + refresh : ''));
 
 console.log(`archive rows       ${stats.total}`);
 console.log(`inserted           ${stats.inserted}`);
 console.log(`replaced           ${stats.replaced}`);
 console.log(`already in the db  ${stats.skipped}`);
+console.log(`provenance rows    ${stats.provenance}`);
 console.log(`printed studentid  ${stats.printedId}`);
 console.log(`generated id       ${stats.generatedId}`);
 console.log(`with merit         ${stats.withMerit}`);

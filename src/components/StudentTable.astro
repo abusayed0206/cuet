@@ -1,5 +1,5 @@
 ---
-import { cleanName, meritSortKey, meritText, parseId, type Student } from '../lib/db';
+import { cleanName, meritSortKey, meritText, type Student } from '../lib/db';
 import { deptByCode, deptLabel } from '../lib/departments';
 
 interface Props {
@@ -12,8 +12,7 @@ interface Props {
 const { students, mixed = false, interactive = false } = Astro.props;
 
 const rows = students.map((s) => {
-  const { code } = parseId(s.studentid);
-  const d = deptByCode(code);
+  const d = deptByCode(s.dept_code);
   return {
     id: s.studentid,
     name: cleanName(s.name),

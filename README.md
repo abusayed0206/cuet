@@ -16,13 +16,15 @@ batch and department, or use the public JSON API.
 
 ```
 src/
-  lib/departments.ts   department table, keyed by the ID's department digits
+  lib/departments.ts   department table, keyed by the two-digit department code
   lib/db.ts            all D1 queries
   lib/api.ts           JSON helpers, rate limiting, API response shapes
   pages/               routes (pages + /api endpoints)
   components/, layouts/
 migrations/            D1 schema and data fixes (data imports are gitignored)
 scripts/csv-to-sql.mjs CSV → D1 migration for importing a new batch
+scripts/import-archive.mjs  the pre-2012 archive (see below)
+scripts/check-data.mjs      checks the data in D1 against the rules (see below)
 scripts/refresh-derived.sql  rebuilds class_counts / name_words (see below)
 ```
 
@@ -33,13 +35,24 @@ by hand, run `npm run db:refresh` (imports made with csv-to-sql do it already).
 
 ### Student IDs
 
-IDs are `YY DD RRR`: batch, department code, class roll. The site and API take the department from `DD`, not from the
-`department` text column. Code `12` shows as MSE for batches ≤ 22 and MME after that.
+A student ID is the URL key and nothing else. The batch, the department and
+the class roll are columns of their own, so the code is never read out of the
+ID:
 
-Batches 03–11 come from the pre-2012 CUET site, which published merit lists
-instead of student IDs, and the 2016 department allotment PDFs print only
-"serial, merit, roll, name", where the serial is a merit-ordered row number,
-not a class roll. Those students carry a hash where the class roll would be:
+| column | meaning |
+|---|---|
+| `studentid` | the URL key, unique |
+| `batch` | two digits, `03` … `25` |
+| `dept_code` | two digits, `01` … `12`, or `00` when the source published no department |
+| `class_roll` | three digits, or NULL when it was never published |
+| `admission_roll`, `admission_merit` | as published, may be empty |
+| `source`, `inferred`, `note` | where the row came from, and what was inferred |
+
+Real CUET IDs are seven digits (`YY DD RRR`). Batches 03–11 come from the
+pre-2012 CUET site, which published merit lists instead of student IDs, and
+the 2016 department allotment PDFs print only "serial, merit, roll, name",
+where the serial is a merit-ordered row number, not a class roll. Those
+students carry a hash where the class roll would be:
 
 ```
 2504001    a real CUET student ID
@@ -54,7 +67,8 @@ they are. Because the hash is not a class roll, the pre-2012 students are found
 by name, and `searchStudents()` leaves them out of an ID-prefix search.
 
 Department code `00` means the source published no department (batches 04 and
-08); their student IDs carry the hash right after the batch.
+08); their student IDs carry the hash right after the batch. Code `12` shows as
+MSE for batches ≤ 22 and MME after that.
 
 ## Routes
 
@@ -124,19 +138,33 @@ Cloudflare Workers Builds watches this repo:
 ## Adding a new batch
 
 1. Prepare a CSV with headers `studentid,name,admission_roll,admission_merit`.
-2. `node scripts/csv-to-sql.mjs batch26.csv migrations/0006_import_batch_26.sql`
+2. `node scripts/csv-to-sql.mjs batch26.csv migrations/0011_import_batch_26.sql`
    (use the next free migration number; the script appends `scripts/refresh-derived.sql`,
    so `class_counts` and `name_words` update in the same migration)
 3. `npm run db:migrate` (applies new migrations to production D1)
-4. Check the derived tables match; all three numbers must be equal:
-   ```sh
-   npx wrangler d1 execute CUET_students --remote --command "SELECT (SELECT COUNT(*) FROM students), (SELECT SUM(count) FROM class_counts), (SELECT COUNT(DISTINCT studentid) FROM name_words)"
-   ```
-   If they differ, run `npm run db:refresh`.
+4. `npm run db:check` - the rules the site relies on, see below
 5. Push to `main` so the edge cache and the in-memory overview refresh, then
    `node scripts/indexnow.mjs --since <today>`.
 
 Import migrations contain personal data and are gitignored; keep the CSV outside the repo.
+
+### Checking the data
+
+`npm run db:check` runs the rules the site depends on against D1 and exits
+non-zero when one is broken:
+
+1. `students` == `SUM(class_counts)` == the students in `name_words`
+2. `class_counts` matches the students it counts
+3. every student ID has a shape the site accepts
+4. every student has a department code, and a class roll only where the ID has one
+5. the session matches the batch
+6. no student ID carries two names
+
+It also reports (without failing) the names that two students in a batch
+share - the source really has those, they are different people.
+
+Run it after every import, and `node scripts/check-data.mjs --local` against a
+local copy of the database before applying a migration.
 
 ### Importing the pre-2012 archive
 
@@ -145,16 +173,21 @@ department allotment PDFs) has its own importer, because its CSV has a
 different shape and most of its rows have no student ID:
 
 ```sh
-npx wrangler d1 execute CUET_students --remote --command "SELECT studentid, name, batch FROM students" --json > live.json
-node scripts/import-archive.mjs "C:/Users/abusa/cuet-archive/clean/cuet_students_03-16.csv" live.json migrations/0007_import_archive.sql
+npx wrangler d1 execute CUET_students --remote --command "SELECT studentid, name, batch, dept_code FROM students" --json > live.json
+node scripts/import-archive.mjs "C:/Users/abusa/cuet-archive/clean/cuet_students_03-16.csv" live.json migrations/0012_import_archive.sql
 npm run db:migrate
 ```
 
-It imports name, student ID, department, batch, session, admission roll and
-merit, and skips students that are already in the database. Re-running it after
-an ID scheme change: pass the student IDs of the earlier import with
-`--replace ids.txt` — those rows are dropped and inserted again with the new
-ID.
+It imports name, student ID, department, class roll, batch, session, admission
+roll and merit, and skips students that are already in the database.
+
+- `--replace ids.txt` - the student IDs of an earlier import of the same
+  archive: those rows are dropped and inserted again, for when the ID scheme
+  changes.
+- `--inferred inferred.csv` - the archive's list of rows with an inferred
+  field; those rows get `inferred = 1` and the reason in `note`.
+- `--provenance` - only write the `source`, `inferred` and `note` columns of
+  rows that are already in the database.
 
 ### Editing existing students
 
@@ -173,7 +206,7 @@ Don't rebuild `name_words` from scratch (`DELETE FROM name_words` + refresh): th
 ### D1 budget (free plan)
 
 D1 bills every row a query *reads*: 5M/day, then all queries fail until 00:00 UTC. A
-query without an index on its `WHERE` reads all ~8.6K students (plus index rows). Before
+query without an index on its `WHERE` reads all ~12.8K students (plus index rows). Before
 adding a query, check its plan in `wrangler d1 execute --local` with `EXPLAIN QUERY PLAN`:
 it must say `SEARCH ... USING INDEX`, never `SCAN students`. Usage per database:
 dashboard → D1 → CUET_students → Metrics.
@@ -189,6 +222,8 @@ D1 keeps 30 days of point-in-time history (Time Travel). For an offline copy:
 npx wrangler d1 export CUET_students --remote --output cuet-backup.sql
 ```
 
+Keep the export outside the repository - it holds every student's name.
+
 ## Branches
 
 - `main`: this site
@@ -197,7 +232,10 @@ npx wrangler d1 export CUET_students --remote --output cuet-backup.sql
 
 ## Data and terms
 
-Data was compiled from publicly available sources and may contain errors. Personal use is free; commercial use or
+Data was compiled from publicly available sources and may contain errors. The batches from
+2003-04 to 2011-12 come from CUET's pre-2012 site, which published merit lists rather than
+student IDs, so those students have no student ID here - only a name, a batch, the
+department where it was published, and the admission roll. Personal use is free; commercial use or
 integration into another system requires acknowledgment. See [privacy](https://cuet.sayed.app/privacy) and
 [terms](https://cuet.sayed.app/terms). Contact: hello@sayed.page.
 
