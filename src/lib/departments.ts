@@ -27,8 +27,9 @@ export const DEPARTMENTS: Department[] = [
   { code: '00', slug: 'unknown', short: 'N/A', name: 'Department not published' },
 ];
 
-// Old slugs used by the previous site.
-const ALIASES: Record<string, string> = { wrp: 'wre', mse: 'mme' };
+// Old slugs used by the previous site. "cwr" (Civil & Water Resources) is the
+// name the 2016 allotment lists use for the department the site calls WRE.
+const ALIASES: Record<string, string> = { wrp: 'wre', cwr: 'wre', mse: 'mme' };
 
 const byCode = new Map(DEPARTMENTS.map((d) => [d.code, d]));
 const bySlug = new Map(DEPARTMENTS.map((d) => [d.slug, d]));
