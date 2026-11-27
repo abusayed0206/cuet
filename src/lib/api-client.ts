@@ -29,6 +29,16 @@ function validateOrigin(url: URL) {
   }
 }
 
+/** Non-2xx answer from the API. `status` lets callers turn a 404 into a page 404. */
+export class ApiError extends Error {
+  status: number;
+  constructor(path: string, status: number) {
+    super(`the CUET API answered ${status} for ${path}`);
+    this.name = 'ApiError';
+    this.status = status;
+  }
+}
+
 /** GET a path of the API, with the response cached in the isolate. */
 export async function apiGet<T>(
   path: string,
@@ -56,7 +66,7 @@ export async function apiGet<T>(
         signal: controller.signal,
       });
       if (!res.ok) {
-        throw new Error(`the CUET API answered ${res.status} for ${path}`);
+        throw new ApiError(path, res.status);
       }
       const body = (await res.json()) as T;
 

@@ -1,4 +1,4 @@
-import { apiGet } from './api-client';
+import { apiGet, ApiError } from './api-client';
 import { deptByCode, type Department } from './departments';
 
 export interface Student {
@@ -77,8 +77,14 @@ export function meritLabel(batch: string) {
 // ---------- single student ----------
 
 export async function getStudent(id: string) {
-  const { data } = await apiGet<{ data: ApiStudent }>(`/api/v1/students/${encodeURIComponent(id)}`);
-  return toStudent(data);
+  try {
+    const { data } = await apiGet<{ data: ApiStudent }>(`/api/v1/students/${encodeURIComponent(id)}`);
+    return toStudent(data);
+  } catch (err) {
+    // A missing student is a page 404, not an upstream outage.
+    if (err instanceof ApiError && err.status === 404) return null;
+    throw err;
+  }
 }
 
 /** Previous/next student in the same class plus class size, in one call. */
@@ -99,8 +105,13 @@ export async function getNeighbours(student: Student) {
 export async function getClass(batch: string, code: string) {
   const dept = deptByCode(code);
   if (!dept) return [];
-  const { data } = await apiGet<{ data: ApiStudent[] }>(`/api/v1/batches/${batch}/${dept.slug}`);
-  return data.map(toStudent);
+  try {
+    const { data } = await apiGet<{ data: ApiStudent[] }>(`/api/v1/batches/${batch}/${dept.slug}`);
+    return data.map(toStudent);
+  } catch (err) {
+    if (err instanceof ApiError && err.status === 404) return [];
+    throw err;
+  }
 }
 
 // ---------- overview: counts per batch x department ----------
@@ -168,11 +179,17 @@ export interface SearchOptions {
  */
 export async function searchStudents(q: string, { batch, code, limit = 100 }: SearchOptions = {}) {
   const dept = code ? deptByCode(code) : undefined;
-  const { data, meta } = await apiGet<{ data: ApiStudent[]; meta: { count: number; has_more: boolean } }>(
-    '/api/v1/search',
-    { q, batch, dept: dept?.slug, limit },
-  );
-  return { results: data.map(toStudent), more: meta.has_more };
+  try {
+    const { data, meta } = await apiGet<{ data: ApiStudent[]; meta: { count: number; has_more: boolean } }>(
+      '/api/v1/search',
+      { q, batch, dept: dept?.slug, limit },
+    );
+    return { results: data.map(toStudent), more: meta.has_more };
+  } catch (err) {
+    // No matches is an empty result set, not an upstream failure.
+    if (err instanceof ApiError && err.status === 404) return { results: [], more: false };
+    throw err;
+  }
 }
 
 // ---------- sitemap ----------
